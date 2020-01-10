@@ -31,6 +31,10 @@
   justify-content: center;
   align-items: center;
   background-color: #fff;
+  transition: all 0.5s ease;
+  &.fading {
+    transform: translate(50px);
+  }
   h2 {
     font-size: 48px;
   }

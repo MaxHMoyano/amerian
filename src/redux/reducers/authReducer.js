@@ -1,7 +1,7 @@
 import { LOGIN, SET_LOADING } from "../actions/types";
 
 const INITIAL_STATE = {
-  isAuthenticated: false,
+  isAuthenticated: true,
   isUserLoading: false
 };
 

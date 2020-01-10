@@ -1,10 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
 
+// Overrides to bootstrap default options
 $font-family-sans-serif: "Open Sans", sans-serif;
-
 $font-size-base: 0.9rem;
 $body-bg: #f4f4f4;
-
 $primary: #b20022;
 
 @import "~bootstrap/scss/bootstrap.scss";
@@ -18,4 +17,4 @@ $primary: #b20022;
 
 @import "./styles/utilities";
 @import "./styles/login";
-@import "./styles/main";
+@import "./styles/layout";
