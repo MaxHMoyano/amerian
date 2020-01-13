@@ -1,3 +1,7 @@
 export const SET_LOADING = "SET_LOADING";
 
 export const LOGIN = "LOGIN";
+
+export const ADD_MENU = "ADD_MENU";
+export const ACTIVE_MENU_ITEM = "ACTIVE_MENU_ITEM";
+export const REMOVE_PREVIOUS_ACTIVE_MENU = "REMOVE_PREVIOUS_ACTIVE_MENU";

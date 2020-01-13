@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button } from "react-bootstrap";
 const NavBar = () => {
   return (
-    <div className="main_navbar bg-light">
+    <div className="main_navbar">
       <div className="user">
         <p className="m-0">Bienvenida</p>
         <h2 className="m-0 text-muted font-weight-bold">Agustina</h2>

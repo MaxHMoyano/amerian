@@ -8,7 +8,7 @@ function App() {
   const isUserLoading = useSelector(state => state.auth.isUserLoading);
 
   return (
-    <div className="app">
+    <div className='app'>
       {!isAuthenticated && !isUserLoading ? <Login /> : <MainContainer />}
     </div>
   );

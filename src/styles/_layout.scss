@@ -6,16 +6,26 @@
   grid-template-rows: 90px 1fr;
   grid-template-areas: "primarySidebar secondarySidebar navbar" "primarySidebar secondarySidebar content";
   .main_navbar {
-    padding: 1.5rem;
+    background-color: $white;
+    padding: 1.5rem 3rem;
     grid-area: navbar;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     .toolbar {
+      width: 25%;
       display: flex;
       align-items: center;
-      justify-content: space-around;
+      justify-content: space-between;
+      .search {
+        flex: 1;
+      }
+      .actions {
+        width: 25%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
     }
   }
 
@@ -33,6 +43,7 @@
       justify-content: center;
       width: 100%;
       height: 90px;
+      cursor: pointer;
     }
     .menu {
       width: 100%;
@@ -45,21 +56,64 @@
       flex: 1;
     }
     .menu_item {
-      margin-top: 1rem;
-      padding: 1.5rem;
       cursor: pointer;
       width: 100%;
+      padding: 1rem 1rem;
       &:hover {
         background: darken($color: $primary, $amount: 20%);
       }
       .menu_link {
+        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: $light;
+        text-decoration: none;
+        padding: 0.5rem;
+        &.active {
+          background-color: $light-red;
+          border-radius: 50%;
+        }
       }
     }
   }
 
   .secondary_sidebar {
     grid-area: secondarySidebar;
+    background-color: $gray-200;
+    padding: 3rem 1rem;
+    width: 240px;
+    max-width: 240px;
+    position: relative;
+
+    .sidebar_toggle {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      position: absolute;
+      right: -1rem;
+    }
+    .link {
+      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1rem 0.5rem;
+      border-radius: 3px;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      color: $dark;
+      text-decoration: none;
+      &:hover {
+        background-color: $gray-400;
+      }
+      &.active {
+        background-color: $gray-400;
+      }
+    }
   }
 
   .main_content {

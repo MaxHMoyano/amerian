@@ -1,42 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import logo from "../../assets/logo.png";
 import { Image } from "react-bootstrap";
-const PrimarySidebar = () => {
-  const menu = [
-    {
-      title: "Hoteles",
-      icon: "hotel",
-      url: "/hotels"
-    },
-    {
-      title: "Staff",
-      icon: "users",
-      url: "/staff"
-    },
-    {
-      title: "Convenios",
-      icon: "hands-helping",
-      url: "/agreements"
-    },
-    {
-      title: "Agregar nuevo",
-      icon: "plus",
-      url: "/create-menu-item"
-    }
-  ];
+import { NavLink, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { activeMenu } from "../../redux/actions/menuActions";
 
-  const [menuItems] = useState(menu);
+const PrimarySidebar = () => {
+  const menu = useSelector(({ menu }) => menu.menuItems);
+  const dispatch = useDispatch();
   return (
     <div className="primary_sidebar">
-      <div className="logo">
-        <Image src={logo} />
-      </div>
+      <Link to="/home">
+        <div className="logo">
+          <Image src={logo} />
+        </div>
+      </Link>
       <div className="menu">
-        {menuItems.map(item => (
+        {menu.map(item => (
           <div key={item.title} className="menu_item">
-            <a href={item.url} className="menu_link">
+            <NavLink
+              to={item.url}
+              className="menu_link"
+              onClick={() => dispatch(activeMenu(item.url))}
+            >
               <i className={`fas fa-${item.icon}`}></i>
-            </a>
+            </NavLink>
           </div>
         ))}
       </div>
@@ -48,6 +36,11 @@ const PrimarySidebar = () => {
       <div className="menu_item">
         <a href="/help" className="menu_link">
           <i className="fas fa-question-circle"></i>
+        </a>
+      </div>
+      <div className="menu_item">
+        <a href="/help" className="menu_link">
+          <i className="fas fa-cog"></i>
         </a>
       </div>
     </div>

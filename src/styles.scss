@@ -2,9 +2,29 @@
 
 // Overrides to bootstrap default options
 $font-family-sans-serif: "Open Sans", sans-serif;
-$font-size-base: 0.9rem;
-$body-bg: #f4f4f4;
+$body-bg: #fff;
+
+// Colors
+$light-red: #be2d47;
 $primary: #b20022;
+$secondary: #8c7853;
+$info: #5bc0de;
+$light-info: #d9edf7;
+$success: #5cb85c;
+$light-success: #dff0d8;
+$warning: #f0ad4e;
+$light-warning: #fcf8e3;
+$danger: #d9534f;
+$light-danger: #f2dede;
+
+// $gray-100: #f8f9fa !default;
+// $gray-200: #f6f6f4 !default;
+// $gray-300: #ddd !default;
+// $gray-400: #ccc !default;
+// $gray-500: #adb5bd !default;
+// $gray-600: #6c757d !default;
+// $gray-700: #495057 !default;
+// $gray-800: #343a40 !default;
 
 @import "~bootstrap/scss/bootstrap.scss";
 
