@@ -37,6 +37,7 @@
     width: 65px;
     color: $light;
     background-color: darken($color: $primary, $amount: 10%);
+    z-index: 1;
     .logo {
       display: flex;
       align-items: center;
@@ -85,16 +86,30 @@
     width: 240px;
     max-width: 240px;
     position: relative;
-
+    transition: all 0.3s ease;
+    &.inactive {
+      animation-name: hide_sidebar;
+      animation-duration: 0.3s;
+      animation-fill-mode: forwards;
+      transform: translate3d(-100%, 0, 0);
+      .sidebar_toggle {
+        right: -1.7rem;
+      }
+      h4,
+      .link {
+        display: none !important;
+      }
+    }
     .sidebar_toggle {
       width: 30px;
       height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
+      // border-radius: 50%;
       position: absolute;
       right: -1rem;
+      background: $light-red;
     }
     .link {
       display: block;
@@ -118,5 +133,14 @@
 
   .main_content {
     grid-area: content;
+  }
+}
+
+@keyframes hide_sidebar {
+  from {
+    width: 240px;
+  }
+  to {
+    width: 0;
   }
 }

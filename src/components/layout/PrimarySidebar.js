@@ -3,14 +3,18 @@ import logo from "../../assets/logo.png";
 import { Image } from "react-bootstrap";
 import { NavLink, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { activeMenu } from "../../redux/actions/menuActions";
+import {
+  activeMenu,
+  removePreviousActiveMenu
+} from "../../redux/actions/menuActions";
 
 const PrimarySidebar = () => {
   const menu = useSelector(({ menu }) => menu.menuItems);
   const dispatch = useDispatch();
+
   return (
     <div className="primary_sidebar">
-      <Link to="/home">
+      <Link to="/home" onClick={() => dispatch(removePreviousActiveMenu())}>
         <div className="logo">
           <Image src={logo} />
         </div>
@@ -29,19 +33,31 @@ const PrimarySidebar = () => {
         ))}
       </div>
       <div className="menu_item">
-        <a href="/notifications" className="menu_link">
+        <Link
+          className="menu_link"
+          to="notifications"
+          onClick={() => dispatch(removePreviousActiveMenu())}
+        >
           <i className="fas fa-bell"></i>
-        </a>
+        </Link>
       </div>
       <div className="menu_item">
-        <a href="/help" className="menu_link">
+        <Link
+          className="menu_link"
+          to="notifications"
+          onClick={() => dispatch(removePreviousActiveMenu())}
+        >
           <i className="fas fa-question-circle"></i>
-        </a>
+        </Link>
       </div>
       <div className="menu_item">
-        <a href="/help" className="menu_link">
+        <Link
+          className="menu_link"
+          to="notifications"
+          onClick={() => dispatch(removePreviousActiveMenu())}
+        >
           <i className="fas fa-cog"></i>
-        </a>
+        </Link>
       </div>
     </div>
   );
