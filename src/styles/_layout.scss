@@ -72,7 +72,7 @@
         text-decoration: none;
         padding: 0.5rem;
         &.active {
-          background-color: $light-red;
+          background-color: lighten($color: $primary, $amount: 1%);
           border-radius: 50%;
         }
       }
@@ -109,7 +109,7 @@
       // border-radius: 50%;
       position: absolute;
       right: -1rem;
-      background: $light-red;
+      background-color: darken($color: $primary, $amount: 10%);
     }
     .link {
       display: block;
@@ -133,6 +133,7 @@
 
   .main_content {
     grid-area: content;
+    padding: 3rem 0.5rem;
   }
 }
 
