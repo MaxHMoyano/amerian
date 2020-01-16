@@ -34,11 +34,30 @@ table th {
   border: none !important;
 }
 
-.btn.is-rounded {
-  border-radius: 16px;
+.table td {
+  vertical-align: middle;
 }
 
-.is-rounded {
+.btn.is-rounded {
+  border-radius: 16px;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+// React select
+
+.react_select_container {
+  min-width: 10rem;
+  max-width: 20rem;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  .react_select__control {
+    border-radius: 8px;
+    .react_select__value-container {
+      .react_select__placeholder {
+        position: static;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+  }
 }
