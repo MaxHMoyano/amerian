@@ -16,7 +16,7 @@ const NavBar = () => {
             <i className="fas fa-bell"></i>
           </Button>
           <Button variant="light">
-            <i className="fas fa-ellipsis-v"></i>
+            <i className="fas fa-ellipsis-h"></i>
           </Button>
         </div>
       </div>

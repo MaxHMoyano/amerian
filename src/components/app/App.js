@@ -2,15 +2,15 @@ import React from "react";
 import Login from "../login/Login";
 import MainContainer from "../layout/MainContainer";
 import { useSelector } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  const isUserLoading = useSelector(state => state.auth.isUserLoading);
+  const loggedIn = useSelector(({ auth }) => auth.loggedIn);
 
   return (
-    <div className="app">
-      {!isAuthenticated && !isUserLoading ? <Login /> : <MainContainer />}
-    </div>
+    <Router>
+      <div className="app">{!loggedIn ? <Login /> : <MainContainer />}</div>
+    </Router>
   );
 }
 

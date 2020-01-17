@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../redux/actions/";
-
 import { Image, Form, Button } from "react-bootstrap";
 import logo from "../../assets/Amerian_Logo.png";
 
 const Login = () => {
-  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
   const dispatch = useDispatch();
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");

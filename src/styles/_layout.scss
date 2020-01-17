@@ -6,8 +6,7 @@
   grid-template-rows: 90px 1fr;
   grid-template-areas: "primarySidebar secondarySidebar navbar" "primarySidebar secondarySidebar content";
   .main_navbar {
-    background-color: $white;
-    padding: 1.5rem 3rem;
+    padding: 1.5rem 0.5rem;
     grid-area: navbar;
     display: flex;
     justify-content: space-between;

@@ -5,21 +5,18 @@ import NavBar from "./NavBar";
 import PrimarySidebar from "./PrimarySidebar";
 import SecondarySidebar from "./SecondarySidebar";
 import MainContent from "./MainContent";
-import { BrowserRouter as Router } from "react-router-dom";
 
 const MainContainer = () => {
-  const isUserLoading = useSelector(({ auth }) => auth.isUserLoading);
+  const loggingIn = useSelector(({ auth }) => auth.loggingIn);
 
-  return isUserLoading ? (
+  return loggingIn ? (
     <WelcomePage />
   ) : (
-    <div className='main_container'>
-      <Router>
-        <NavBar />
-        <PrimarySidebar />
-        <SecondarySidebar />
-        <MainContent />
-      </Router>
+    <div className="main_container">
+      <NavBar />
+      <PrimarySidebar />
+      <SecondarySidebar />
+      <MainContent />
     </div>
   );
 };
