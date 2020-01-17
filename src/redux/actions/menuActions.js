@@ -1,15 +1,22 @@
-import { ACTIVE_MENU_ITEM, REMOVE_PREVIOUS_ACTIVE_MENU } from "./types";
+import { menuConstants } from "../constants";
 
-export const activeMenu = menuTitle => dispatch => {
-  dispatch(removePreviousActiveMenu());
-  dispatch({
-    type: ACTIVE_MENU_ITEM,
-    payload: menuTitle
-  });
+export const menuActions = {
+  activeMenu,
+  removePreviousActiveMenu
 };
 
-export const removePreviousActiveMenu = () => {
-  return {
-    type: REMOVE_PREVIOUS_ACTIVE_MENU
+function activeMenu(menuTitle) {
+  return dispatch => {
+    dispatch(removePreviousActiveMenu());
+    dispatch({
+      type: menuConstants.ACTIVE_MENU_ITEM,
+      payload: menuTitle
+    });
   };
-};
+}
+
+function removePreviousActiveMenu() {
+  return {
+    type: menuConstants.REMOVE_PREVIOUS_ACTIVE_MENU
+  };
+}

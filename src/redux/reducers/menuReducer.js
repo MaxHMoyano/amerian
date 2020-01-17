@@ -1,8 +1,4 @@
-import {
-  ADD_MENU,
-  ACTIVE_MENU_ITEM,
-  REMOVE_PREVIOUS_ACTIVE_MENU
-} from "../actions/types";
+import { menuConstants } from "../constants";
 
 const initialState = {
   menuItems: [
@@ -55,9 +51,9 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case ADD_MENU:
+    case menuConstants.ADD_MENU:
       return { ...state, ...payload };
-    case ACTIVE_MENU_ITEM: {
+    case menuConstants.ACTIVE_MENU_ITEM: {
       const activeUrlIdx = state.menuItems.findIndex(e => {
         return e.url === payload;
       });
@@ -67,7 +63,7 @@ export default (state = initialState, { type, payload }) => {
       };
       return state;
     }
-    case REMOVE_PREVIOUS_ACTIVE_MENU:
+    case menuConstants.REMOVE_PREVIOUS_ACTIVE_MENU:
       const activeUrlIdx = state.menuItems.findIndex(e => {
         return e.active === true;
       });

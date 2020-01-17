@@ -1,23 +1,24 @@
-import { LOGIN, SET_LOADING } from "../actions/types";
+import { userConstants } from "../constants";
 
-const INITIAL_STATE = {
-  isAuthenticated: true,
-  isUserLoading: false
-};
+let user = JSON.parse(localStorage.getItem("user"));
+const initialState = user ? { loggedIn: true, user } : {};
 
-export default (state = INITIAL_STATE, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN:
+    case userConstants.LOGIN_REQUEST:
       return {
-        ...state,
-        isAuthenticated: true,
-        isUserLoading: false
+        loggingIn: true,
+        user: action.user
       };
-    case SET_LOADING:
+    case userConstants.LOGIN_SUCCESS:
       return {
-        ...state,
-        isUserLoading: true
+        loggedIn: true,
+        user: action.user
       };
+    case userConstants.LOGIN_FAILURE:
+      return {};
+    case userConstants.LOGOUT:
+      return {};
     default:
       return state;
   }

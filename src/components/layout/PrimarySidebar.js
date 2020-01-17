@@ -3,10 +3,7 @@ import logo from "../../assets/logo.png";
 import { Image } from "react-bootstrap";
 import { NavLink, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  activeMenu,
-  removePreviousActiveMenu
-} from "../../redux/actions/menuActions";
+import { menuActions } from "../../redux/actions/";
 
 const PrimarySidebar = () => {
   const menu = useSelector(({ menu }) => menu.menuItems);
@@ -14,7 +11,10 @@ const PrimarySidebar = () => {
 
   return (
     <div className="primary_sidebar">
-      <Link to="/home" onClick={() => dispatch(removePreviousActiveMenu())}>
+      <Link
+        to="/home"
+        onClick={() => dispatch(menuActions.removePreviousActiveMenu())}
+      >
         <div className="logo">
           <Image src={logo} />
         </div>
@@ -25,7 +25,7 @@ const PrimarySidebar = () => {
             <NavLink
               to={item.url}
               className="menu_link"
-              onClick={() => dispatch(activeMenu(item.url))}
+              onClick={() => dispatch(menuActions.activeMenu(item.url))}
             >
               <i className={`fas fa-${item.icon}`}></i>
             </NavLink>
@@ -36,7 +36,7 @@ const PrimarySidebar = () => {
         <Link
           className="menu_link"
           to="notifications"
-          onClick={() => dispatch(removePreviousActiveMenu())}
+          onClick={() => dispatch(menuActions.removePreviousActiveMenu())}
         >
           <i className="fas fa-bell"></i>
         </Link>
@@ -45,7 +45,7 @@ const PrimarySidebar = () => {
         <Link
           className="menu_link"
           to="notifications"
-          onClick={() => dispatch(removePreviousActiveMenu())}
+          onClick={() => dispatch(menuActions.removePreviousActiveMenu())}
         >
           <i className="fas fa-question-circle"></i>
         </Link>
@@ -54,7 +54,7 @@ const PrimarySidebar = () => {
         <Link
           className="menu_link"
           to="notifications"
-          onClick={() => dispatch(removePreviousActiveMenu())}
+          onClick={() => dispatch(menuActions.removePreviousActiveMenu())}
         >
           <i className="fas fa-cog"></i>
         </Link>
