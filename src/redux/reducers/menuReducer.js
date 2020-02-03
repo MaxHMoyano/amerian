@@ -59,7 +59,7 @@ const initialState = {
       path: "/settings"
     }
   ],
-  activeMenu: {
+  activeItem: {
     name: "",
     routes: []
   }
@@ -70,7 +70,7 @@ export default (state = initialState, { type, payload }) => {
     case menuConstants.SET_ACTIVE_MENU:
       return {
         ...state,
-        activeMenu: {
+        activeItem: {
           name: payload.name,
           routes: payload.routes || []
         }

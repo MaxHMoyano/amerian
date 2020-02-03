@@ -1,18 +1,25 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const NavBar = () => {
-  const currentRoute = useSelector(({ menu }) => menu.activeMenu);
-  const currentTitle = useSelector(({ menu }) => {
-    let parentName = menu.activeMenu.name;
-    let childrenName = menu.activeNestedMenu.name;
+  const currentRoute = useSelector(({ menu }) => menu.activeItem);
 
-    if (childrenName) {
-      return childrenName;
+  const [title, setTitle] = useState("");
+  let location = useLocation();
+
+  useEffect(() => {
+    if (currentRoute.routes.length) {
+      setTitle(
+        currentRoute.routes.find(
+          route => route.path === window.location.pathname
+        ).name
+      );
+    } else {
+      setTitle(currentRoute.name);
     }
-    return parentName;
-  });
+  }, [currentRoute.name, currentRoute.routes, location]);
 
   return (
     <div className="main_navbar">
@@ -23,12 +30,7 @@ const NavBar = () => {
             <h2 className="m-0 text-muted font-weight-bold">Agustina</h2>
           </Fragment>
         ) : (
-          <h3
-            className="m-0 text-muted font-weight-bold"
-            style={{ textTransform: "uppercase" }}
-          >
-            {currentTitle}
-          </h3>
+          <h3 className="m-0 text-muted font-weight-bold">{title}</h3>
         )}
       </div>
       <div className="toolbar">
@@ -36,10 +38,10 @@ const NavBar = () => {
           <Form.Control type="text" placeholder="Buscar" />
         </div>
         <div className="actions px-2">
-          <Button variant="light">
+          <Button variant="light" className="mx-1">
             <i className="fas fa-bell"></i>
           </Button>
-          <Button variant="light">
+          <Button variant="light" className="mx-1">
             <i className="fas fa-ellipsis-h"></i>
           </Button>
         </div>

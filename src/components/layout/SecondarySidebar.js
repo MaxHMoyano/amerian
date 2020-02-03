@@ -5,9 +5,9 @@ import { NavLink } from "react-router-dom";
 const SecondarySidebar = () => {
   // States trackers
   const currentActiveRouteName = useSelector(
-    ({ menu }) => menu.activeMenu.name
+    ({ menu }) => menu.activeItem.name
   );
-  const currentNestedRoutes = useSelector(({ menu }) => menu.activeMenu.routes);
+  const currentNestedRoutes = useSelector(({ menu }) => menu.activeItem.routes);
 
   // Show sidebar only if there are nestes routes
   let isSecondarySidebarActive = currentNestedRoutes.length;
