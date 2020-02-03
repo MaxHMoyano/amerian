@@ -1,11 +1,35 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Form, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
+
 const NavBar = () => {
+  const currentRoute = useSelector(({ menu }) => menu.activeMenu);
+  const currentTitle = useSelector(({ menu }) => {
+    let parentName = menu.activeMenu.name;
+    let childrenName = menu.activeNestedMenu.name;
+
+    if (childrenName) {
+      return childrenName;
+    }
+    return parentName;
+  });
+
   return (
     <div className="main_navbar">
       <div className="user">
-        <p className="m-0">Bienvenida</p>
-        <h2 className="m-0 text-muted font-weight-bold">Agustina</h2>
+        {currentRoute.name === "home" ? (
+          <Fragment>
+            <p className="m-0">Bienvenida</p>
+            <h2 className="m-0 text-muted font-weight-bold">Agustina</h2>
+          </Fragment>
+        ) : (
+          <h3
+            className="m-0 text-muted font-weight-bold"
+            style={{ textTransform: "uppercase" }}
+          >
+            {currentTitle}
+          </h3>
+        )}
       </div>
       <div className="toolbar">
         <div className="search px-2">

@@ -56,7 +56,7 @@ const Staff = () => {
       image: " https://source.unsplash.com/featured/?{avatar}"
     },
     {
-      id: 1,
+      id: 2,
       name: "Adolfo Marconetti",
       position: "posicion",
       admissionDate: "14/09/1998",

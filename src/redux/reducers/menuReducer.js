@@ -1,79 +1,80 @@
 import { menuConstants } from "../constants";
 
 const initialState = {
-  menuItems: [
+  items: [
     {
-      title: "Hoteles",
+      name: "Hoteles",
       icon: "hotel",
-      url: "/hotels",
-      active: false
+      path: "/hotels"
     },
     {
-      title: "Recursos Humanos",
+      name: "Recursos Humanos",
       icon: "users",
-      url: "/humanResources",
-      active: false,
-      subMenu: [
+      path: "/humanResources",
+      routes: [
         {
-          title: "Staff",
-          url: "/humanResources/staff"
+          name: "Staff",
+          path: "/humanResources/staff"
         },
         {
-          title: "Posiciones",
-          url: "/humanResources/positions"
+          name: "Posiciones",
+          path: "/humanResources/positions"
         }
       ]
     },
     {
-      title: "Comercial",
+      name: "Comercial",
       icon: "hands-helping",
-      url: "/comercial",
-      active: false,
-      subMenu: [
+      path: "/comercial",
+      routes: [
         {
-          title: "Tarifas",
-          url: "/comercial/tariffs"
+          name: "Tarifas",
+          path: "/comercial/tariffs"
         },
         {
-          title: "Canales",
-          url: "/comercial/channels"
+          name: "Canales",
+          path: "/comercial/channels"
         }
       ]
     },
     {
-      title: "Agregar nuevo",
+      name: "Agregar nuevo",
       icon: "plus",
-      url: "/create-menu-item",
-      active: false
+      path: "/create-menu-item"
+    },
+    {
+      name: "Notificaciones",
+      icon: "bell",
+      path: "/notifications",
+      isBottom: true
+    },
+    {
+      name: "Ayuda",
+      icon: "question-circle",
+      path: "/help"
+    },
+    {
+      name: "Configuraciones",
+      icon: "cog",
+      path: "/settings"
     }
-  ]
+  ],
+  activeMenu: {
+    name: "",
+    routes: []
+  }
 };
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case menuConstants.ADD_MENU:
-      return { ...state, ...payload };
-    case menuConstants.ACTIVE_MENU_ITEM: {
-      const activeUrlIdx = state.menuItems.findIndex(e => {
-        return e.url === payload;
-      });
-      state.menuItems[activeUrlIdx] = {
-        ...state.menuItems[activeUrlIdx],
-        active: true
+    case menuConstants.SET_ACTIVE_MENU:
+      return {
+        ...state,
+        activeMenu: {
+          name: payload.name,
+          routes: payload.routes || []
+        }
       };
-      return state;
-    }
-    case menuConstants.REMOVE_PREVIOUS_ACTIVE_MENU:
-      const activeUrlIdx = state.menuItems.findIndex(e => {
-        return e.active === true;
-      });
-      if (activeUrlIdx !== -1) {
-        state.menuItems[activeUrlIdx] = {
-          ...state.menuItems[activeUrlIdx],
-          active: false
-        };
-      }
-      return state;
     default:
       return state;
   }

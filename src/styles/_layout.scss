@@ -6,7 +6,7 @@
   grid-template-rows: 90px 1fr;
   grid-template-areas: "primarySidebar secondarySidebar navbar" "primarySidebar secondarySidebar content";
   .main_navbar {
-    padding: 1.5rem 0.5rem;
+    padding: 2rem;
     grid-area: navbar;
     display: flex;
     justify-content: space-between;
@@ -54,25 +54,25 @@
       padding: 0;
       list-style: none;
       flex: 1;
-    }
-    .menu_item {
-      cursor: pointer;
-      width: 100%;
-      padding: 1rem 1rem;
-      &:hover {
-        background: darken($color: $primary, $amount: 20%);
-      }
-      .menu_link {
-        display: block;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: $light;
-        text-decoration: none;
-        padding: 0.5rem;
-        &.active {
-          background-color: lighten($color: $primary, $amount: 1%);
-          border-radius: 50%;
+      .menu_item {
+        cursor: pointer;
+        width: 100%;
+        padding: 1rem 1rem;
+        &:hover {
+          background: darken($color: $primary, $amount: 20%);
+        }
+        .menu_link {
+          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $light;
+          text-decoration: none;
+          padding: 0.5rem;
+          &.active {
+            background-color: lighten($color: $primary, $amount: 1%);
+            border-radius: 50%;
+          }
         }
       }
     }

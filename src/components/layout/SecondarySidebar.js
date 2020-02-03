@@ -1,50 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { NavLink, Redirect } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const SecondarySidebar = () => {
-  const entry = useSelector(state => {
-    const activeUrl = state.menu.menuItems.find(e => {
-      return e.active === true;
-    });
-    return activeUrl;
-  });
+  // States trackers
+  const currentActiveRouteName = useSelector(
+    ({ menu }) => menu.activeMenu.name
+  );
+  const currentNestedRoutes = useSelector(({ menu }) => menu.activeMenu.routes);
 
-  let activeSubMenu = entry && entry.subMenu && entry.subMenu.length;
+  // Show sidebar only if there are nestes routes
+  let isSecondarySidebarActive = currentNestedRoutes.length;
+  const [showSecondarySidebar, setShowSecondarySidebar] = useState(false);
+
   useEffect(() => {
-    setIsSidebarActive(activeSubMenu);
-  }, [activeSubMenu, entry]);
+    setShowSecondarySidebar(isSecondarySidebarActive);
+  }, [isSecondarySidebarActive, currentNestedRoutes]);
 
-  const [isSidebarActive, setIsSidebarActive] = useState(false);
+  if (!isSecondarySidebarActive) {
+    return "";
+  }
+
   return (
     <div
-      className={`secondary_sidebar ${isSidebarActive ? "active" : "inactive"}`}
+      className={`secondary_sidebar ${
+        showSecondarySidebar ? "active" : "inactive"
+      }`}
     >
-      {entry && entry.subMenu && <Redirect to={entry.subMenu[0].url} />}
-
       <button
         type="button"
-        className={`btn btn-primary sidebar_toggle ${
-          entry && entry.subMenu && entry.subMenu.length ? "" : "d-none"
-        }`}
-        onClick={() => setIsSidebarActive(!isSidebarActive)}
+        className={`btn btn-primary sidebar_toggle`}
+        onClick={() => setShowSecondarySidebar(!showSecondarySidebar)}
       >
         <i
           className={`fas fa-${
-            isSidebarActive ? "chevron-left" : "chevron-right"
+            showSecondarySidebar ? "chevron-left" : "chevron-right"
           }`}
         ></i>
       </button>
       <h4 className="text-muted font-weight-bold mb-5">
-        {entry ? entry.title : ""}
+        {currentActiveRouteName}
       </h4>
-      {activeSubMenu
-        ? entry.subMenu.map(e => (
-            <NavLink exact key={e.title} className="link" to={e.url}>
-              {e.title}
-            </NavLink>
-          ))
-        : ""}
+      {currentNestedRoutes.map(e => (
+        <NavLink exact key={e.name} className="link" to={e.path}>
+          {e.name}
+        </NavLink>
+      ))}
     </div>
   );
 };
