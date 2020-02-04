@@ -8,7 +8,7 @@ import Hotels from "../../routes/hotels/Hotels";
 // Human resources components
 
 import HumanResources from "../../routes/humanResources/HumanResources";
-import Staff from "../../routes/humanResources/Staff";
+import Staff from "../../routes/humanResources/Staff/StaffList";
 import Positions from "../../routes/humanResources/Positions";
 
 // Comercial components

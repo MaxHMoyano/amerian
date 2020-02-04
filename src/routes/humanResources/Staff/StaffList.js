@@ -3,6 +3,7 @@ import { Table, Form, Badge, Image } from "react-bootstrap";
 import Select, { components } from "react-select";
 import StarRatings from "react-star-ratings";
 import Checkbox from "react-simple-checkbox";
+import StaffModal from "./StaffModal";
 
 const Staff = () => {
   const customValueContainer = ({ children, getValue, ...props }) => {
@@ -70,6 +71,8 @@ const Staff = () => {
     }
   ]);
 
+  const [showModal, setshowModal] = useState(false);
+
   const getStatusBadgeType = id => {
     switch (id) {
       case 1:
@@ -88,8 +91,13 @@ const Staff = () => {
 
   return (
     <Fragment>
+      <StaffModal onClose={() => setshowModal(false)} show={showModal} />
       <div className="d-flex mb-4 align-items-center w-75">
-        <button type="button" className="btn btn-secondary is-rounded mr-3">
+        <button
+          type="button"
+          onClick={() => setshowModal(true)}
+          className="btn btn-secondary is-rounded mr-3"
+        >
           Agregar Staff
         </button>
         <Form.Group controlId="formBasicEmail" className="mr-3">
