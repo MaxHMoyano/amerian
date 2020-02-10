@@ -131,6 +131,7 @@
   }
 
   .main_content {
+    overflow-y: auto;
     grid-area: content;
     padding: 3rem 0.5rem;
   }

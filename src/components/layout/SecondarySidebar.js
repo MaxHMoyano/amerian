@@ -42,7 +42,7 @@ const SecondarySidebar = () => {
         {currentActiveRouteName}
       </h4>
       {currentNestedRoutes.map(e => (
-        <NavLink exact key={e.name} className="link" to={e.path}>
+        <NavLink key={e.name} className="link" to={e.path}>
           {e.name}
         </NavLink>
       ))}

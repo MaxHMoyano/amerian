@@ -11,11 +11,12 @@ const NavBar = () => {
 
   useEffect(() => {
     if (currentRoute.routes.length) {
-      setTitle(
-        currentRoute.routes.find(
-          route => route.path === window.location.pathname
-        ).name
+      const route = currentRoute.routes.find(
+        route => route.path === window.location.pathname
       );
+      if (route) {
+        setTitle(route.name);
+      }
     } else {
       setTitle(currentRoute.name);
     }

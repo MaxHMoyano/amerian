@@ -1,27 +1,15 @@
 import React, { Fragment, useState } from "react";
 import { Table, Form, Badge, Image } from "react-bootstrap";
-import Select, { components } from "react-select";
+import Select from "react-select";
 import StarRatings from "react-star-ratings";
-import Checkbox from "react-simple-checkbox";
 import StaffModal from "./StaffModal";
+import { customValueContainer } from "../../../helpers/utilities";
+import { useHistory, useLocation } from "react-router-dom";
 
 const Staff = () => {
-  const customValueContainer = ({ children, getValue, ...props }) => {
-    const length = getValue().length;
-    return (
-      <components.ValueContainer {...props}>
-        <components.Placeholder {...props} isFocused={props.isFocused}>
-          {props.selectProps.placeholder}
-        </components.Placeholder>
-        {length !== props.options.length
-          ? length
-            ? `${length} Seleccion${length !== 1 ? "es" : ""}`
-            : ""
-          : "Todos"}
-        {React.cloneElement(children[1])}
-      </components.ValueContainer>
-    );
-  };
+  const history = useHistory();
+  const location = useLocation();
+  console.log(location);
 
   const [hotels] = useState([
     { value: "1", label: "Hotel 1" },
@@ -85,12 +73,9 @@ const Staff = () => {
     }
   };
 
-  const selectAll = isChecked => {
-    console.log(isChecked);
-  };
-
   return (
     <Fragment>
+
       <StaffModal onClose={() => setshowModal(false)} show={showModal} />
       <div className="d-flex mb-4 align-items-center w-75">
         <button
@@ -100,9 +85,7 @@ const Staff = () => {
         >
           Agregar Staff
         </button>
-        <Form.Group controlId="formBasicEmail" className="mr-3">
-          <Form.Control type="text" placeholder="Buscar" />
-        </Form.Group>
+        <Form.Control className="w-25" type="text" placeholder="Buscar" />
         <Select
           className="react_select_container"
           classNamePrefix="react_select"
@@ -128,12 +111,9 @@ const Staff = () => {
         ></Select>
         <button className="btn btn-link">Más filtros...</button>
       </div>
-      <Table striped hover>
+      <Table>
         <thead>
           <tr>
-            <th width="2%">
-              <Checkbox color="#888" size="2" borderThickness="2" />
-            </th>
             <th>Nombre</th>
             <th>Posición</th>
             <th>Ingreso</th>
@@ -146,16 +126,11 @@ const Staff = () => {
         </thead>
         <tbody>
           {staff.map(e => (
-            <tr key={e.id}>
-              <td>
-                <Checkbox
-                  color="#888"
-                  size="2"
-                  borderThickness="2"
-                  onChange={selectAll}
-                  id={e.id}
-                />
-              </td>
+            <tr
+              onClick={() => history.push(`${location.pathname}/${e.id}`)}
+              className="table_link"
+              key={e.id}
+            >
               <td>
                 <div className="d-flex align-items-center">
                   <Image

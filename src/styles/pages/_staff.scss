@@ -1,0 +1,29 @@
+.staff_detail_container {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-areas: 'general summary' 'work summary' 'contact summary' 'address summary';
+  >* {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: .5px solid $light;
+  }
+  .general_info {
+    grid-area: general;
+  }
+  .work_info {
+    grid-area: work;
+  }
+  .contact_info {
+    grid-area: contact;
+  }
+  .address {
+    grid-area: address;
+  }
+  .summary {
+    padding: 2rem;
+    height: 550px;
+    box-shadow: 0 6px 16px $gray-300;
+    grid-area: summary;
+  }
+}
