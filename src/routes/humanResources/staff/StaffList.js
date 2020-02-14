@@ -9,7 +9,6 @@ import { useHistory, useLocation } from "react-router-dom";
 const Staff = () => {
   const history = useHistory();
   const location = useLocation();
-  console.log(location);
 
   const [hotels] = useState([
     { value: "1", label: "Hotel 1" },

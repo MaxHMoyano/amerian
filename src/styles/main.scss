@@ -1,7 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
-
 @import "./theme";
 @import "./utilities";
 @import "./login";
 @import "./layout";
-@import "./pages/staff"
+
+@import "./components/components.scss";
+@import "./pages/pages.scss";

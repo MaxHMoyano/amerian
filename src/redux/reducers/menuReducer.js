@@ -5,12 +5,14 @@ const initialState = {
     {
       name: "Hoteles",
       icon: "hotel",
-      path: "/hotels"
+      path: "/hotels",
+      primary: true,
     },
     {
       name: "Recursos Humanos",
       icon: "users",
       path: "/humanResources",
+      primary: true,
       routes: [
         {
           name: "Staff",
@@ -26,21 +28,26 @@ const initialState = {
       name: "Comercial",
       icon: "hands-helping",
       path: "/comercial",
+      primary: true,
       routes: [
         {
           name: "Tarifas",
           path: "/comercial/tariffs"
         },
         {
-          name: "Canales",
-          path: "/comercial/channels"
-        }
+          name: "Solicitudes",
+          path: "/comercial/petitions"
+        },
+        {
+          name: "Clientes Convenio",
+          path: "/comercial/agreements"
+        },
       ]
     },
     {
       name: "Agregar nuevo",
       icon: "plus",
-      path: "/create-menu-item"
+      path: "/create-menu-item",
     },
     {
       name: "Notificaciones",

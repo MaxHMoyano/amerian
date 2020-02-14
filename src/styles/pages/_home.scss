@@ -1,0 +1,13 @@
+.home_container {
+  height: 100%;
+  background: url('../../assets/bg-compania@2x.png') no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  img {
+    border: 6px solid $gray-600;
+    border-radius: 50%;
+  }
+}

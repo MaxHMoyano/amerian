@@ -25,14 +25,14 @@ const NavBar = () => {
   return (
     <div className="main_navbar">
       <div className="user">
-        {currentRoute.name === "home" ? (
+        {(currentRoute.name === "home" || !currentRoute.name) ? (
           <Fragment>
             <p className="m-0">Bienvenida</p>
             <h2 className="m-0 text-muted font-weight-bold">Agustina</h2>
           </Fragment>
         ) : (
-          <h3 className="m-0 text-muted font-weight-bold">{title}</h3>
-        )}
+            <h3 className="m-0 text-muted font-weight-bold">{title}</h3>
+          )}
       </div>
       <div className="toolbar">
         <div className="search px-2">

@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useLocation } from "react-router-dom";
 import Home from "../../routes/home/Home";
 
 // Hotels components
@@ -8,18 +8,25 @@ import Hotels from '../../routes/hotels/Hotels';
 // Human resources components
 
 import HumanResources from "../../routes/humanResources/HumanResources";
-import StaffList from "../../routes/humanResources/Staff/StaffList";
-import StaffDetail from '../../routes/humanResources/Staff/StaffDetail';
-import PositionsList from "../../routes/humanResources/Positions/PositionsList";
+import StaffList from "../../routes/humanResources/staff/StaffList";
+import StaffDetail from '../../routes/humanResources/staff/StaffDetail';
+import PositionsList from "../../routes/humanResources/positions/PositionsList";
 
 // Comercial components
 import Comercial from "../../routes/comercial/Comercial";
-import Tariffs from "../../routes/comercial/Tariffs";
-import Channels from "../../routes/comercial/Channels";
+import Tariffs from "../../routes/comercial/tariffs/Tariffs";
+import Petitions from "../../routes/comercial/petitions/Petitions";
+import Agreements from '../../routes/comercial/agreements/Agreements';
 
 const MainContent = () => {
+
+  const location = useLocation();
+  const noPaddingHomeStyle = {
+    padding: "0"
+  };
+
   return (
-    <div className="main_content">
+    <div className="main_content" style={location.pathname === "/home" ? noPaddingHomeStyle : {}}>
       <Switch>
         <Route exact path={["/home", "/"]} component={Home}></Route>
         {/* Hotels routes */}
@@ -34,7 +41,8 @@ const MainContent = () => {
         {/* Comercial routes */}
         <Route exact path="/comercial/" component={Comercial}></Route>
         <Route exact path="/comercial/tariffs/" component={Tariffs}></Route>
-        <Route exact path="/comercial/channels/" component={Channels}></Route>
+        <Route exact path="/comercial/petitions/" component={Petitions}></Route>
+        <Route exact path="/comercial/agreements/" component={Agreements}></Route>
       </Switch>
     </div>
   );

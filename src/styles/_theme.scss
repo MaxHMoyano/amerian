@@ -3,13 +3,8 @@ $font-family-sans-serif: "Open Sans", sans-serif;
 $font-size-base: .85rem;
 $body-bg: #fff;
 
-// Colors
-$primary: #b20022;
-$secondary: #8c7853;
-$info: #5bc0de;
-$success: #5cb85c;
-$warning: #f0ad4e;
-$danger: #d9534f;
+@import "./colors";
+
 
 // $gray-100: #f8f9fa !default;
 // $gray-200: #f6f6f4 !default;
@@ -78,4 +73,21 @@ table th {
       }
     }
   }
+}
+
+
+
+// Colors
+
+.bg-info {
+  background-color: lighten($color: $info, $amount: 5%) !important;
+}
+.bg-warning {
+  background-color: lighten($color: $warning, $amount: 5%) !important;
+}
+.bg-danger {
+  background-color: lighten($color: $danger, $amount: 5%) !important;
+}
+.bg-success {
+  background-color: lighten($color: $success, $amount: 5%) !important;
 }

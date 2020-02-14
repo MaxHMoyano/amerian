@@ -1,10 +1,19 @@
 import React from "react";
 import { Button, Image, Row, Col, Form } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 
 
 const StaffDetail = () => {
+  const history = useHistory();
+
+
   return (
-    <div className="d-flex flex-column px-5">
+    <div className="d-flex flex-column">
+      <div className="d-flex align-items-center mb-3">
+        <Button onClick={() => history.goBack()} className="mr-2" variant="light"><i className="fas fa-chevron-left"></i></Button>
+        <h2 className="mb-0">Nombre del staff</h2>
+
+      </div>
       <div className="d-flex mb-4">
         <Button variant="secondary">Editar Perfil</Button>
 
