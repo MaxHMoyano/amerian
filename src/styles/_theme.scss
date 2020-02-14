@@ -6,15 +6,6 @@ $body-bg: #fff;
 @import "./colors";
 
 
-// $gray-100: #f8f9fa !default;
-// $gray-200: #f6f6f4 !default;
-// $gray-300: #ddd !default;
-// $gray-400: #ccc !default;
-// $gray-500: #adb5bd !default;
-// $gray-600: #6c757d !default;
-// $gray-700: #495057 !default;
-// $gray-800: #343a40 !default;
-
 @import "~bootstrap/scss/bootstrap.scss";
 
 .app {
@@ -60,7 +51,7 @@ table th {
 
 // React select
 .react_select_container {
-  min-width: 10rem;
+  min-width: 15rem;
   max-width: 20rem;
   margin-left: 0.25rem;
   margin-right: 0.25rem;

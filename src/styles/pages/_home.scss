@@ -1,6 +1,8 @@
 .home_container {
   height: 100%;
-  background: url('../../assets/bg-compania@2x.png') no-repeat;
+  background: linear-gradient(to right, $dark, $gray-700);
+  // background: url('../../assets/bg-compania@2x.png') no-repeat;
+  // background: $dark;
   background-size: cover;
   display: flex;
   flex-flow: column;

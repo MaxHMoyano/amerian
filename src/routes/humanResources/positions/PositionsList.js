@@ -70,7 +70,7 @@ const Positions = () => {
               </td>
               <td> PH[Llaves de seguridad]</td>
               <td>
-                <Badge variant="success">{e.status}</Badge>
+                <Badge className="p-2" variant="success">{e.status}</Badge>
               </td>
               <td>
                 <i className="fas fa-ellipsis-h"></i>

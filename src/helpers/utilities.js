@@ -3,16 +3,19 @@ import { components } from "react-select";
 
 export const customValueContainer = ({ children, getValue, ...props }) => {
   const length = getValue().length;
+  console.log(props);
   return (
     <components.ValueContainer {...props}>
       <components.Placeholder {...props} isFocused={props.isFocused}>
         {props.selectProps.placeholder}
       </components.Placeholder>
-      {length !== props.options.length
-        ? length
-          ? `${length} Seleccion${length !== 1 ? "es" : ""}`
-          : ""
-        : "Todos"}
+      {
+        length === 1 ? props.selectProps.value[0].label : length !== props.options.length
+          ? length
+            ? `${length} Selecciones`
+            : ""
+          : "Todos"
+      }
       {React.cloneElement(children[1])}
     </components.ValueContainer>
   );

@@ -15,7 +15,7 @@ import PositionsList from "../../routes/humanResources/positions/PositionsList";
 // Comercial components
 import Comercial from "../../routes/comercial/Comercial";
 import Tariffs from "../../routes/comercial/tariffs/Tariffs";
-import Petitions from "../../routes/comercial/petitions/Petitions";
+import PetitionsList from "../../routes/comercial/petitions/PetitionsList";
 import Agreements from '../../routes/comercial/agreements/Agreements';
 
 const MainContent = () => {
@@ -41,7 +41,7 @@ const MainContent = () => {
         {/* Comercial routes */}
         <Route exact path="/comercial/" component={Comercial}></Route>
         <Route exact path="/comercial/tariffs/" component={Tariffs}></Route>
-        <Route exact path="/comercial/petitions/" component={Petitions}></Route>
+        <Route exact path="/comercial/petitions/" component={PetitionsList}></Route>
         <Route exact path="/comercial/agreements/" component={Agreements}></Route>
       </Switch>
     </div>
