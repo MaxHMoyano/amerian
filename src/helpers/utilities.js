@@ -3,7 +3,6 @@ import { components } from "react-select";
 
 export const customValueContainer = ({ children, getValue, ...props }) => {
   const length = getValue().length;
-  console.log(props);
   return (
     <components.ValueContainer {...props}>
       <components.Placeholder {...props} isFocused={props.isFocused}>

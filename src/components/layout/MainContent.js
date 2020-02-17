@@ -14,9 +14,9 @@ import PositionsList from "../../routes/humanResources/positions/PositionsList";
 
 // Comercial components
 import Comercial from "../../routes/comercial/Comercial";
-import Tariffs from "../../routes/comercial/tariffs/Tariffs";
+import Tariffs from "../../routes/comercial/tariffs/TariffsList";
 import PetitionsList from "../../routes/comercial/petitions/PetitionsList";
-import Agreements from '../../routes/comercial/agreements/Agreements';
+import Agreements from '../../routes/comercial/agreements/AgreementsList';
 
 const MainContent = () => {
 

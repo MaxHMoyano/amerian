@@ -27,8 +27,8 @@ const Positions = () => {
 
   return (
     <Fragment>
-      <div className="d-flex mb-4 align-items-center w-75">
-        <button type="button" className="btn btn-secondary is-rounded mr-3">
+      <div className="d-flex mb-4 align-items-center">
+        <button type="button" className="btn btn-secondary is_rounded mr-3">
           Agregar Posición
         </button>
         <Form.Control className="w-25" type="text" placeholder="Buscar" />
@@ -70,7 +70,9 @@ const Positions = () => {
               </td>
               <td> PH[Llaves de seguridad]</td>
               <td>
-                <Badge className="p-2" variant="success">{e.status}</Badge>
+                <Badge className="p-2" variant="success">
+                  {e.status}
+                </Badge>
               </td>
               <td>
                 <i className="fas fa-ellipsis-h"></i>

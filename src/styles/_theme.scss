@@ -1,10 +1,9 @@
 // Overrides to bootstrap default options
 $font-family-sans-serif: "Open Sans", sans-serif;
-$font-size-base: .85rem;
+$font-size-base: 0.85rem;
 $body-bg: #fff;
 
 @import "./colors";
-
 
 @import "~bootstrap/scss/bootstrap.scss";
 
@@ -25,7 +24,7 @@ table th {
 }
 
 // Buttons
-.btn.is-rounded {
+.btn.is_rounded {
   border-radius: 16px;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
@@ -65,8 +64,6 @@ table th {
     }
   }
 }
-
-
 
 // Colors
 

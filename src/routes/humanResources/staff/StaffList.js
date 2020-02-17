@@ -74,13 +74,12 @@ const Staff = () => {
 
   return (
     <Fragment>
-
       <StaffModal onClose={() => setshowModal(false)} show={showModal} />
-      <div className="d-flex mb-4 align-items-center w-75">
+      <div className="d-flex mb-4 align-items-center">
         <button
           type="button"
           onClick={() => setshowModal(true)}
-          className="btn btn-secondary is-rounded mr-3"
+          className="btn btn-secondary is_rounded mr-3"
         >
           Agregar Staff
         </button>
