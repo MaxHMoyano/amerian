@@ -5,13 +5,48 @@
   }
 }
 
-
-
-
 .section_title {
   font-size: 1.15rem;
   border-left: 4px solid $primary;
-  margin-left: -1.25rem;
+  // margin-left: -1.25rem;
   padding-left: 1.25rem;
   margin-bottom: 1rem;
+}
+
+.icon_input {
+  position: relative;
+  i {
+    position: absolute;
+    right: .75rem;
+    top: .5rem;
+    font-size: 1.15rem;
+    color: $gray-400;
+  }
+  &:focus {
+    i {
+      color: $primary;
+    }
+  }
+}
+
+.cursor_pointer {
+  cursor: pointer;
+}
+
+.w-15 {
+  width: 15% !important;
+}
+
+.form_submit_panel {
+  position: fixed;
+    bottom: 0;
+    // border-top: $gray-600 1px solid;
+    box-shadow: 8px -8px 24px $gray-100;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2rem;
+    background: $white;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }

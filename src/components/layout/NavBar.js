@@ -35,8 +35,9 @@ const NavBar = () => {
           )}
       </div>
       <div className="toolbar">
-        <div className="search px-2">
+        <div className="icon_input search mx-2">
           <Form.Control type="text" placeholder="Buscar" />
+          <i className="fas fa-search"></i>
         </div>
         <div className="actions px-2">
           <Button variant="light" className="mx-1">

@@ -16,6 +16,7 @@ import PositionsList from "../../routes/humanResources/positions/PositionsList";
 import Comercial from "../../routes/comercial/Comercial";
 import Tariffs from "../../routes/comercial/tariffs/TariffsList";
 import PetitionsList from "../../routes/comercial/petitions/PetitionsList";
+import NewPetition from '../../routes/comercial/petitions/NewPetition';
 import Agreements from '../../routes/comercial/agreements/AgreementsList';
 
 const MainContent = () => {
@@ -28,7 +29,6 @@ const MainContent = () => {
   return (
     <div className="main_content" style={location.pathname === "/home" ? noPaddingHomeStyle : {}}>
       <Switch>
-        <Route exact path={["/home", "/"]} component={Home}></Route>
         {/* Hotels routes */}
         <Route path="/hotels/" component={Hotels}></Route>
 
@@ -42,7 +42,9 @@ const MainContent = () => {
         <Route exact path="/comercial/" component={Comercial}></Route>
         <Route exact path="/comercial/tariffs/" component={Tariffs}></Route>
         <Route exact path="/comercial/petitions/" component={PetitionsList}></Route>
+        <Route exact path="/comercial/petitions/:new" component={NewPetition}></Route>
         <Route exact path="/comercial/agreements/" component={Agreements}></Route>
+        <Route path={["/home", "/"]} component={Home}></Route>
       </Switch>
     </div>
   );

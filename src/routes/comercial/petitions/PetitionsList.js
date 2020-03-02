@@ -1,11 +1,22 @@
 import React, { useState, Fragment } from "react";
 import InfoCard from "../../../components/shared/InfoCard";
 import Select from "react-select";
-import { Form, Button, Table, Badge } from "react-bootstrap";
+import { Form, Button, Table, Badge, Dropdown } from "react-bootstrap";
 import { customValueContainer } from "../../../helpers/utilities";
 import { useSelector } from "react-redux";
+import { useLocation, useHistory } from 'react-router-dom';
 
 const PetitionsList = () => {
+
+  const location = useLocation();
+  const history = useHistory();
+
+  const [tariffsTypes] = useState([
+    { name: "Tarifa General", value: 1, path: "new-petition?type=general" },
+    { name: "Fechas Especiales", value: 2, path: "new-petition?type=special" },
+    { name: "Promociones", value: 3, path: "new-petition?type=promotion" },
+  ]);
+
   const [summary] = useState([
     {
       name: "Nuevas",
@@ -41,7 +52,7 @@ const PetitionsList = () => {
 
   const hotels = useSelector(({ hotels }) => hotels.list);
 
-  const [petitions, setPetitions] = useState([
+  const [petitions] = useState([
     {
       id: 1,
       name: "Nombre de la tarifa",
@@ -68,7 +79,7 @@ const PetitionsList = () => {
 
   return (
     <Fragment>
-      <div className="summary_container mb-3" style={gridSummary}>
+      <div className="summary_container mb-4" style={gridSummary}>
         {summary.map(card => (
           <InfoCard
             key={card.code}
@@ -79,10 +90,20 @@ const PetitionsList = () => {
           />
         ))}
       </div>
+      {/* <hr className="text-muted" /> */}
       <div className="d-flex mb-4 align-items-center">
-        <Button variant="secondary" className="is_rounded mr-3">
-          Agregar Staff
-        </Button>
+        <Dropdown>
+          <Dropdown.Toggle className="is_rounded mr-2" variant="secondary" id="dropdown-basic">
+            Agregar Tarifa
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {
+              tariffsTypes.map((e) => (
+                <Dropdown.Item key={e.value} onClick={() => history.push(`${location.pathname}/${e.path}`)}>{e.name}</Dropdown.Item>
+              ))
+            }
+          </Dropdown.Menu>
+        </Dropdown>
         <Button variant="outline-secondary" className="is_rounded mr-3">
           Actualizar convenios
         </Button>

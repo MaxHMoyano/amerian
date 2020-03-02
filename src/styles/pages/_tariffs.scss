@@ -1,0 +1,8 @@
+.petitions_badge {
+  cursor: pointer;
+  transition: all .3s ease;
+  &:hover {
+    transform: translate3d(0, 2px, 0);
+    opacity: .8;
+  }
+}

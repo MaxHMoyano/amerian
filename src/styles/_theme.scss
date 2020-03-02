@@ -2,9 +2,12 @@
 $font-family-sans-serif: "Open Sans", sans-serif;
 $font-size-base: 0.85rem;
 $body-bg: #fff;
+$border-radius: 8px;
+$enable-responsive-font-sizes: true;
+$enable-gradients: true;
 
+// Theme colors
 @import "./colors";
-
 @import "~bootstrap/scss/bootstrap.scss";
 
 .app {

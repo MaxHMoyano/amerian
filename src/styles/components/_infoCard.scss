@@ -4,7 +4,7 @@
   box-shadow: 0 0 16px $gray-100;
   transition: all .3s ease;
   &:hover {
-    transform: translate3d(0, 3px, 0);
+    transform: translate3d(0, -3px, 0);
     opacity: .9;
   }
   .info_card_header {

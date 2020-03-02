@@ -8,11 +8,11 @@ export const userActions = {
   getAll
 };
 
-function login(username, password) {
+function login(email, password) {
   return dispatch => {
-    dispatch(request({ username }));
+    dispatch(request({ email }));
 
-    userService.login(username, password).then(
+    userService.login(email, password).then(
       user => {
         dispatch(success(user));
         history.push("/");

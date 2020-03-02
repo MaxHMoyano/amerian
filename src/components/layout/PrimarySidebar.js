@@ -3,7 +3,7 @@ import logo from "../../assets/logo.png";
 import { Image } from "react-bootstrap";
 import { NavLink, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { menuActions } from "../../redux/actions";
+import { menuActions, userActions } from "../../redux/actions";
 
 const PrimarySidebar = () => {
   const menu = useSelector(({ menu }) => menu.items);
@@ -35,6 +35,16 @@ const PrimarySidebar = () => {
             </NavLink>
           </div>
         ))}
+        <div className="menu_item">
+          <NavLink
+            to="/home"
+            className="menu_link"
+            onClick={() => dispatch(userActions.logout())}
+          >
+            <i className="fas fa-sign-out-alt"></i>
+          </NavLink>
+
+        </div>
       </div>
     </div>
   );
