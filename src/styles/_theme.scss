@@ -2,7 +2,7 @@
 $font-family-sans-serif: "Open Sans", sans-serif;
 $font-size-base: 0.85rem;
 $body-bg: #fff;
-$border-radius: 8px;
+// $border-radius: 8px;
 $enable-responsive-font-sizes: true;
 $enable-gradients: true;
 
@@ -53,12 +53,10 @@ table th {
 
 // React select
 .react_select_container {
-  min-width: 15rem;
-  max-width: 20rem;
   margin-left: 0.25rem;
   margin-right: 0.25rem;
   .react_select__control {
-    border-radius: 8px;
+    border-radius: 0.25rem;
     .react_select__value-container {
       .react_select__placeholder {
         position: static;

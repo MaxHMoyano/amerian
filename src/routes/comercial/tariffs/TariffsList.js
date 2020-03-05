@@ -1,12 +1,19 @@
 import React, { Fragment, useState } from "react";
-import { Table, Badge, Form, Button } from 'react-bootstrap';
+import { Table, Badge, Form, Button, Dropdown } from 'react-bootstrap';
 import { customValueContainer } from '../../../helpers/utilities';
 import Select from 'react-select';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const Tariffs = () => {
 
   const history = useHistory();
+  const location = useLocation();
+
+  const [tariffsTypes] = useState([
+    { name: "Tarifa General", value: 1, path: "/comercial/petitions/new-petition?type=general" },
+    { name: "Fechas Especiales", value: 2, path: "/comercial/petitions/new-petition?type=special" },
+    { name: "Promociones", value: 3, path: "/comercial/petitions/new-petition?type=promotion" },
+  ]);
 
   const [tariffs] = useState([
     {
@@ -38,6 +45,18 @@ const Tariffs = () => {
 
   return <Fragment>
     <div className="d-flex align-items-center mb-2">
+      <Dropdown>
+        <Dropdown.Toggle className="is_rounded mr-2" variant="secondary" id="dropdown-basic">
+          Agregar Tarifa
+          </Dropdown.Toggle>
+        <Dropdown.Menu>
+          {
+            tariffsTypes.map((e) => (
+              <Dropdown.Item key={e.value} onClick={() => history.push(`${e.path}`)}>{e.name}</Dropdown.Item>
+            ))
+          }
+        </Dropdown.Menu>
+      </Dropdown>
       <div className="icon_input w-15">
         <Form.Control className="" type="text" placeholder="Buscar..." />
         <i className="fas fa-search"></i>
