@@ -4,12 +4,17 @@ import { Form, Button, Table, InputGroup, Row, Col } from 'react-bootstrap';
 import Select from 'react-select';
 import { useState } from 'react';
 import { customSelectTheme } from '../../../helpers/utilities';
+import { useDispatch, useSelector } from 'react-redux';
+import { hotelsActions } from '../../../redux/actions/hotelsActions';
+import { useEffect } from 'react';
+
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 };
 
 const NewPetition = () => {
+  const dispatch = useDispatch();
   const query = useQuery();
   const history = useHistory();
 
@@ -24,8 +29,12 @@ const NewPetition = () => {
       default:
         break;
     }
-
   };
+
+  let hotels = useSelector(({ hotels }) => hotels.list);
+  useEffect(() => {
+    dispatch(hotelsActions.getHotels());
+  });
 
   const [corporationExceptions, setCorporationExceptions] = useState(["21", "22"]);
   const [operatorExceptions, setOperatorExceptions] = useState(["21", "22"]);
@@ -45,7 +54,7 @@ const NewPetition = () => {
 
   return (
     <Fragment>
-      <Form className="w-50">
+      <Form style={{ width: "60%" }}>
         <div className="d-flex align-items-center mb-5">
           <Button onClick={() => history.goBack()} variant="light"><i className="fas fa-chevron-left"></i></Button>
           <h3 className="font-weight-bold text-primary mb-0 ml-2">{getTitle()}</h3>
@@ -55,7 +64,7 @@ const NewPetition = () => {
           <Col md={6}>
             <Form.Group>
               <Form.Label>Nombre Hotel</Form.Label>
-              <Select className="react_select_container" classNamePrefix="react_select" />
+              <Select options={hotels.map((hotel) => ({ label: hotel.name, value: hotel.id }))} className="react_select_container" classNamePrefix="react_select" />
             </Form.Group>
           </Col>
         </Row>
@@ -212,6 +221,13 @@ const NewPetition = () => {
             </Row>
           ))
         }
+        <hr />
+        <Row>
+          <Col md={{ span: 4, offset: 8 }} style={{ position: "absolute", bottom: "0" }} className="text-right">
+            <Button variant="light" className="mx-2">Cancelar</Button>
+            <Button variant="secondary" className="mx-2">Guardar</Button>
+          </Col>
+        </Row>
 
 
 
