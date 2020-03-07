@@ -50,3 +50,12 @@
     justify-content: flex-end;
     align-items: center;
 }
+
+.icon-button {
+  cursor: pointer;
+  transition: all .3s ease;
+  &:hover {
+    color: $primary;
+    opacity: .9;
+  }
+}

@@ -19,3 +19,5 @@ export const customValueContainer = ({ children, getValue, ...props }) => {
     </components.ValueContainer>
   );
 };
+
+export const customSelectTheme = (theme) => ({ ...theme, colors: { ...theme.colors, primary: "#b20022" } });
