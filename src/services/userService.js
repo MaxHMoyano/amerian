@@ -22,7 +22,7 @@ function login(email, password) {
         access_token: tokens.access,
         refresh_token: tokens.refresh
       };
-      localStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("user", JSON.stringify(user));
 
       return user;
     });
@@ -30,7 +30,7 @@ function login(email, password) {
 
 function logout() {
   // remove user from local storage to log user out
-  localStorage.removeItem("user");
+  sessionStorage.removeItem("user");
 }
 
 function getAll() {

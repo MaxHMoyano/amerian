@@ -14,7 +14,7 @@ function login(email, password) {
 
     userService.login(email, password).then(
       user => {
-        dispatch(success(user));
+        dispatch(welcomePage(user));
         history.push("/");
       },
       error => {
@@ -22,6 +22,15 @@ function login(email, password) {
       }
     );
   };
+
+  function welcomePage(user) {
+    return dispatch => {
+      dispatch({ type: userConstants.LOGIN_WELCOME, user });
+      setTimeout(() => {
+        dispatch(success(user));
+      }, 2000);
+    };
+  }
 
   function request(user) {
     return { type: userConstants.LOGIN_REQUEST, user };

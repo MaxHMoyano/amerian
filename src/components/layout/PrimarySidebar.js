@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../../assets/logo.png";
-import { Image } from "react-bootstrap";
+import { Image, Button } from "react-bootstrap";
 import { NavLink, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { menuActions, userActions } from "../../redux/actions";
@@ -36,13 +36,13 @@ const PrimarySidebar = () => {
           </div>
         ))}
         <div className="menu_item">
-          <NavLink
+          <Button variant="link"
             to="/home"
             className="menu_link"
             onClick={() => dispatch(userActions.logout())}
           >
             <i className="fas fa-sign-out-alt"></i>
-          </NavLink>
+          </Button>
 
         </div>
       </div>

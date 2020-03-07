@@ -31,11 +31,11 @@ const initialState = {
       primary: true,
       routes: [
         {
-          name: "Tarifas",
+          name: "Tarifas Vigentes",
           path: "/comercial/tariffs"
         },
         {
-          name: "Solicitudes",
+          name: "Actualizaciones",
           path: "/comercial/petitions"
         },
         {

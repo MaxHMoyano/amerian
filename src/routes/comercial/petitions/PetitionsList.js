@@ -94,7 +94,7 @@ const PetitionsList = () => {
       <div className="d-flex mb-4 align-items-center">
         <Dropdown>
           <Dropdown.Toggle className="is_rounded mr-2" variant="secondary" id="dropdown-basic">
-            Agregar Tarifa
+            Nueva Tarifa
           </Dropdown.Toggle>
           <Dropdown.Menu>
             {

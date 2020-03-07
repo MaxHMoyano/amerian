@@ -26,8 +26,9 @@ const MainContent = () => {
     padding: "0"
   };
 
+
   return (
-    <div className="main_content" style={location.pathname === "/home" ? noPaddingHomeStyle : {}}>
+    <div className="main_content" style={location.pathname === "/home" || location.pathname === "/" ? noPaddingHomeStyle : {}}>
       <Switch>
         {/* Hotels routes */}
         <Route path="/hotels/" component={Hotels}></Route>

@@ -7,18 +7,18 @@ import SecondarySidebar from "./SecondarySidebar";
 import MainContent from "./MainContent";
 
 const MainContainer = () => {
-  const loggingIn = useSelector(({ auth }) => auth.loggingIn);
+  const welcomePage = useSelector(({ auth }) => auth.welcomePage);
 
-  return loggingIn ? (
+  return welcomePage ? (
     <WelcomePage />
   ) : (
-    <div className="main_container">
-      <NavBar />
-      <PrimarySidebar />
-      <SecondarySidebar />
-      <MainContent />
-    </div>
-  );
+      <div className="main_container">
+        <NavBar />
+        <PrimarySidebar />
+        <SecondarySidebar />
+        <MainContent />
+      </div>
+    );
 };
 
 export default MainContainer;
