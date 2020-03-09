@@ -1,5 +1,5 @@
 import { hotelsConstants } from "../constants";
-import { hotelsService } from '../../services/hotels.service';
+import { hotelsService } from '../../services/';
 
 export const hotelsActions = {
   getHotels

@@ -176,12 +176,12 @@ const NewPetition = () => {
         {
           corporationExceptions.map((exc, idx) => (
             <Row className="mb-2" key={idx}>
-              <Col md={9}>
+              <Col md={8}>
                 <Select theme={customSelectTheme}></Select>
               </Col>
-              <Col md={3} className="d-flex align-items-center justify-content-end">
-                <i className="fas fa-save mr-4 icon-button"></i>
-                <Form.Control type="text" onChange={(e) => changeCorpExceptionValue(e, idx)} value={exc} />
+              <Col md={4} className="d-flex align-items-center justify-content-end">
+                <i className="fas fa-save mx-3 icon-button"></i>
+                <Form.Control className="flex-1" type="text" onChange={(e) => changeCorpExceptionValue(e, idx)} value={exc} />
                 <span className="ml-1">%</span>
                 <i className="fas fa-trash mx-3 icon-button"></i>
                 <Button onClick={() => setCorporationExceptions([...corporationExceptions, { value: exc.value }])} variant="outline-info mx-1">

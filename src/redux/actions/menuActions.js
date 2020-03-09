@@ -1,7 +1,7 @@
 import { menuConstants } from "../constants";
 
 export const menuActions = {
-  setActiveMenu
+  setActiveMenu,
 };
 
 function setActiveMenu(item) {

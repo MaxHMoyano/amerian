@@ -1,10 +1,12 @@
 import { combineReducers } from "redux";
 import authReducer from "./authReducer";
 import menuReducer from "./menuReducer";
-import hotelReducer from "./hotelsReducer";
+import hotelsReducer from "./hotelsReducer";
+import clientsReducer from "./clientsReducer";
 
 export default combineReducers({
   auth: authReducer,
   menu: menuReducer,
-  hotels: hotelReducer,
+  hotels: hotelsReducer,
+  clients: clientsReducer,
 });

@@ -1,4 +1,4 @@
-import { userConstants } from "../constants";
+import { userConstants, menuConstants } from "../constants";
 import { userService } from "../../services";
 import { history } from "../../helpers/history";
 
@@ -15,7 +15,6 @@ function login(email, password) {
     userService.login(email, password).then(
       user => {
         dispatch(welcomePage(user));
-        history.push("/");
       },
       error => {
         dispatch(failure(error));
@@ -27,7 +26,9 @@ function login(email, password) {
     return dispatch => {
       dispatch({ type: userConstants.LOGIN_WELCOME, user });
       setTimeout(() => {
+        history.push("/home");
         dispatch(success(user));
+        dispatch({ type: menuConstants.SET_ACTIVE_MENU, payload: { name: "home" } });
       }, 2000);
     };
   }
@@ -45,6 +46,7 @@ function login(email, password) {
 
 function logout() {
   userService.logout();
+  history.push("/login");
   return { type: userConstants.LOGOUT };
 }
 
