@@ -4,9 +4,13 @@ let INITIAL_STATE = {
   clients: [],
 };
 
-export default (state = INITIAL_STATE, action) => {
-  switch (action.type) {
+export default (state = INITIAL_STATE, { type, payload }) => {
+  switch (type) {
     case clientsConstants.GET_CLIENTS:
+      return {
+        ...state,
+        clients: payload
+      };
     default:
       return state;
   }
