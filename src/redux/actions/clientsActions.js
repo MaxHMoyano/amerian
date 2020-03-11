@@ -2,15 +2,24 @@ import { clientsConstants } from "../constants";
 import { clientsService } from '../../services';
 
 export const clientsActions = {
-  getClients
+  fetchClients
 };
 
-function getClients() {
-  return async (dispatch) => {
-    let clients = await clientsService.getClients();
+function fetchClients(type) {
+  return (dispatch) => {
     dispatch({
-      type: clientsConstants.GET_CLIENTS,
-      payload: clients,
+      type: clientsConstants.FETCH_CLIENTS_REQUEST,
+    });
+    clientsService.fetchClients(type).then((clients) => {
+      dispatch({
+        type: clientsConstants.FETCH_CLIENTS_SUCCESS,
+        payload: clients,
+      });
+    }, (error) => {
+      dispatch({
+        type: clientsConstants.FETCH_CLIENTS_ERROR,
+        error: error,
+      });
     });
   };
 }

@@ -22,13 +22,15 @@ const NavBar = () => {
     }
   }, [currentRoute.name, currentRoute.routes, location]);
 
+  const userName = useSelector(({ users }) => users.current ? users.current.first_name : "");
+
   return (
     <div className="main_navbar">
       <div className="user">
         {(currentRoute.name === "home" || !currentRoute.name) ? (
           <Fragment>
-            <p className="m-0">Bienvenida</p>
-            <h2 className="m-0 text-muted font-weight-bold">Agustina</h2>
+            <p className="m-0">Bienvenido</p>
+            <h2 className="m-0 text-muted font-weight-bold">{userName}</h2>
           </Fragment>
         ) : (
             <h3 className="m-0 text-muted font-weight-bold">{title}</h3>

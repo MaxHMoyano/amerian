@@ -50,10 +50,11 @@ table th {
   }
 }
 
+.bg-gray {
+  background: $gray-100;
+}
 // React select
 .react_select_container {
-  margin-left: 0.25rem;
-  margin-right: 0.25rem;
   .react_select__control {
     border-radius: 0.25rem;
     .react_select__value-container {

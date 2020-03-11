@@ -5,7 +5,8 @@ import { history } from "../../helpers/history";
 export const userActions = {
   login,
   logout,
-  getAll
+  getAll,
+  fetchUser
 };
 
 function login(email, password) {
@@ -24,6 +25,7 @@ function login(email, password) {
 
   function welcomePage(user) {
     return dispatch => {
+      dispatch(fetchUser(user.id));
       dispatch({ type: userConstants.LOGIN_WELCOME, user });
       setTimeout(() => {
         history.push("/home");
@@ -42,6 +44,25 @@ function login(email, password) {
   function failure(error) {
     return { type: userConstants.LOGIN_FAILURE, error };
   }
+}
+
+function fetchUser(userId) {
+  return (dispatch) => {
+    dispatch({
+      type: userConstants.GET_USER_REQUEST
+    });
+    userService.fetchUser(userId).then((user) => {
+      dispatch({
+        type: userConstants.GET_USER_SUCCESS,
+        payload: user
+      });
+    }, (error) => {
+      dispatch({
+        type: userConstants.GET_USER_ERROR,
+        error
+      });
+    });
+  };
 }
 
 function logout() {

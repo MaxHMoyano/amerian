@@ -4,10 +4,9 @@ import { Form, Button, Table, InputGroup, Row, Col } from 'react-bootstrap';
 import Select from 'react-select';
 import { useState } from 'react';
 import { customSelectTheme } from '../../../helpers/utilities';
-import { useDispatch, useSelector } from 'react-redux';
-import { hotelsActions } from '../../../redux/actions/hotelsActions';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { hotelsActions, clientsActions, currenciesActions } from '../../../redux/actions/';
 import { useEffect } from 'react';
-
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -31,13 +30,28 @@ const NewPetition = () => {
     }
   };
 
-  let hotels = useSelector(({ hotels }) => hotels.list);
-  useEffect(() => {
-    dispatch(hotelsActions.getHotels());
-  });
+  const [selectedHotel, setSelectedHotel] = useState(null);
 
-  const [corporationExceptions, setCorporationExceptions] = useState(["21", "22"]);
-  const [operatorExceptions, setOperatorExceptions] = useState(["21", "22"]);
+  useEffect(() => {
+    console.log("componentRender");
+    dispatch(hotelsActions.fetchHotels());
+    dispatch(clientsActions.fetchClients());
+    dispatch(currenciesActions.fetchCurrencies());
+  }, []);
+
+  let hotels = useSelector(({ hotels }) => hotels.list);
+  let corporateClients = useSelector(({ clients }) => {
+    const corpoClients = clients.list.filter((client) => client.type === "COR");
+    console.log(corpoClients);
+    return corpoClients;
+  }, shallowEqual);
+  let currencies = useSelector(({ currencies }) => currencies.list);
+
+
+  const [corporationExceptions, setCorporationExceptions] = useState([
+    { value: "" },
+  ]);
+  const [operatorExceptions, setOperatorExceptions] = useState(["21"]);
 
   const [roomsTypes, setRoomsTypes] = useState([
     { id: 1, name: "Standard Doble", priceUsd: 50, priceArs: 3333 },
@@ -54,7 +68,7 @@ const NewPetition = () => {
 
   return (
     <Fragment>
-      <Form style={{ width: "60%" }}>
+      <Form style={{ width: "70%" }}>
         <div className="d-flex align-items-center mb-5">
           <Button onClick={() => history.goBack()} variant="light"><i className="fas fa-chevron-left"></i></Button>
           <h3 className="font-weight-bold text-primary mb-0 ml-2">{getTitle()}</h3>
@@ -64,7 +78,7 @@ const NewPetition = () => {
           <Col md={6}>
             <Form.Group>
               <Form.Label>Nombre Hotel</Form.Label>
-              <Select options={hotels.map((hotel) => ({ label: hotel.name, value: hotel.id }))} className="react_select_container" classNamePrefix="react_select" />
+              <Select onChange={(value) => setSelectedHotel(value)} options={hotels.map((hotel) => ({ label: hotel.name, value: hotel.id }))} className="react_select_container" classNamePrefix="react_select" />
             </Form.Group>
           </Col>
         </Row>
@@ -81,7 +95,7 @@ const NewPetition = () => {
           <Col md={4}>
             <Form.Group>
               <Form.Label>Moneda base</Form.Label>
-              <Select className="react_select_container" classNamePrefix="react_select" />
+              <Select options={currencies.map((currency) => ({ label: currency.name, value: currency.value }))} className="react_select_container" classNamePrefix="react_select" />
             </Form.Group>
 
           </Col>
@@ -96,7 +110,7 @@ const NewPetition = () => {
           <Col>
             <Form.Group>
               <Form.Label>Moneda alternativa</Form.Label>
-              <Select className="react_select_container" classNamePrefix="react_select" />
+              <Select options={currencies.map((currency) => ({ label: currency.name, value: currency.value }))} className="react_select_container" classNamePrefix="react_select" />
             </Form.Group>
           </Col>
           <Col>
@@ -162,72 +176,121 @@ const NewPetition = () => {
           </div>
         </div>
 
-        {/* Corpos */}
-        <Row className="mt-5">
-          <Col md={6}>
-            <span className="section_title">Descuentos Corporativos</span>
-          </Col>
-          <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
-            <Form.Control />
-            <span className="ml-2">%</span>
-          </Col>
-        </Row>
-        <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
-        {
-          corporationExceptions.map((exc, idx) => (
-            <Row className="mb-2" key={idx}>
-              <Col md={8}>
-                <Select theme={customSelectTheme}></Select>
-              </Col>
-              <Col md={4} className="d-flex align-items-center justify-content-end">
-                <i className="fas fa-save mx-3 icon-button"></i>
-                <Form.Control className="flex-1" type="text" onChange={(e) => changeCorpExceptionValue(e, idx)} value={exc} />
-                <span className="ml-1">%</span>
-                <i className="fas fa-trash mx-3 icon-button"></i>
-                <Button onClick={() => setCorporationExceptions([...corporationExceptions, { value: exc.value }])} variant="outline-info mx-1">
-                  <i className="fas fa-plus"></i>
-                </Button>
-              </Col>
-            </Row>
-          ))
-        }
+        <div className="bg-gray p-4 mt-5">
+          {/* Corpos */}
+          <Row>
+            <Col md={6}>
+              <span className="section_title">Descuentos Corporativos</span>
+            </Col>
+            <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
+              <Form.Control />
+              <span className="ml-2">%</span>
+            </Col>
+          </Row>
+          <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
+          {
+            corporationExceptions.map((exc, idx) => (
+              <Row className="mb-2" key={idx}>
+                <Col md={8}>
+                  <Select isMulti options={corporateClients.map((client) => ({ label: client.name, value: client.id }))} theme={customSelectTheme}></Select>
+                </Col>
+                <Col md={4} className="d-flex align-items-center justify-content-end">
+                  <i className="fas fa-save mx-3 icon-button"></i>
+                  <Form.Control className="flex-1" type="text" onChange={(e) => changeCorpExceptionValue(e, idx)} value={exc.value} />
+                  <span className="ml-1">%</span>
+                  <i className="fas fa-trash mx-3 icon-button"></i>
+                  <Button onClick={() => setCorporationExceptions([...corporationExceptions, { value: exc.value }])} variant="outline-info mx-1">
+                    <i className="fas fa-plus"></i>
+                  </Button>
+                </Col>
+              </Row>
+            ))
+          }
+        </div>
 
-        {/* Operadores */}
-        <Row className="mt-5">
-          <Col md={6}>
-            <span className="section_title">Mark-Up Operadores</span>
-          </Col>
-          <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
-            <Form.Control />
-            <span className="ml-2">%</span>
-          </Col>
-        </Row>
-        <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
-        {
-          operatorExceptions.map((exc, idx) => (
-            <Row className="mb-2" key={idx}>
-              <Col md={9}>
-                <Select theme={customSelectTheme}></Select>
-              </Col>
-              <Col md={3} className="d-flex align-items-center justify-content-end">
-                <i className="fas fa-save mr-4 icon-button"></i>
-                <Form.Control type="text" onChange={(e) => changeCorpExceptionValue(e, idx)} value={exc} />
-                <span className="ml-1">%</span>
-                <i className="fas fa-trash mx-3 icon-button"></i>
-                <Button onClick={() => setOperatorExceptions([...corporationExceptions, { value: exc.value }])} variant="outline-info mx-1">
-                  <i className="fas fa-plus"></i>
-                </Button>
-              </Col>
-            </Row>
-          ))
-        }
-        <hr />
-        <Row>
-          <Col md={{ span: 4, offset: 8 }} style={{ position: "absolute", bottom: "0" }} className="text-right">
+        <div className="bg-gray p-4 mt-5">
+          {/* Corpos */}
+          <Row>
+            <Col md={6}>
+              <span className="section_title">Mark-up Operadores</span>
+            </Col>
+            <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
+              <Form.Control />
+              <span className="ml-2">%</span>
+            </Col>
+          </Row>
+          <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
+          {
+            corporationExceptions.map((exc, idx) => (
+              <Row className="mb-2" key={idx}>
+                <Col md={8}>
+                  <Select isMulti options={corporateClients.map((client) => ({ label: client.name, value: client.id }))} theme={customSelectTheme}></Select>
+                </Col>
+                <Col md={4} className="d-flex align-items-center justify-content-end">
+                  <i className="fas fa-save mx-3 icon-button"></i>
+                  <Form.Control className="flex-1" type="text" onChange={(e) => changeCorpExceptionValue(e, idx)} value={exc.value} />
+                  <span className="ml-1">%</span>
+                  <i className="fas fa-trash mx-3 icon-button"></i>
+                  <Button onClick={() => setCorporationExceptions([...corporationExceptions, { value: exc.value }])} variant="outline-info mx-1">
+                    <i className="fas fa-plus"></i>
+                  </Button>
+                </Col>
+              </Row>
+            ))
+          }
+        </div>
+
+
+        <div className="bg-gray p-4 mt-5">
+          {/* Corpos */}
+          <Row>
+            <Col md={6}>
+              <span className="section_title">Comisión Agencia T&T</span>
+            </Col>
+            <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
+              <Form.Control />
+              <span className="ml-2">%</span>
+            </Col>
+          </Row>
+          <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
+          {
+            corporationExceptions.map((exc, idx) => (
+              <Row className="mb-2" key={idx}>
+                <Col md={8}>
+                  <Select isMulti options={corporateClients.map((client) => ({ label: client.name, value: client.id }))} theme={customSelectTheme}></Select>
+                </Col>
+                <Col md={4} className="d-flex align-items-center justify-content-end">
+                  <i className="fas fa-save mx-3 icon-button"></i>
+                  <Form.Control className="flex-1" type="text" onChange={(e) => changeCorpExceptionValue(e, idx)} value={exc.value} />
+                  <span className="ml-1">%</span>
+                  <i className="fas fa-trash mx-3 icon-button"></i>
+                  <Button onClick={() => setCorporationExceptions([...corporationExceptions, { value: exc.value }])} variant="outline-info mx-1">
+                    <i className="fas fa-plus"></i>
+                  </Button>
+                </Col>
+              </Row>
+            ))
+          }
+        </div>
+
+        <h3 className="text-muted mt-5">Observaciones</h3>
+        <Form.Group>
+          <Form.Label className="text-muted">Observaciones Convenio</Form.Label>
+          <Form.Control rows="5" as="textarea" />
+        </Form.Group>
+
+
+
+
+
+
+
+        {/* <Row>
+          <Col md={{ span: 4, offset: 8 }} className="text-right">
             <Button variant="light" className="mx-2">Cancelar</Button>
             <Button variant="secondary" className="mx-2">Guardar</Button>
           </Col>
-        </Row>
+        </Row> */}
 
 
 

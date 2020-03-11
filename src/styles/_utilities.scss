@@ -8,8 +8,8 @@
 .section_title {
   font-size: 1.15rem;
   border-left: 4px solid $primary;
-  // margin-left: -1.25rem;
-  padding-left: 1.25rem;
+  margin-left: -15px;
+  padding-left: 15px;
   margin-bottom: 1rem;
 }
 
@@ -17,8 +17,8 @@
   position: relative;
   i {
     position: absolute;
-    right: .75rem;
-    top: .5rem;
+    right: 0.75rem;
+    top: 0.5rem;
     font-size: 1.15rem;
     color: $gray-400;
   }
@@ -39,23 +39,28 @@
 
 .form_submit_panel {
   position: fixed;
-    bottom: 0;
-    // border-top: $gray-600 1px solid;
-    box-shadow: 8px -8px 24px $gray-100;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 2rem;
-    background: $white;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  bottom: 0;
+  // border-top: $gray-600 1px solid;
+  box-shadow: 8px -8px 24px $gray-100;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 2rem;
+  background: $white;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .icon-button {
   cursor: pointer;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   &:hover {
     color: $primary;
-    opacity: .9;
+    opacity: 0.9;
   }
+}
+
+.list_options {
+  display: grid;
+  column-gap: 0.25rem;
 }

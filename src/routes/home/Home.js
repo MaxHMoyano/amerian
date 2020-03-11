@@ -4,7 +4,7 @@ import MenuSelector from '../../components/shared/MenuSelector';
 
 const Home = () => {
   return <div className="home_container">
-    <Image height="160" width="160" src="https://source.unsplash.com/featured/?{profile}" />
+    {/* <Image height="160" width="160" src="https://source.unsplash.com/featured/?{profile}" /> */}
     <MenuSelector />
     <h1 className="text-light font-weight-bold">Amerian Hoteles</h1>
   </div>;

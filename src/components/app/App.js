@@ -2,7 +2,7 @@ import React from "react";
 import Login from "../login/Login";
 import MainContainer from "../layout/MainContainer";
 import { useSelector } from "react-redux";
-import { BrowserRouter, Router } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { history } from "../../helpers/history";
 
 function App() {

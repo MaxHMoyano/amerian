@@ -3,13 +3,24 @@ import InfoCard from "../../../components/shared/InfoCard";
 import Select from "react-select";
 import { Form, Button, Table, Badge, Dropdown } from "react-bootstrap";
 import { customValueContainer } from "../../../helpers/utilities";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useHistory } from 'react-router-dom';
+import { hotelsActions } from "../../../redux/actions/";
+import { useEffect } from "react";
+
 
 const PetitionsList = () => {
 
   const location = useLocation();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(hotelsActions.fetchHotels());
+  }, []);
+
+  const hotels = useSelector(({ hotels }) => hotels.list);
+
 
   const [tariffsTypes] = useState([
     { name: "Tarifa General", value: 1, path: "new-petition?type=general" },
@@ -50,7 +61,6 @@ const PetitionsList = () => {
     columnGap: "2rem"
   };
 
-  const hotels = useSelector(({ hotels }) => hotels.list);
 
   const [petitions] = useState([
     {
@@ -91,7 +101,7 @@ const PetitionsList = () => {
         ))}
       </div>
       {/* <hr className="text-muted" /> */}
-      <div className="d-flex mb-4 align-items-center">
+      <div className="d-flex align-items-center">
         <Dropdown>
           <Dropdown.Toggle className="is_rounded mr-2" variant="secondary" id="dropdown-basic">
             Nueva Tarifa
@@ -109,7 +119,7 @@ const PetitionsList = () => {
         </Button>
         <Form.Control className="w-25" type="text" placeholder="Buscar" />
         <Select
-          className="react_select_container"
+          className="react_select_container mx-2"
           classNamePrefix="react_select"
           components={{
             ValueContainer: customValueContainer

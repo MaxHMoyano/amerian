@@ -2,13 +2,24 @@ import { hotelsConstants } from "../constants";
 import { hotelsService } from '../../services/';
 
 export const hotelsActions = {
-  getHotels
+  fetchHotels
 };
 
-function getHotels() {
+function fetchHotels() {
   return (dispatch) => {
-    hotelsService.getHotels().then((hotels) => {
-      dispatch({ type: hotelsConstants.GET_HOTELS, payload: hotels });
+    dispatch({
+      type: hotelsConstants.FETCH_HOTELS_REQUEST,
+    });
+    hotelsService.fetchHotels().then((clients) => {
+      dispatch({
+        type: hotelsConstants.FETCH_HOTELS_SUCCESS,
+        payload: clients,
+      });
+    }, (error) => {
+      dispatch({
+        type: hotelsConstants.FETCH_HOTELS_ERROR,
+        error: error,
+      });
     });
   };
 }

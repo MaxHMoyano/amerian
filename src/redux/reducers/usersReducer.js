@@ -1,25 +1,25 @@
-import { clientsConstants } from "../constants";
+import { userConstants } from "../constants";
 
 let INITIAL_STATE = {
-  list: [],
+  current: "",
   error: "",
   pending: false
 };
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
   switch (type) {
-    case clientsConstants.FETCH_CLIENTS_REQUEST:
+    case userConstants.GET_USER_REQUEST:
       return {
         ...state,
         pending: true
       };
-    case clientsConstants.FETCH_CLIENTS_SUCCESS:
+    case userConstants.GET_USER_SUCCESS:
       return {
         ...state,
-        list: payload,
+        current: payload,
         pending: false,
       };
-    case clientsConstants.FETCH_CLIENTS_ERROR:
+    case userConstants.GET_USER_ERROR:
       return {
         ...state,
         error: error,
