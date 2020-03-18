@@ -1,6 +1,6 @@
 import config from "config";
-import { authHeader } from "../helpers/auth-header";
-import { API_VERSION } from "../helpers/apiVersion";
+import { authHeader } from "../../helpers/auth-header";
+import { API_VERSION } from "../../helpers/apiVersion";
 
 export const currenciesService = {
   fetchCurrencies

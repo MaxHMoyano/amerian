@@ -1,3 +1,4 @@
 export const menuConstants = {
   SET_ACTIVE_MENU: "SET_ACTIVE_MENU",
+  SET_ACTIVE_MENU_TO_HOME: "SET_ACTIVE_MENU_TO_HOME"
 };

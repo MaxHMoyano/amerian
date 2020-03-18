@@ -2,12 +2,11 @@ import React, { Fragment, useState } from "react";
 import { Table, Badge, Form, Button, Dropdown } from 'react-bootstrap';
 import { customValueContainer } from '../../../helpers/utilities';
 import Select from 'react-select';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Tariffs = () => {
 
   const history = useHistory();
-  const location = useLocation();
 
   const [tariffsTypes] = useState([
     { name: "Tarifa General", value: 1, path: "/comercial/petitions/new-petition?type=general" },
@@ -99,7 +98,7 @@ const Tariffs = () => {
         {
           tariffs.map((tariff) => (
             <tr key={tariff.id}>
-              <td width="50%">{tariff.hotel}</td>
+              <td width="35%">{tariff.hotel}</td>
               <td>{tariff.province}</td>
               <td>
                 <div className="d-flex align-items-center">

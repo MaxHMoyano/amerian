@@ -1,5 +1,5 @@
 import { clientsConstants } from "../constants";
-import { clientsService } from '../../services';
+import { clientsService } from '../services';
 
 export const clientsActions = {
   fetchClients

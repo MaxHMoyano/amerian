@@ -8,7 +8,7 @@ $grid-gutter-width: 8px;
 // Theme colors
 @import "./colors";
 @import "~bootstrap/scss/bootstrap.scss";
-
+@import "~react-datepicker/dist/react-datepicker.css";
 .app {
   height: 100vh;
   max-height: 100vh;

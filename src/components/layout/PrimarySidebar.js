@@ -13,7 +13,7 @@ const PrimarySidebar = () => {
     <div className="primary_sidebar">
       <Link
         to="/home"
-        onClick={() => dispatch(menuActions.setActiveMenu({ name: "home" }))}
+        onClick={() => dispatch(menuActions.setActiveMenuToHome())}
       >
         <div className="logo">
           <Image src={logo} />

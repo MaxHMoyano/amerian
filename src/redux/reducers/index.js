@@ -5,6 +5,8 @@ import hotelsReducer from "./hotelsReducer";
 import clientsReducer from "./clientsReducer";
 import currenciesReducer from "./currenciesReducer";
 import userReducer from "./usersReducer";
+import roomTypesReducer from "./roomTypesReducer";
+import sharedReducer from "./sharedReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -13,4 +15,6 @@ export default combineReducers({
   clients: clientsReducer,
   currencies: currenciesReducer,
   users: userReducer,
+  roomTypes: roomTypesReducer,
+  shared: sharedReducer,
 });

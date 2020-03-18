@@ -8,18 +8,18 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
   switch (type) {
-    case hotelsConstants.FETCH_HOTELS_REQUEST:
+    case hotelsConstants.FETCH_ROOM_TYPES_REQUEST:
       return {
         ...state,
         pending: true
       };
-    case hotelsConstants.FETCH_HOTELS_SUCCESS:
+    case hotelsConstants.FETCH_ROOM_TYPES_SUCCESS:
       return {
         ...state,
         payload,
         pending: false,
       };
-    case hotelsConstants.FETCH_HOTELS_ERROR:
+    case hotelsConstants.FETCH_ROOM_TYPES_ERROR:
       return {
         ...state,
         error: error,

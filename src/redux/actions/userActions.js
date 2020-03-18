@@ -1,5 +1,5 @@
 import { userConstants, menuConstants } from "../constants";
-import { userService } from "../../services";
+import { userService } from "../services";
 import { history } from "../../helpers/history";
 
 export const userActions = {
@@ -30,7 +30,7 @@ function login(email, password) {
       setTimeout(() => {
         history.push("/home");
         dispatch(success(user));
-        dispatch({ type: menuConstants.SET_ACTIVE_MENU, payload: { name: "home" } });
+        dispatch({ type: menuConstants.SET_ACTIVE_MENU_TO_HOME });
       }, 2000);
     };
   }

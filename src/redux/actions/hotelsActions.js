@@ -1,8 +1,9 @@
 import { hotelsConstants } from "../constants";
-import { hotelsService } from '../../services/';
+import { hotelsService } from '../services/';
 
 export const hotelsActions = {
-  fetchHotels
+  fetchHotels,
+  fetchRoomTypes,
 };
 
 function fetchHotels() {
@@ -21,5 +22,21 @@ function fetchHotels() {
         error: error,
       });
     });
+  };
+}
+
+
+function fetchRoomTypes(hotelId) {
+  return (dispatch) => {
+    dispatch({ type: hotelsConstants.FETCH_ROOM_TYPES_REQUEST });
+    hotelsService.fetchRoomTypesByHotelId(hotelId).then((rooms) => {
+      dispatch({
+        type: hotelsConstants.FETCH_ROOM_TYPES_SUCCESS,
+        payload: rooms,
+      });
+    }, (error) => dispatch({
+      type: hotelsConstants.FETCH_ROOM_TYPES_ERROR,
+      error
+    }));
   };
 }

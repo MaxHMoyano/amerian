@@ -3,7 +3,7 @@ import { Switch, Route, useLocation } from "react-router-dom";
 import Home from "../../routes/home/Home";
 
 // Hotels components
-import Hotels from '../../routes/hotels/Hotels';
+import HotelsList from '../../routes/hotels/HotelsList';
 
 // Human resources components
 
@@ -31,7 +31,7 @@ const MainContent = () => {
     <div className="main_content" style={location.pathname === "/home" || location.pathname === "/" ? noPaddingHomeStyle : {}}>
       <Switch>
         {/* Hotels routes */}
-        <Route path="/hotels/" component={Hotels}></Route>
+        <Route path="/hotels/" component={HotelsList}></Route>
 
         {/* Human resources routes */}
         <Route exact path="/humanResources" component={HumanResources}></Route>

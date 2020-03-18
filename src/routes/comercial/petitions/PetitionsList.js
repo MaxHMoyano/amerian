@@ -17,9 +17,9 @@ const PetitionsList = () => {
 
   useEffect(() => {
     dispatch(hotelsActions.fetchHotels());
-  }, []);
+  }, [dispatch]);
 
-  const hotels = useSelector(({ hotels }) => hotels.list);
+  const hotels = useSelector(({ hotels }) => hotels.payload);
 
 
   const [tariffsTypes] = useState([

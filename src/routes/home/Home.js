@@ -1,6 +1,7 @@
 import React from "react";
-import { Image } from 'react-bootstrap';
+// import { Image } from 'react-bootstrap';
 import MenuSelector from '../../components/shared/MenuSelector';
+
 
 const Home = () => {
   return <div className="home_container">

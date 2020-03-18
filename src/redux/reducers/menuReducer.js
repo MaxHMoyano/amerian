@@ -82,6 +82,14 @@ export default (state = initialState, { type, payload }) => {
           routes: payload.routes || []
         }
       };
+    case menuConstants.SET_ACTIVE_MENU_TO_HOME:
+      return {
+        ...state,
+        activeItem: {
+          name: "home",
+          routes: []
+        }
+      };
     default:
       return state;
   }

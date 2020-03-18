@@ -3,3 +3,4 @@ export { menuActions } from "./menuActions";
 export { hotelsActions } from "./hotelsActions";
 export { clientsActions } from "./clientsActions";
 export { currenciesActions } from "./currenciesActions";
+export { sharedActions } from "./sharedActions";

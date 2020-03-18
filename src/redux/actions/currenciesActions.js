@@ -1,5 +1,5 @@
 import { currenciesConstants } from "../constants";
-import { currenciesService } from '../../services';
+import { currenciesService } from '../services';
 
 export const currenciesActions = {
   fetchCurrencies
