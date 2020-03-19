@@ -22,14 +22,14 @@ function fetchCountries() {
   });
 }
 
-function fetchProvinces() {
+function fetchProvinces(countryId) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()
   };
 
 
-  return fetch(`${config.apiUrl}/${API_VERSION}/countries/1/regions/`, requestOptions).then(res => {
+  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/regions/`, requestOptions).then(res => {
     if (res.ok) {
       return res.json();
     }

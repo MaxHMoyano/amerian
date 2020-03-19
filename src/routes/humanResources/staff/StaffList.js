@@ -5,10 +5,20 @@ import StarRatings from "react-star-ratings";
 import StaffModal from "./StaffModal";
 import { customValueContainer } from "../../../helpers/utilities";
 import { useHistory, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { staffActions } from "../../../redux/actions/";
+
 
 const Staff = () => {
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    dispatch(staffActions.fetchStaff());
+  }, [dispatch]);
 
   const [hotels] = useState([
     { value: "1", label: "Hotel 1" },
@@ -29,34 +39,7 @@ const Staff = () => {
     { value: "5", label: "Posición 5" }
   ]);
 
-  const [staff] = useState([
-    {
-      id: 1,
-      name: "Adriana Peralta",
-      position: "posicion",
-      admissionDate: "14/09/1998",
-      rating: 4,
-      status: {
-        name: "Activo",
-        id: 1
-      },
-      mail: "aperalta@amerian.com",
-      image: " https://source.unsplash.com/featured/?{avatar}"
-    },
-    {
-      id: 2,
-      name: "Adolfo Marconetti",
-      position: "posicion",
-      admissionDate: "14/09/1998",
-      rating: 1,
-      status: {
-        name: "Inactivo",
-        id: 2
-      },
-      mail: "amarconetti@amerian.com",
-      image: " https://source.unsplash.com/featured/?{nature}"
-    }
-  ]);
+  let staff = useSelector(({ staff }) => staff.payload);
 
   const [showModal, setshowModal] = useState(false);
 

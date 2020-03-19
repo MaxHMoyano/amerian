@@ -1,6 +1,7 @@
 export { userActions } from "./userActions";
 export { menuActions } from "./menuActions";
-export { hotelsActions } from "./hotelsActions";
-export { clientsActions } from "./clientsActions";
-export { currenciesActions } from "./currenciesActions";
+export { hotelActions } from "./hotelActions";
+export { clientActions } from "./clientActions";
+export { currencyActions } from "./currencyActions";
 export { sharedActions } from "./sharedActions";
+export { staffActions } from "./staffActions";

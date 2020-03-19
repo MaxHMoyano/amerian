@@ -1,4 +1,4 @@
-import { clientsConstants } from "../constants";
+import { clientConstants } from "../constants";
 
 let INITIAL_STATE = {
   payload: [],
@@ -8,18 +8,18 @@ let INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
   switch (type) {
-    case clientsConstants.FETCH_CLIENTS_REQUEST:
+    case clientConstants.FETCH_CLIENTS_REQUEST:
       return {
         ...state,
         pending: true
       };
-    case clientsConstants.FETCH_CLIENTS_SUCCESS:
+    case clientConstants.FETCH_CLIENTS_SUCCESS:
       return {
         ...state,
         payload,
         pending: false,
       };
-    case clientsConstants.FETCH_CLIENTS_ERROR:
+    case clientConstants.FETCH_CLIENTS_ERROR:
       return {
         ...state,
         error: error,

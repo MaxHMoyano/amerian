@@ -1,6 +1,7 @@
 export { userConstants } from "./userConstants";
 export { menuConstants } from "./menuConstants";
-export { hotelsConstants } from "./hotelsConstants";
-export { clientsConstants } from "./clientsConstants";
-export { currenciesConstants } from "./currenciesConstants";
+export { hotelConstants } from "./hotelConstants";
+export { clientConstants } from "./clientConstants";
+export { currencyConstants } from "./currencyConstants";
 export { sharedConstants } from "./sharedConstants";
+export { staffConstants } from "./staffConstants";

@@ -5,7 +5,7 @@ import Select from 'react-select';
 import { useState } from 'react';
 import { customSelectTheme } from '../../../helpers/utilities';
 import { useDispatch, useSelector } from 'react-redux';
-import { hotelsActions, clientsActions, currenciesActions } from '../../../redux/actions/';
+import { hotelActions, clientActions, currencyActions } from '../../../redux/actions/';
 import { useEffect } from 'react';
 
 function useQuery() {
@@ -32,22 +32,21 @@ const NewPetition = () => {
 
 
   useEffect(() => {
-    console.log("componentRender");
-    dispatch(hotelsActions.fetchHotels());
-    dispatch(clientsActions.fetchClients());
-    dispatch(currenciesActions.fetchCurrencies());
+    dispatch(hotelActions.fetchHotels());
+    dispatch(clientActions.fetchClients());
+    dispatch(currencyActions.fetchCurrencies());
   }, [dispatch]);
 
-  let hotels = useSelector(({ hotels }) => hotels.payload);
+  let hotels = useSelector(({ hotel }) => hotel.payload);
 
   // All clients types for selection in their respective box
-  let corporationClients = useSelector(({ clients }) => clients.payload.filter((client) => client.type === "COR"));
-  let corpAgencyClient = useSelector(({ clients }) => clients.payload.filter((client) => client.type === "COA"));
-  let operatorClients = useSelector(({ clients }) => clients.payload.filter((client) => client.type === "OPE"));
-  let agencyClients = useSelector(({ clients }) => clients.payload.filter((client) => client.type === "AGE"));
+  let corporationClients = useSelector(({ client }) => client.payload.filter((client) => client.type === "COR"));
+  let corpAgencyClient = useSelector(({ client }) => client.payload.filter((client) => client.type === "COA"));
+  let operatorClients = useSelector(({ client }) => client.payload.filter((client) => client.type === "OPE"));
+  let agencyClients = useSelector(({ client }) => client.payload.filter((client) => client.type === "AGE"));
 
-  let currencies = useSelector(({ currencies }) => currencies.payload);
-  let roomTypes = useSelector(({ roomTypes }) => roomTypes.payload);
+  let currencies = useSelector(({ currency }) => currency.payload);
+  let roomTypes = useSelector(({ roomType }) => roomType.payload);
 
   const [selectedHotel, setSelectedHotel] = useState(hotels[0]);
 
@@ -82,7 +81,7 @@ const NewPetition = () => {
 
   const changeSelectedHotel = (newHotel) => {
     setSelectedHotel(newHotel);
-    dispatch(hotelsActions.fetchRoomTypes(newHotel.value));
+    dispatch(hotelActions.fetchRoomTypes(newHotel.value));
     // fetch Hotels rooms
   };
 

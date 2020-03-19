@@ -1,4 +1,4 @@
-import { currenciesConstants } from "../constants";
+import { currencyConstants } from "../constants";
 
 let INITIAL_STATE = {
   payload: [],
@@ -8,18 +8,18 @@ let INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
   switch (type) {
-    case currenciesConstants.FETCH_CURRENCIES_REQUEST:
+    case currencyConstants.FETCH_CURRENCIES_REQUEST:
       return {
         ...state,
         pending: true
       };
-    case currenciesConstants.FETCH_CURRENCIES_SUCCESS:
+    case currencyConstants.FETCH_CURRENCIES_SUCCESS:
       return {
         ...state,
         payload,
         pending: false,
       };
-    case currenciesConstants.FETCH_CURRENCIES_ERROR:
+    case currencyConstants.FETCH_CURRENCIES_ERROR:
       return {
         ...state,
         error: error,

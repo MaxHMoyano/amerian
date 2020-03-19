@@ -1,4 +1,4 @@
-import { hotelsConstants } from '../constants/hotelsConstants';
+import { hotelConstants } from '../constants/';
 
 const INITIAL_STATE = {
   payload: [],
@@ -8,18 +8,18 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
   switch (type) {
-    case hotelsConstants.FETCH_HOTELS_REQUEST:
+    case hotelConstants.FETCH_ROOM_TYPES_REQUEST:
       return {
         ...state,
         pending: true
       };
-    case hotelsConstants.FETCH_HOTELS_SUCCESS:
+    case hotelConstants.FETCH_ROOM_TYPES_SUCCESS:
       return {
         ...state,
         payload,
         pending: false,
       };
-    case hotelsConstants.FETCH_HOTELS_ERROR:
+    case hotelConstants.FETCH_ROOM_TYPES_ERROR:
       return {
         ...state,
         error: error,

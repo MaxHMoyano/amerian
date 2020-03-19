@@ -5,7 +5,7 @@ import { Form, Button, Table, Badge, Dropdown } from "react-bootstrap";
 import { customValueContainer } from "../../../helpers/utilities";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useHistory } from 'react-router-dom';
-import { hotelsActions } from "../../../redux/actions/";
+import { hotelActions } from "../../../redux/actions/";
 import { useEffect } from "react";
 
 
@@ -16,10 +16,10 @@ const PetitionsList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(hotelsActions.fetchHotels());
+    dispatch(hotelActions.fetchHotels());
   }, [dispatch]);
 
-  const hotels = useSelector(({ hotels }) => hotels.payload);
+  const hotels = useSelector(({ hotel }) => hotel.payload);
 
 
   const [tariffsTypes] = useState([

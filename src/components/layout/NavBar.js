@@ -22,7 +22,7 @@ const NavBar = () => {
     }
   }, [currentRoute.name, currentRoute.routes, location]);
 
-  const userName = useSelector(({ users }) => users.current ? users.current.first_name : "");
+  const userName = useSelector(({ user }) => user.current ? user.current.first_name : "");
 
   return (
     <div className="main_navbar">

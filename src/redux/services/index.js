@@ -1,6 +1,6 @@
 export { userService } from "./userService";
 export { staffService } from "./staffService";
-export { clientsService } from "./clientService";
-export { hotelsService } from "./hotelService";
-export { currenciesService } from "./currencyService";
+export { clientService } from "./clientService";
+export { hotelService } from "./hotelService";
+export { currencyService } from "./currencyService";
 export { sharedService } from "./sharedService";

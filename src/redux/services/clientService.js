@@ -2,7 +2,7 @@ import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
 
-export const clientsService = {
+export const clientService = {
   fetchClients
 };
 
