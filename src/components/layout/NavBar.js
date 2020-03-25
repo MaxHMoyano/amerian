@@ -37,7 +37,7 @@ const NavBar = () => {
           )}
       </div>
       <div className="toolbar">
-        <div className="icon_input search mx-2">
+        <div className="icon_input search mx-4">
           <Form.Control type="text" placeholder="Buscar" />
           <i className="fas fa-search"></i>
         </div>

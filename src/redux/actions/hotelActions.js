@@ -1,5 +1,5 @@
 import { hotelConstants } from "../constants";
-import { hotelService } from '../services';
+import { hotelService, sharedService } from '../services';
 
 export const hotelActions = {
   fetchHotels,
@@ -9,23 +9,42 @@ export const hotelActions = {
 };
 
 function fetchHotels() {
-  return (dispatch) => {
-    dispatch({
-      type: hotelConstants.FETCH_HOTELS_REQUEST,
+  return async (dispatch) => {
+    dispatch(request());
+    let hotels = await hotelService.fetchHotels();
+    let countries = await sharedService.fetchCountries();
+    hotels.results = hotels.results.map((hotel) => {
+      let country = countries.results.find(country => country.id === hotel.country);
+      return {
+        ...hotel,
+        country
+      };
     });
-    hotelService.fetchHotels().then((clients) => {
-      dispatch({
-        type: hotelConstants.FETCH_HOTELS_SUCCESS,
-        payload: clients,
-      });
-    }, (error) => {
-      dispatch({
-        type: hotelConstants.FETCH_HOTELS_ERROR,
-        error: error,
-      });
-    });
+    dispatch(success(hotels));
   };
+
+  function request() {
+    return {
+      type: hotelConstants.FETCH_HOTELS_REQUEST,
+    };
+  }
+
+  function success(hotels) {
+    return {
+      type: hotelConstants.FETCH_HOTELS_SUCCESS,
+      payload: hotels,
+    };
+  }
+
+  function failure(error) {
+    return {
+      type: hotelConstants.FETCH_HOTELS_ERROR,
+      error: error,
+    };
+  }
+
 }
+
 
 
 function fetchRoomTypes(hotelId) {
@@ -45,22 +64,10 @@ function fetchRoomTypes(hotelId) {
 
 function createNewHotel(hotel) {
   return (dispatch) => {
-    dispatch(request());
     hotelService.createNewHotel(hotel).then((newHotel) => {
-      dispatch(success(hotel));
-    }, error => dispatch(failure(error)));
+      dispatch(fetchHotels());
+    });
   };
-
-
-  function request() {
-    return { type: hotelConstants.CREATE_NEW_HOTEL_REQUEST };
-  }
-  function success(hotel) {
-    return { type: hotelConstants.CREATE_NEW_HOTEL_SUCCESS, payload: hotel };
-  }
-  function failure(error) {
-    return { type: hotelConstants.CREATE_NEW_HOTEL_ERROR, error };
-  }
 }
 
 

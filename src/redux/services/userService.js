@@ -15,7 +15,7 @@ function login(email, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   };
-  return fetch(`${config.apiUrl}/token/`, requestOptions)
+  return fetch(`${config.apiUrl}/${API_VERSION}/token/`, requestOptions)
     .then(handleResponse)
     .then((tokens) => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -35,7 +35,7 @@ function fetchUser(userId) {
     method: "GET",
     headers: authHeader()
   };
-  let url = new URL(`${config.apiUrl}/${API_VERSION}/users/${userId}`);
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/users/${userId}/`);
   return fetch(url, requestOptions).then(res => {
     if (res.ok) {
       return res.json();

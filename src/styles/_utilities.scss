@@ -64,3 +64,8 @@
   display: grid;
   column-gap: 0.25rem;
 }
+
+.error_message {
+  color: $primary;
+  font-style: italic;
+}

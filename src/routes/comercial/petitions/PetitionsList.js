@@ -19,7 +19,7 @@ const PetitionsList = () => {
     dispatch(hotelActions.fetchHotels());
   }, [dispatch]);
 
-  const hotels = useSelector(({ hotel }) => hotel.payload);
+  const hotels = useSelector(({ hotel }) => hotel);
 
 
   const [tariffsTypes] = useState([
@@ -128,7 +128,7 @@ const PetitionsList = () => {
           hideSelectedOptions={false}
           isMulti
           placeholder="Hotel: "
-          options={hotels.map(hotel => ({
+          options={hotels.results.map(hotel => ({
             label: hotel.name,
             value: hotel.id
           }))}

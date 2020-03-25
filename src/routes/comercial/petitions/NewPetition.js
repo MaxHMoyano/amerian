@@ -37,16 +37,16 @@ const NewPetition = () => {
     dispatch(currencyActions.fetchCurrencies());
   }, [dispatch]);
 
-  let hotels = useSelector(({ hotel }) => hotel.payload);
+  let hotels = useSelector(({ hotel }) => hotel);
 
   // All clients types for selection in their respective box
-  let corporationClients = useSelector(({ client }) => client.payload.filter((client) => client.type === "COR"));
-  let corpAgencyClient = useSelector(({ client }) => client.payload.filter((client) => client.type === "COA"));
-  let operatorClients = useSelector(({ client }) => client.payload.filter((client) => client.type === "OPE"));
-  let agencyClients = useSelector(({ client }) => client.payload.filter((client) => client.type === "AGE"));
+  let corporationClients = useSelector(({ client }) => client.results.filter((client) => client.type === "COR"));
+  let corpAgencyClient = useSelector(({ client }) => client.results.filter((client) => client.type === "COA"));
+  let operatorClients = useSelector(({ client }) => client.results.filter((client) => client.type === "OPE"));
+  let agencyClients = useSelector(({ client }) => client.results.filter((client) => client.type === "AGE"));
 
-  let currencies = useSelector(({ currency }) => currency.payload);
-  let roomTypes = useSelector(({ roomType }) => roomType.payload);
+  let currencies = useSelector(({ currency }) => currency);
+  let roomTypes = useSelector(({ roomTypes }) => roomTypes);
 
   const [selectedHotel, setSelectedHotel] = useState(hotels[0]);
 
@@ -97,7 +97,7 @@ const NewPetition = () => {
           <Col md={6}>
             <Form.Group>
               <Form.Label>Nombre Hotel</Form.Label>
-              <Select onChange={changeSelectedHotel} value={selectedHotel} options={hotels.map((hotel) => ({ label: hotel.name, value: hotel.id }))} className="react_select_container" classNamePrefix="react_select" />
+              <Select onChange={changeSelectedHotel} value={selectedHotel} options={hotels.results.map((hotel) => ({ label: hotel.name, value: hotel.id }))} className="react_select_container" classNamePrefix="react_select" />
             </Form.Group>
           </Col>
         </Row>
@@ -114,7 +114,7 @@ const NewPetition = () => {
           <Col md={4}>
             <Form.Group>
               <Form.Label>Moneda base</Form.Label>
-              <Select options={currencies.map((currency) => ({ label: currency.name, value: currency.value }))} className="react_select_container" classNamePrefix="react_select" />
+              <Select options={currencies.results.map((currency) => ({ label: currency.name, value: currency.value }))} className="react_select_container" classNamePrefix="react_select" />
             </Form.Group>
 
           </Col>
@@ -129,7 +129,7 @@ const NewPetition = () => {
           <Col>
             <Form.Group>
               <Form.Label>Moneda alternativa</Form.Label>
-              <Select options={currencies.map((currency) => ({ label: currency.name, value: currency.value }))} className="react_select_container" classNamePrefix="react_select" />
+              <Select options={currencies.results.map((currency) => ({ label: currency.name, value: currency.value }))} className="react_select_container" classNamePrefix="react_select" />
             </Form.Group>
           </Col>
           <Col>

@@ -9,6 +9,7 @@ import roomTypeReducer from "./roomTypeReducer";
 import sharedReducer from "./sharedReducer";
 import staffReducer from "./staffReducer";
 import chainReducer from "./chainReducer";
+import positionReducer from "./positionReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
   shared: sharedReducer,
   staff: staffReducer,
   chain: chainReducer,
+  position: positionReducer,
 });

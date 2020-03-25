@@ -1,7 +1,7 @@
 import { currencyConstants } from "../constants";
 
 let INITIAL_STATE = {
-  payload: [],
+  results: [],
   error: "",
   pending: false
 };
@@ -16,7 +16,7 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
     case currencyConstants.FETCH_CURRENCIES_SUCCESS:
       return {
         ...state,
-        payload,
+        results: payload,
         pending: false,
       };
     case currencyConstants.FETCH_CURRENCIES_ERROR:

@@ -1,17 +1,26 @@
 import { staffConstants } from "../constants";
 import { staffService } from "../services/staffService";
+import { positionService } from "../services";
 
 export const staffActions = {
   fetchStaff,
+  createNewStaff
 };
 
 
 function fetchStaff(hotelId) {
   return dispatch => {
     dispatch(request());
-    staffService.fetchStaff().then((staff) => {
-      dispatch(success(staff));
-    }, error => dispatch(failure(error)));
+    Promise.all([staffService.fetchStaff(), positionService.fetchPositions()])
+      .then(([staff, positions]) => {
+        staff.results = staff.results.map(staff => {
+          return {
+            ...staff,
+            position: positions.results.find(e => e.id === staff.position).name
+          };
+        });
+        dispatch(success(staff));
+      }, error => dispatch(failure(error)));
   };
 
 
@@ -24,4 +33,12 @@ function fetchStaff(hotelId) {
   function failure(error) {
     return { type: staffConstants.FETCH_STAFF_ERROR, error };
   }
+}
+
+function createNewStaff(staff) {
+  return dispatch => {
+    staffService.createStaff(staff).then(() => {
+      dispatch(fetchStaff());
+    });
+  };
 }

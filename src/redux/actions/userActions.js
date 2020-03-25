@@ -15,7 +15,10 @@ function login(email, password) {
 
     userService.login(email, password).then(
       user => {
-        dispatch(welcomePage(user));
+        dispatch(fetchUser(user.id));
+        setTimeout(() => {
+          dispatch(welcomePage(user));
+        }, 300);
       },
       error => {
         dispatch(failure(error));
@@ -25,7 +28,6 @@ function login(email, password) {
 
   function welcomePage(user) {
     return dispatch => {
-      dispatch(fetchUser(user.id));
       dispatch({ type: userConstants.LOGIN_WELCOME, user });
       setTimeout(() => {
         history.push("/home");

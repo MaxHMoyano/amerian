@@ -43,7 +43,7 @@ function createNewHotel(hotel) {
   const requestOptions = {
     method: "POST",
     body: JSON.stringify(hotel),
-    headers: authHeader()
+    headers: authHeader(),
   };
 
   const url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/`);

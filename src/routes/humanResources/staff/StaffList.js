@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from "react";
-import { Table, Form, Badge, Image } from "react-bootstrap";
-import Select from "react-select";
+import { Table, Badge, Image } from "react-bootstrap";
+// import Select from "react-select";
 import StarRatings from "react-star-ratings";
-import StaffModal from "./StaffModal";
-import { customValueContainer } from "../../../helpers/utilities";
+import StaffModal from "./NewStaff";
+// import { customValueContainer } from "../../../helpers/utilities";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -20,26 +20,7 @@ const Staff = () => {
     dispatch(staffActions.fetchStaff());
   }, [dispatch]);
 
-  const [hotels] = useState([
-    { value: "1", label: "Hotel 1" },
-    { value: "2", label: "Hotel 2" },
-    {
-      value: "3",
-      label: "Hotel 3"
-    },
-    { value: "4", label: "Hotel 4" },
-    { value: "5", label: "Hotel 5" }
-  ]);
-
-  const [positions] = useState([
-    { value: "1", label: "Posición 1" },
-    { value: "2", label: "Posición 2" },
-    { value: "3", label: "Posición 3" },
-    { value: "4", label: "Posición 4" },
-    { value: "5", label: "Posición 5" }
-  ]);
-
-  let staff = useSelector(({ staff }) => staff.payload);
+  let staff = useSelector(({ staff }) => staff);
 
   const [showModal, setshowModal] = useState(false);
 
@@ -66,7 +47,7 @@ const Staff = () => {
         >
           Agregar Staff
         </button>
-        <Form.Control className="w-25" type="text" placeholder="Buscar" />
+        {/* <Form.Control className="w-25" type="text" placeholder="Buscar" />
         <Select
           className="react_select_container"
           classNamePrefix="react_select"
@@ -90,69 +71,42 @@ const Staff = () => {
           placeholder="Posicion: "
           options={positions}
         ></Select>
-        <button className="btn btn-link">Más filtros...</button>
+        <button className="btn btn-link">Más filtros...</button> */}
       </div>
       <Table>
         <thead>
           <tr>
             <th>Nombre</th>
             <th>Posición</th>
-            <th>Ingreso</th>
-            <th>Rating</th>
-            <th>Status</th>
-            <th>
+            {/* <th>
               <i className="fas fa-ellipsis-v"></i>
-            </th>
+            </th> */}
           </tr>
         </thead>
         <tbody>
-          {staff.map(e => (
+          {staff.results.map(e => (
             <tr
-              onClick={() => history.push(`${location.pathname}/${e.id}`)}
+              // onClick={() => history.push(`${location.pathname}/${e.id}`)}
               className="table_link"
               key={e.id}
             >
               <td>
                 <div className="d-flex align-items-center">
-                  <Image
-                    className="mx-3"
-                    src={e.image}
-                    roundedCircle
-                    width="50"
-                    height="50"
-                  />
                   <div className="d-flex flex-column">
-                    <p className="mb-0">{e.name}</p>
-                    <p className="mb-0 text-muted">{e.mail}</p>
+                    <p className="mb-0">{e.first_name} {e.last_name}</p>
+                    <p className="mb-0 text-muted">{e.email}</p>
                   </div>
                 </div>
               </td>
               <td>
-                <Badge className="p-2" variant="dark">
+                <Badge variant="dark" className="p-2">
                   {e.position}
                 </Badge>
               </td>
-              <td>{e.admissionDate}</td>
-              <td>
-                <StarRatings
-                  rating={e.rating}
-                  numberOfStars={5}
-                  starRatedColor="#FFE622"
-                  starDimension="15px"
-                  starSpacing="3px"
-                />
-              </td>
-              <td>
-                <Badge
-                  className="p-2"
-                  variant={getStatusBadgeType(e.status.id)}
-                >
-                  {e.status.name}
-                </Badge>
-              </td>
-              <td>
+
+              {/* <td>
                 <i className="fas fa-ellipsis-h"></i>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>
