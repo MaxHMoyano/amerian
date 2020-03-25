@@ -14,7 +14,7 @@ function fetchPositions(hotelId) {
   };
   let url = "";
   if (hotelId) {
-    url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/human_capital/positions/`);
+    url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/positions/`);
   } else {
     url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/positions/`);
   }
@@ -26,13 +26,13 @@ function fetchPositions(hotelId) {
   });
 }
 
-function createNewPosition(position) {
+function createNewPosition(hotelId, position) {
   const requestOptions = {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(position),
   };
-  let url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/positions/`);
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/positions/`);
   return fetch(url, requestOptions).then(res => {
     if (res.ok) {
       return res.json();

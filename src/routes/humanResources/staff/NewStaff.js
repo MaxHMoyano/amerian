@@ -4,7 +4,6 @@ import Select from 'react-select';
 import { useSelector, useDispatch } from "react-redux";
 import { positionActions, hotelActions, sharedActions, staffActions } from "../../../redux/actions/";
 import { useFormik } from "formik";
-import { formatRelative } from "date-fns";
 
 const StaffModal = ({ show, onClose }) => {
   const dispatch = useDispatch();
@@ -19,25 +18,30 @@ const StaffModal = ({ show, onClose }) => {
       phone: "",
     },
     validate: values => { },
-    onSubmit: values => {
+    onSubmit: (values, { resetForm }) => {
       let staff = {
         ...values,
-        // hotel: values.hotel.value,
         position: values.position.value,
       };
-      dispatch(staffActions.createNewStaff(staff));
+      dispatch(staffActions.createNewStaff(values.hotel.value, staff));
       onClose();
+      resetForm();
+      dispatch(positionActions.cleanState());
     }
   });
 
+  const handleHotelChange = (value) => {
+    formik.setFieldValue("hotel", value);
+    dispatch(positionActions.fetchPositions(value.value));
+  };
+
+
+  let hotels = useSelector(({ hotel }) => hotel);
+  let positions = useSelector(({ position }) => position);
 
   useEffect(() => {
     dispatch(hotelActions.fetchHotels());
-    dispatch(positionActions.fetchPositions());
   }, [dispatch]);
-
-  // let hotels = useSelector(({ hotel }) => hotel);
-  let positions = useSelector(({ position }) => position);
 
   return (
     <Fragment>
@@ -66,16 +70,16 @@ const StaffModal = ({ show, onClose }) => {
               </Col>
             </Form.Row>
             <Form.Row>
-              {/* <Col>
+              <Col>
                 <Form.Group>
                   <Form.Label>Hotel</Form.Label>
-                  <Select isLoading={hotels.pending} onChange={value => formik.setFieldValue("hotel", value)} value={formik.values.hotel} options={hotels.results.map(e => ({ label: e.name, value: e.id }))} />
+                  <Select isLoading={hotels.pending} onChange={handleHotelChange} value={formik.values.hotel} options={hotels.results.map(e => ({ label: e.name, value: e.id }))} />
                 </Form.Group>
-              </Col> */}
+              </Col>
               <Col>
                 <Form.Group>
                   <Form.Label>Posicion</Form.Label>
-                  <Select isLoading={positions.pending} onChange={value => formik.setFieldValue("position", value)} value={formik.values.position} options={positions.results.map(e => ({ label: e.name, value: e.id }))} />
+                  <Select isDisabled={!positions.results.length} isLoading={positions.pending} onChange={value => formik.setFieldValue("position", value)} value={formik.values.position} options={positions.results.map(e => ({ label: e.name, value: e.id }))} />
                 </Form.Group>
               </Col>
             </Form.Row>

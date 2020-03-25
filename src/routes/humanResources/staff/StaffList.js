@@ -24,17 +24,6 @@ const Staff = () => {
 
   const [showModal, setshowModal] = useState(false);
 
-  const getStatusBadgeType = id => {
-    switch (id) {
-      case 1:
-        return "success";
-      case 2:
-        return "danger";
-
-      default:
-        break;
-    }
-  };
 
   return (
     <Fragment>

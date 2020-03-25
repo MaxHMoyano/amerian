@@ -23,6 +23,12 @@ export default (state = initialState, { type, payload, error }) => {
         pending: false,
         error,
       };
+    case positionConstants.CLEAN_POSITIONS:
+      return {
+        results: [],
+        pending: false,
+        error: "",
+      };
 
     default:
       return state;

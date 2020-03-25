@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 // import Select from "react-select";
 // import { customValueContainer } from "../../../helpers/utilities";
 import NewPosition from './NewPosition';
@@ -45,6 +45,7 @@ const PositionsList = () => {
           <tr>
             <th>Nombre</th>
             <th>Descripcion</th>
+            <th>Hotel</th>
             <th>
               <i className="fas fa-ellipsis-v"></i>
             </th>
@@ -58,7 +59,13 @@ const PositionsList = () => {
                 {e.description}
               </td>
               <td>
-                <i className="fas fa-ellipsis-h"></i>
+                {e.hotel}
+              </td>
+              <td>
+                <Button variant="light">
+                  <i className="fas fa-ellipsis-h"></i>
+
+                </Button>
               </td>
             </tr>
           ))}

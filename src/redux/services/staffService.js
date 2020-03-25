@@ -28,13 +28,13 @@ function fetchStaff(hotelId) {
 }
 
 
-function createStaff(staff) {
+function createStaff(hotelId, staff) {
   const requestOptions = {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(staff)
   };
-  let url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/staffs/`);
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/staff/`);
 
   return fetch(url, requestOptions).then(res => {
     if (res.ok) {

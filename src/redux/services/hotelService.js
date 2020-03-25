@@ -4,8 +4,9 @@ import { API_VERSION } from "../../helpers/apiVersion";
 
 export const hotelService = {
   fetchHotels,
-  fetchRoomTypesByHotelId,
+  fetchHotel,
   createNewHotel,
+  fetchRoomTypesByHotelId,
   fetchChains,
 };
 
@@ -22,6 +23,20 @@ function fetchHotels() {
     }
     throw res.statusText;
   });
+}
+
+function fetchHotel(hotelId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  return fetch(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/`, requestOptions).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw res.statusText;
+  });
+
 }
 
 function fetchRoomTypesByHotelId(hotelId) {

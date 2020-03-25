@@ -5,9 +5,9 @@ export const customValueContainer = ({ children, getValue, ...props }) => {
   const length = getValue().length;
   return (
     <components.ValueContainer {...props}>
-      <components.Placeholder {...props} isFocused={props.isFocused}>
+      {/* <components.Placeholder {...props} isFocused={props.isFocused}>
         {props.selectProps.placeholder}
-      </components.Placeholder>
+      </components.Placeholder> */}
       {
         length === 1 ? props.selectProps.value[0].label : length !== props.options.length
           ? length

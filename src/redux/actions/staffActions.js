@@ -35,9 +35,9 @@ function fetchStaff(hotelId) {
   }
 }
 
-function createNewStaff(staff) {
+function createNewStaff(hotelId, staff) {
   return dispatch => {
-    staffService.createStaff(staff).then(() => {
+    staffService.createStaff(hotelId, staff).then(() => {
       dispatch(fetchStaff());
     });
   };
