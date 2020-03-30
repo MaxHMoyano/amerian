@@ -1,11 +1,13 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
+import { handleResponse } from "../../helpers/utilities";
 
 export const hotelService = {
   fetchHotels,
   fetchHotel,
-  createNewHotel,
+  createHotel,
+  deleteHotel,
   fetchRoomTypesByHotelId,
   fetchChains,
 };
@@ -54,7 +56,7 @@ function fetchRoomTypesByHotelId(hotelId) {
   });
 }
 
-function createNewHotel(hotel) {
+function createHotel(hotel) {
   const requestOptions = {
     method: "POST",
     body: JSON.stringify(hotel),
@@ -65,6 +67,21 @@ function createNewHotel(hotel) {
   return fetch(url, requestOptions).then(res => {
     if (res.ok) {
       return res.json();
+    }
+    throw res.statusText;
+  });
+}
+
+function deleteHotel(hotelId) {
+  const requestOptions = {
+    method: "DELETE",
+    headers: authHeader(),
+  };
+
+  const url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/`);
+  return fetch(url, requestOptions).then(res => {
+    if (res.ok) {
+      return res.text();
     }
     throw res.statusText;
   });

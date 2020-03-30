@@ -6,3 +6,4 @@ export { currencyActions } from "./currencyActions";
 export { sharedActions } from "./sharedActions";
 export { staffActions } from "./staffActions";
 export { positionActions } from "./positionActions";
+export { rateActions } from "./rateActions";

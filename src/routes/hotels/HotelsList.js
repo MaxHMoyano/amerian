@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Button, Table, Row, Col, Form, Badge } from "react-bootstrap";
+import { Button, Table, Row, Col, Badge } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { hotelActions } from "../../redux/actions";
 import NewHotel from "./NewHotel";
+import DeleteHotel from "./DeleteHotel";
 
 const HotelsList = () => {
 
@@ -12,18 +13,25 @@ const HotelsList = () => {
     dispatch(hotelActions.fetchHotels());
   }, [dispatch]);
 
-  const onCloseDialog = () => {
-    setShowNewModal(false);
+
+  const [selectedHotel, setSelectedHotel] = useState({});
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
+  const handleDeleteHotel = (hotel) => {
+    setSelectedHotel(hotel);
+    setShowDeleteModal(true);
   };
 
-  const [showNewModal, setShowNewModal] = useState(false);
 
   let hotels = useSelector(({ hotel }) => hotel);
   return <Fragment>
-    <NewHotel onCloseDialog={onCloseDialog} show={showNewModal} />
+    <NewHotel onClose={e => setShowDetailModal(false)} show={showDetailModal} />
+    <DeleteHotel hotel={selectedHotel} onClose={e => setShowDeleteModal(false)} show={showDeleteModal} />
     <Row>
       <Col className="d-flex">
-        <Button onClick={() => setShowNewModal(true)} className="is_rounded" variant="secondary">Agregar Hotel</Button>
+        <Button onClick={() => setShowDetailModal(true)} className="is_rounded" variant="secondary">Agregar Hotel</Button>
         {/* <div className="icon_input">
           <Form.Control className="mx-3"></Form.Control>
           <i className="fas fa-search"></i>
@@ -63,7 +71,7 @@ const HotelsList = () => {
                       </td>
                       <td>
                         <Button className="mx-1" variant="light"><i className="fas fa-edit"></i></Button>
-                        <Button className="mx-1" variant="light"><i className="fas fa-trash"></i></Button>
+                        <Button className="mx-1" onClick={e => handleDeleteHotel(hotel)} variant="light"><i className="fas fa-trash"></i></Button>
                       </td>
                     </tr>
                   ))

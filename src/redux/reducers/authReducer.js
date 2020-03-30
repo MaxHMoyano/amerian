@@ -24,9 +24,17 @@ export default (state = initialState, action) => {
         welcomePage: true,
       };
     case userConstants.LOGIN_FAILURE:
-      return {};
+      return {
+        ...state,
+        error: action.error
+      };
     case userConstants.LOGOUT:
       return {};
+    case userConstants.CLEAR_LOGIN_ERROR:
+      return {
+        ...state,
+        error: "",
+      };
     default:
       return state;
   }

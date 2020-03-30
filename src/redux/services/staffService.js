@@ -15,9 +15,9 @@ function fetchStaff(hotelId) {
   };
   let url = "";
   if (hotelId) {
-    url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/human_capital/staffs/`);
+    url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/human_capital/staff/`);
   } else {
-    url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/staffs/`);
+    url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/staff/`);
   }
   return fetch(url, requestOptions).then(res => {
     if (res.ok) {

@@ -4,8 +4,9 @@ import { hotelService, sharedService } from '../services';
 export const hotelActions = {
   fetchHotels,
   fetchRoomTypes,
-  createNewHotel,
+  createHotel,
   fetchChains,
+  deleteHotel,
 };
 
 function fetchHotels() {
@@ -62,9 +63,9 @@ function fetchRoomTypes(hotelId) {
   };
 }
 
-function createNewHotel(hotel) {
+function createHotel(hotel) {
   return (dispatch) => {
-    hotelService.createNewHotel(hotel).then((newHotel) => {
+    hotelService.createHotel(hotel).then((newHotel) => {
       dispatch(fetchHotels());
     });
   };
@@ -89,4 +90,12 @@ function fetchChains() {
   function failure(error) {
     return { type: hotelConstants.FETCH_CHAINS_ERROR, error };
   }
+}
+
+function deleteHotel(hotelId) {
+  return dispatch => {
+    hotelService.deleteHotel(hotelId).then((res) => {
+      dispatch(fetchHotels());
+    });
+  };
 }

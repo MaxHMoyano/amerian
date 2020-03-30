@@ -56,7 +56,7 @@ const Tariffs = () => {
           }
         </Dropdown.Menu>
       </Dropdown>
-      <div className="icon_input w-15">
+      {/* <div className="icon_input w-15">
         <Form.Control className="" type="text" placeholder="Buscar..." />
         <i className="fas fa-search"></i>
       </div>
@@ -83,7 +83,7 @@ const Tariffs = () => {
         isMulti
         placeholder="Ubicacion: "
         options={locations.map((location) => ({ label: location.name, value: location.id }))}
-      ></Select>
+      ></Select> */}
     </div>
     <Table>
       <thead>

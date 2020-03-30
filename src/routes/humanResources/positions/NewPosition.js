@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { hotelActions, positionActions } from '../../../redux/actions';
 import { useFormik } from 'formik';
-import { customValueContainer } from '../../../helpers/utilities';
 const NewPosition = ({ show, onCloseDialog }) => {
   const dispatch = useDispatch();
 

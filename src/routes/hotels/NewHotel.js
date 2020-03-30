@@ -62,15 +62,15 @@ const NewHotel = (props) => {
         chain: values.chain.value,
         region: values.region.value
       };
-      dispatch(hotelActions.createNewHotel(hotel));
-      props.onCloseDialog();
+      dispatch(hotelActions.createHotel(hotel));
+      props.onClose();
     }
   });
 
 
 
   return (
-    <Modal show={props.show} onHide={props.onCloseDialog}>
+    <Modal show={props.show} onHide={props.onClose}>
       <form onSubmit={formik.handleSubmit}>
         <Modal.Header closeButton>
           <Modal.Title>Agregar Nuevo Hotel</Modal.Title>
@@ -138,7 +138,7 @@ const NewHotel = (props) => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={props.onCloseDialog} variant="link">Cancelar</Button>
+          <Button onClick={props.onClose} variant="link">Cancelar</Button>
           <Button type="submit" variant="secondary">Agregar</Button>
         </Modal.Footer>
       </form>

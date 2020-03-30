@@ -1,18 +1,18 @@
 import React, { Fragment, useState } from "react";
-import { Table, Badge, Image } from "react-bootstrap";
+import { Table, Badge } from "react-bootstrap";
 // import Select from "react-select";
-import StarRatings from "react-star-ratings";
+// import StarRatings from "react-star-ratings";
 import StaffModal from "./NewStaff";
 // import { customValueContainer } from "../../../helpers/utilities";
-import { useHistory, useLocation } from "react-router-dom";
+// import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { staffActions } from "../../../redux/actions/";
 
 
 const Staff = () => {
-  const history = useHistory();
-  const location = useLocation();
+  // const history = useHistory();
+  // const location = useLocation();
   const dispatch = useDispatch();
 
 

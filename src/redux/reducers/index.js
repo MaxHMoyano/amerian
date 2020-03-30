@@ -10,6 +10,7 @@ import sharedReducer from "./sharedReducer";
 import staffReducer from "./staffReducer";
 import chainReducer from "./chainReducer";
 import positionReducer from "./positionReducer";
+import rateReducer from "./rateReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -23,4 +24,5 @@ export default combineReducers({
   staff: staffReducer,
   chain: chainReducer,
   position: positionReducer,
+  rate: rateReducer,
 });

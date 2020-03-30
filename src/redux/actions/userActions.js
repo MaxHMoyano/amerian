@@ -6,8 +6,18 @@ export const userActions = {
   login,
   logout,
   getAll,
-  fetchUser
+  fetchUser,
+  clearLoginError,
 };
+
+function clearLoginError() {
+  return dispatch => {
+    dispatch({
+      type: userConstants.CLEAR_LOGIN_ERROR,
+    });
+  };
+}
+
 
 function login(email, password) {
   return dispatch => {
@@ -44,7 +54,7 @@ function login(email, password) {
     return { type: userConstants.LOGIN_SUCCESS, user };
   }
   function failure(error) {
-    return { type: userConstants.LOGIN_FAILURE, error };
+    return { type: userConstants.LOGIN_FAILURE, error: "Ha ocurrido un error, por favor verifique sus credenciales" };
   }
 }
 
