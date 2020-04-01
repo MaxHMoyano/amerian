@@ -4,6 +4,7 @@ import { API_VERSION } from "../../helpers/apiVersion";
 
 export const positionService = {
   fetchPositions,
+  fetchPosition,
   createNewPosition
 };
 
@@ -25,6 +26,22 @@ function fetchPositions(hotelId) {
     throw res.statusText;
   });
 }
+
+function fetchPosition(positionId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/positions/${positionId}/`);
+  return fetch(url, requestOptions).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw res.statusText;
+  });
+}
+
+
 
 function createNewPosition(hotelId, position) {
   const requestOptions = {

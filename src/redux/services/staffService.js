@@ -8,17 +8,12 @@ export const staffService = {
   createStaff
 };
 
-function fetchStaff(hotelId) {
+function fetchStaff() {
   const requestOptions = {
     method: "GET",
     headers: authHeader()
   };
-  let url = "";
-  if (hotelId) {
-    url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/human_capital/staff/`);
-  } else {
-    url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/staff/`);
-  }
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/staff/`);
   return fetch(url, requestOptions).then(res => {
     if (res.ok) {
       return res.json();

@@ -14,10 +14,10 @@ import PositionsList from "../../routes/humanResources/positions/PositionsList";
 
 // Comercial components
 import Comercial from "../../routes/comercial/Comercial";
-import Tariffs from "../../routes/comercial/tariffs/TariffsList";
-import PetitionsList from "../../routes/comercial/petitions/PetitionsList";
-import NewPetition from '../../routes/comercial/petitions/NewPetition';
-import Agreements from '../../routes/comercial/agreements/AgreementsList';
+import RatesList from "../../routes/comercial/rates/RatesList";
+import RateUpdatesList from "../../routes/comercial/rates/RateUpdatesList";
+import NewRate from '../../routes/comercial/rates/NewRate';
+import Clients from '../../routes/comercial/clients/ClientList';
 
 const MainContent = () => {
 
@@ -41,10 +41,10 @@ const MainContent = () => {
 
         {/* Comercial routes */}
         <Route exact path="/comercial/" component={Comercial}></Route>
-        <Route exact path="/comercial/tariffs/" component={Tariffs}></Route>
-        <Route exact path="/comercial/petitions/" component={PetitionsList}></Route>
-        <Route exact path="/comercial/petitions/:new" component={NewPetition}></Route>
-        <Route exact path="/comercial/agreements/" component={Agreements}></Route>
+        <Route exact path="/comercial/rates/" component={RatesList}></Route>
+        <Route exact path="/comercial/rates-updates/" component={RateUpdatesList}></Route>
+        <Route exact path="/comercial/rates-updates/:new" component={NewRate}></Route>
+        <Route exact path="/comercial/clients/" component={Clients}></Route>
         <Route path={["/home", "/"]} component={Home}></Route>
       </Switch>
     </div>

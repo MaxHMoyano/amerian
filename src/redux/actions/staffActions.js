@@ -1,6 +1,5 @@
 import { staffConstants } from "../constants";
-import { staffService } from "../services/staffService";
-import { positionService } from "../services";
+import { staffService, positionService, hotelService } from "../services/";
 
 export const staffActions = {
   fetchStaff,
@@ -8,19 +7,22 @@ export const staffActions = {
 };
 
 
-function fetchStaff(hotelId) {
+function fetchStaff() {
   return dispatch => {
-    dispatch(request());
-    Promise.all([staffService.fetchStaff(), positionService.fetchPositions()])
-      .then(([staff, positions]) => {
-        staff.results = staff.results.map(staff => {
-          return {
-            ...staff,
-            position: positions.results.find(e => e.id === staff.position).name
-          };
+    return new Promise((resolve, reject) => {
+      dispatch(request());
+      staffService.fetchStaff().then((staff) => {
+        Promise.all(staff.results.map(getStaffData)).then((data) => {
+          staff.results = data;
+          dispatch(success(staff));
+          resolve();
         });
-        dispatch(success(staff));
-      }, error => dispatch(failure(error)));
+      }, error => {
+        dispatch(failure(error));
+        reject(error);
+      });
+
+    });
   };
 
 
@@ -37,8 +39,22 @@ function fetchStaff(hotelId) {
 
 function createNewStaff(hotelId, staff) {
   return dispatch => {
-    staffService.createStaff(hotelId, staff).then(() => {
-      dispatch(fetchStaff());
+    return new Promise((resolve, reject) => {
+      staffService.createStaff(hotelId, staff).then(() => {
+        resolve();
+      }, reject);
     });
   };
+}
+
+function getStaffData(staff) {
+  return new Promise((resolve, reject) => {
+    Promise.all([positionService.fetchPosition(staff.position), hotelService.fetchHotel(staff.hotel)]).then(([position, hotel]) => {
+      resolve({
+        ...staff,
+        position: position.name,
+        hotel: hotel.name
+      });
+    }, reject);
+  });
 }

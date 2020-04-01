@@ -3,7 +3,7 @@ $font-family-sans-serif: "Open Sans", sans-serif;
 $font-size-base: 0.85rem;
 $body-bg: #fff;
 $enable-responsive-font-sizes: true;
-$grid-gutter-width: 8px;
+$grid-gutter-width: 16px;
 
 // Theme colors
 @import "./colors";
@@ -67,6 +67,10 @@ table th {
   }
 }
 
+.dropdown-toggle::after,
+.dropdown-toggle::before {
+  display: none !important;
+}
 // Colors
 
 .bg-info {

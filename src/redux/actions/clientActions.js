@@ -3,26 +3,43 @@ import { clientService } from '../services';
 
 export const clientActions = {
   fetchClients,
-  fetchClientTypes
+  fetchClientTypes,
+  createClient
 };
 
 function fetchClients(type) {
   return (dispatch) => {
-    dispatch({
-      type: clientConstants.FETCH_CLIENTS_REQUEST,
-    });
-    clientService.fetchClients(type).then((clients) => {
-      dispatch({
-        type: clientConstants.FETCH_CLIENTS_SUCCESS,
-        payload: clients,
-      });
-    }, (error) => {
-      dispatch({
-        type: clientConstants.FETCH_CLIENTS_ERROR,
-        error: error,
+    return new Promise((resolve, reject) => {
+      dispatch(request());
+      clientService.fetchClients(type).then((clients) => {
+        dispatch(success(clients));
+        resolve();
+      }, (error) => {
+        dispatch(failure());
+        reject(error);
       });
     });
   };
+
+  function request() {
+    return {
+      type: clientConstants.FETCH_CLIENTS_REQUEST,
+    };
+  }
+
+  function success(clients) {
+    return {
+      type: clientConstants.FETCH_CLIENTS_SUCCESS,
+      payload: clients,
+    };
+  }
+
+  function failure(error) {
+    return {
+      type: clientConstants.FETCH_CLIENTS_ERROR,
+      error: error,
+    };
+  }
 }
 
 function fetchClientTypes() {
@@ -52,4 +69,14 @@ function fetchClientTypes() {
       error,
     };
   }
+}
+
+function createClient(client) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      clientService.createClient(client).then((client) => {
+        resolve(client);
+      }, reject);
+    });
+  };
 }

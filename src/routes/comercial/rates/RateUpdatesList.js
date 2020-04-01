@@ -1,32 +1,31 @@
 import React, { useState, Fragment } from "react";
 import InfoCard from "../../../components/shared/InfoCard";
-import Select from "react-select";
-import { Form, Button, Table, Badge, Dropdown } from "react-bootstrap";
-import { customValueContainer } from "../../../helpers/utilities";
+import { Button, Table, Badge, Dropdown } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useHistory } from 'react-router-dom';
-import { hotelActions } from "../../../redux/actions/";
+import { hotelActions, rateActions } from "../../../redux/actions";
 import { useEffect } from "react";
 
 
-const PetitionsList = () => {
+const RateUpdatesList = () => {
 
+  // global Hooks
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
 
+  // onMounted function
   useEffect(() => {
-    dispatch(hotelActions.fetchHotels());
+    dispatch(rateActions.fetchRates());
+    dispatch(rateActions.fetchRateTypes());
+    dispatch(rateActions.fetchRateStates());
   }, [dispatch]);
 
-  const hotels = useSelector(({ hotel }) => hotel);
+  // selectors
+  const tariffsTypes = useSelector(({ rate }) => rate.types);
+  const rates = useSelector(({ rate }) => rate);
 
-
-  const [tariffsTypes] = useState([
-    { name: "Tarifa General", value: 1, path: "new-petition?type=general" },
-    { name: "Fechas Especiales", value: 2, path: "new-petition?type=special" },
-    { name: "Promociones", value: 3, path: "new-petition?type=promotion" },
-  ]);
+  // utility functions
 
   const [summary] = useState([
     {
@@ -62,31 +61,6 @@ const PetitionsList = () => {
   };
 
 
-  const [petitions] = useState([
-    {
-      id: 1,
-      name: "Nombre de la tarifa",
-      period: "19/02/2020 - 01/03/2020",
-      currency: "USD",
-      hotel: "Hotel 1",
-      status: {
-        name: "En curso",
-        code: "info"
-      }
-    },
-    {
-      id: 2,
-      name: "Nombre de la tarifa",
-      period: "19/02/2020 - 01/03/2020",
-      currency: "USD",
-      hotel: "Hotel 1",
-      status: {
-        name: "Pendiente",
-        code: "warning"
-      }
-    }
-  ]);
-
   return (
     <Fragment>
       <div className="summary_container mb-4" style={gridSummary}>
@@ -109,7 +83,7 @@ const PetitionsList = () => {
           <Dropdown.Menu>
             {
               tariffsTypes.map((e) => (
-                <Dropdown.Item key={e.value} onClick={() => history.push(`${location.pathname}/${e.path}`)}>{e.name}</Dropdown.Item>
+                <Dropdown.Item key={e.value} onClick={() => history.push(`${location.pathname}/new?type=${e.value}`)}>{e.name}</Dropdown.Item>
               ))
             }
           </Dropdown.Menu>
@@ -117,23 +91,6 @@ const PetitionsList = () => {
         <Button variant="outline-secondary" className="is_rounded mr-3">
           Actualizar convenios
         </Button>
-        <Form.Control className="w-25" type="text" placeholder="Buscar" />
-        <Select
-          className="react_select_container mx-2"
-          classNamePrefix="react_select"
-          components={{
-            ValueContainer: customValueContainer
-          }}
-          isClearable
-          hideSelectedOptions={false}
-          isMulti
-          placeholder="Hotel: "
-          options={hotels.results.map(hotel => ({
-            label: hotel.name,
-            value: hotel.id
-          }))}
-        ></Select>
-        <button className="btn btn-link">Más filtros...</button>
       </div>
       <Table>
         <thead>
@@ -144,26 +101,42 @@ const PetitionsList = () => {
             <th>Hotel</th>
             <th>Estado</th>
             <th>
-              <Button variant="light">
-                <i className="fas fa-ellipsis-v"></i>
+              <Button variant="light" disabled>
+                <i className="fas fa-ellipsis-h"></i>
               </Button>
             </th>
           </tr>
         </thead>
         <tbody>
-          {petitions.map(e => (
-            <tr className="table_link" key={e.id}>
-              <td>{e.name}</td>
-              <td>{e.period}</td>
-              <td>{e.currency}</td>
-              <td>{e.hotel}</td>
+          {rates.results.map(rate => (
+            <tr className="table_link" key={rate.id}>
+              <td>{rate.name}</td>
+              <td>[Obtener del detalle]</td>
+              <td>{rate.currency}</td>
+              <td>{rate.hotel}</td>
               <td>
-                <Badge className="p-2 text-light" variant={e.status.code}>
-                  {e.status.name}
+                <Badge className="p-2 text-light" variant={rates.states.length ? rates.states.find((state) => rate.status === state.value).code : ""}>
+                  {rates.states.length ? rates.states.find((state) => rate.status === state.value).name : ""}
                 </Badge>
               </td>
               <td>
-                <i className="fas fa-ellipsis-h"></i>
+                <Dropdown drop="left">
+                  <Dropdown.Toggle variant="light">
+                    <i className="fas fa-ellipsis-h"></i>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      as="button"
+                      className="d-flex justify-content-between align-items-center">
+                      <span>Editar</span> <i className="fas fa-edit"></i>
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as="button"
+                      className="d-flex justify-content-between align-items-center">
+                      <span>Eliminar</span> <i className="fas fa-trash"></i>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               </td>
             </tr>
           ))}
@@ -173,4 +146,4 @@ const PetitionsList = () => {
   );
 };
 
-export default PetitionsList;
+export default RateUpdatesList;

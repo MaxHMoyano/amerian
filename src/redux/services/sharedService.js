@@ -4,7 +4,9 @@ import { API_VERSION } from "../../helpers/apiVersion";
 
 export const sharedService = {
   fetchCountries,
-  fetchProvinces,
+  fetchCountry,
+  fetchRegions,
+  fetchRegion,
 };
 
 function fetchCountries() {
@@ -22,7 +24,7 @@ function fetchCountries() {
   });
 }
 
-function fetchProvinces(countryId) {
+function fetchRegions(countryId) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()
@@ -34,5 +36,35 @@ function fetchProvinces(countryId) {
       return res.json();
     }
     throw res.statusText;
+  });
+}
+
+function fetchCountry(countryId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+
+
+  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/`, requestOptions).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw res.statusText;
+  });
+}
+
+function fetchRegion(countryId, regionId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+
+
+  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/regions/${regionId}/`, requestOptions).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    Promise.reject(res.statusText);
   });
 }

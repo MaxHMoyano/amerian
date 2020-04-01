@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { Table, Badge } from "react-bootstrap";
+import { Table, Badge, Button, Dropdown } from "react-bootstrap";
 // import Select from "react-select";
 // import StarRatings from "react-star-ratings";
 import StaffModal from "./NewStaff";
@@ -36,70 +36,73 @@ const Staff = () => {
         >
           Agregar Staff
         </button>
-        {/* <Form.Control className="w-25" type="text" placeholder="Buscar" />
-        <Select
-          className="react_select_container"
-          classNamePrefix="react_select"
-          components={{
-            ValueContainer: customValueContainer
-          }}
-          isClearable
-          hideSelectedOptions={false}
-          isMulti
-          placeholder="Hotel: "
-          options={hotels}
-        ></Select>
-        <Select
-          className="react_select_container"
-          classNamePrefix="react_select"
-          components={{
-            ValueContainer: customValueContainer
-          }}
-          hideSelectedOptions={false}
-          isMulti
-          placeholder="Posicion: "
-          options={positions}
-        ></Select>
-        <button className="btn btn-link">Más filtros...</button> */}
       </div>
-      <Table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Posición</th>
-            {/* <th>
-              <i className="fas fa-ellipsis-v"></i>
-            </th> */}
-          </tr>
-        </thead>
-        <tbody>
-          {staff.results.map(e => (
-            <tr
-              // onClick={() => history.push(`${location.pathname}/${e.id}`)}
-              className="table_link"
-              key={e.id}
-            >
-              <td>
-                <div className="d-flex align-items-center">
-                  <div className="d-flex flex-column">
-                    <p className="mb-0">{e.first_name} {e.last_name}</p>
-                    <p className="mb-0 text-muted">{e.email}</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <Badge variant="dark" className="p-2">
-                  {e.position}
-                </Badge>
-              </td>
+      {
+        staff.pending ? <div className="d-flex justify-content-center"><i className="fas fa-spinner fa-spin fa-3x"></i></div> :
+          <Table>
+            <thead>
+              <tr>
+                <th width="50%">Nombre</th>
+                <th>Posición</th>
+                <th>Hotel</th>
+                <th>
+                  <Button variant="light" disabled>
+                    <i className="fas fa-ellipsis-h"></i>
+                  </Button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
 
-              {/* <td>
-                <i className="fas fa-ellipsis-h"></i>
-              </td> */}
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+              {staff.results.map(e => (
+                <tr
+                  // onClick={() => history.push(`${location.pathname}/${e.id}`)}
+                  className="table_link"
+                  key={e.email}
+                >
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <div className="d-flex flex-column">
+                        <p className="mb-0">{e.first_name} {e.last_name}</p>
+                        <p className="mb-0 text-muted">{e.email}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <Badge variant="dark" className="p-2">
+                      {e.position}
+                    </Badge>
+                  </td>
+                  <td>
+                    <Badge variant="primary" className="p-2">
+                      {e.hotel}
+                    </Badge>
+                  </td>
+                  <td>
+                    <Dropdown drop="left">
+                      <Dropdown.Toggle variant="light">
+                        <i className="fas fa-ellipsis-h"></i>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          as="button"
+                          className="d-flex justify-content-between align-items-center">
+                          <span>Editar</span> <i className="fas fa-edit"></i>
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          as="button"
+                          className="d-flex justify-content-between align-items-center">
+                          <span>Eliminar</span> <i className="fas fa-trash"></i>
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+      }
     </Fragment>
   );
 };

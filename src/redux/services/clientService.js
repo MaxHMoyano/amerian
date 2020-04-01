@@ -4,7 +4,8 @@ import { API_VERSION } from "../../helpers/apiVersion";
 
 export const clientService = {
   fetchClients,
-  fetchClientTypes
+  fetchClientTypes,
+  createClient,
 };
 
 function fetchClients(type) {
@@ -42,3 +43,21 @@ function fetchClientTypes() {
   });
 
 }
+
+function createClient(client) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify(client)
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/clients/`);
+
+  return fetch(url, requestOptions).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw res.statusText;
+  });
+
+}
+

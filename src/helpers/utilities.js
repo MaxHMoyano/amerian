@@ -44,3 +44,6 @@ export const handleResponse = (response) => {
 };
 
 export const customSelectTheme = (theme) => ({ ...theme, colors: { ...theme.colors, primary: "#b20022" } });
+
+
+export const phoneRegex = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;

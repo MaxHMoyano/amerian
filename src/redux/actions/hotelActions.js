@@ -10,18 +10,21 @@ export const hotelActions = {
 };
 
 function fetchHotels() {
-  return async (dispatch) => {
-    dispatch(request());
-    let hotels = await hotelService.fetchHotels();
-    let countries = await sharedService.fetchCountries();
-    hotels.results = hotels.results.map((hotel) => {
-      let country = countries.results.find(country => country.id === hotel.country);
-      return {
-        ...hotel,
-        country
-      };
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      dispatch(request());
+      hotelService.fetchHotels().then((hotels) => {
+        Promise.all(hotels.results.map(getHotelData)).then((data) => {
+          hotels.results = data;
+          dispatch(success(hotels));
+          resolve();
+        });
+      }, error => {
+        dispatch(failure(error));
+        reject(error);
+      });
     });
-    dispatch(success(hotels));
+
   };
 
   function request() {
@@ -65,8 +68,10 @@ function fetchRoomTypes(hotelId) {
 
 function createHotel(hotel) {
   return (dispatch) => {
-    hotelService.createHotel(hotel).then((newHotel) => {
-      dispatch(fetchHotels());
+    return new Promise((resolve, reject) => {
+      hotelService.createHotel(hotel).then((hotel) => {
+        resolve(hotel);
+      });
     });
   };
 }
@@ -98,4 +103,19 @@ function deleteHotel(hotelId) {
       dispatch(fetchHotels());
     });
   };
+}
+
+
+
+
+function getHotelData(hotel) {
+  return new Promise((resolve, reject) => {
+    Promise.all([sharedService.fetchCountry(hotel.country), sharedService.fetchRegion(hotel.country, hotel.region)]).then(([country, region]) => {
+      resolve({
+        ...hotel,
+        country: country.name,
+        region: region.name
+      });
+    });
+  });
 }

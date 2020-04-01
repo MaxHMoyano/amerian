@@ -32,15 +32,15 @@ const initialState = {
       routes: [
         {
           name: "Tarifas Vigentes",
-          path: "/comercial/tariffs"
+          path: "/comercial/rates"
         },
         {
           name: "Actualizaciones",
-          path: "/comercial/petitions"
+          path: "/comercial/rates-updates"
         },
         {
           name: "Clientes Convenio",
-          path: "/comercial/agreements"
+          path: "/comercial/clients"
         },
       ]
     },

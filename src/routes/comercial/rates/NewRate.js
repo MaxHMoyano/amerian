@@ -5,7 +5,7 @@ import Select from 'react-select';
 import { useState } from 'react';
 import { customSelectTheme } from '../../../helpers/utilities';
 import { useDispatch, useSelector } from 'react-redux';
-import { hotelActions, clientActions, currencyActions, rateActions } from '../../../redux/actions/';
+import { hotelActions, clientActions, currencyActions, rateActions } from '../../../redux/actions';
 import { useEffect } from 'react';
 import Datepicker from 'react-datepicker';
 import { useFormik } from 'formik';
@@ -16,21 +16,13 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 };
 
-const NewPetition = () => {
+const NewRate = () => {
   const dispatch = useDispatch();
   const query = useQuery();
   const history = useHistory();
 
   const getTitle = () => {
     switch (query.get("type")) {
-      case "general":
-        return "Tarifa General";
-      case "special":
-        return "Tarifas Especiales";
-      case "promotion":
-        return "Promociones";
-      default:
-        break;
     }
   };
 
@@ -41,7 +33,9 @@ const NewPetition = () => {
     dispatch(currencyActions.fetchCurrencies());
   }, [dispatch]);
 
-  const [roomTypes] = useState([]);
+  const [roomTypes] = useState([
+    { name: "" }
+  ]);
   const [showRoomsModal, setShowRoomsModal] = useState(false);
 
   let hotels = useSelector(({ hotel }) => hotel);
@@ -69,10 +63,14 @@ const NewPetition = () => {
       name: "",
       hotel: null,
       currency: null,
+      date_from: new Date(),
+      date_to: null,
+      alternative_date_from: new Date(),
+      alternative_date_to: null,
       alternative_currency: null,
       exchange_rate: "",
       agreement_discount: 0,
-      type: null,
+      type: 0, // Hay que poner el tipo de la URL
       observations: "",
       corporationRates: {
         base: "",
@@ -119,7 +117,7 @@ const NewPetition = () => {
     let exIdx = activeExCopy.findIndex(ex => ex.name === e.target.id.split("-")[0]);
     activeExCopy[exIdx] = {
       ...activeExCopy[exIdx],
-      active: !activeExCopy[exIdx].active
+      active: e.target.checked
     };
     setActiveEx(activeExCopy);
   };
@@ -183,8 +181,12 @@ const NewPetition = () => {
                 <Datepicker
                   className="form-control"
                   placeholderText="Desde"
+                  selected={formik.values.date_from}
+                  onChange={value => formik.setFieldValue("date_from", value)}
                 />
                 <Datepicker
+                  selected={formik.values.date_to}
+                  onChange={value => formik.setFieldValue("date_to", value)}
                   placeholderText="Hasta"
                   className="form-control" />
               </div>
@@ -221,10 +223,15 @@ const NewPetition = () => {
                 <Datepicker
                   className="form-control"
                   placeholderText="Desde"
+                  selected={formik.values.alternative_date_from}
+                  onChange={value => formik.setFieldValue("alternative_date_from", value)}
                 />
                 <Datepicker
                   placeholderText="Hasta"
-                  className="form-control" />
+                  className="form-control"
+                  selected={formik.values.alternative_date_to}
+                  onChange={value => formik.setFieldValue("alternative_date_to", value)}
+                />
               </div>
             </Form.Group>
           </Col>
@@ -234,15 +241,15 @@ const NewPetition = () => {
           <Table striped hover>
             <thead>
               <tr>
-                <th width="70%"><Button variant="outline-info">Configurar Habitaciones</Button></th>
+                <th width="70%"><Button onClick={e => setShowRoomsModal(true)} variant="outline-info">Configurar Habitaciones</Button></th>
                 <th><span className="text-muted">USD</span></th>
                 <th><span className="text-muted">ARS</span></th>
               </tr>
             </thead>
             <tbody>
               {
-                roomTypes.map((room) => (
-                  <tr key={room.id}>
+                roomTypes.map((room, idx) => (
+                  <tr key={idx}>
                     <td>{room.name}</td>
                     <td><Form.Control onChange={(event) => console.log(event)} value={room.priceUsd} /></td>
                     <td><Form.Control onChange={(event) => console.log(event)} value={room.priceArs} /></td>
@@ -282,7 +289,7 @@ const NewPetition = () => {
                       custom
                       type="checkbox"
                       onChange={handleTypeChange}
-                      label={`${clientType.value} (${currency.value})`}
+                      label={`${clientType.name} (${currency.value})`}
                       id={`${clientType.value}-${currency.value}`} />
                   ))
                 }
@@ -312,6 +319,8 @@ const NewPetition = () => {
               <Row className="mb-2" key={idx}>
                 <Col md={8}>
                   <Select
+                    value={exc.names}
+                    onChange={value => formik.setFieldValue(`corporationRates.exceptions[${idx}].names`, value)}
                     isMulti
                     options={corporationClients.map((client) => ({ label: client.name, value: client.id }))}
                     theme={customSelectTheme}
@@ -319,7 +328,13 @@ const NewPetition = () => {
                 </Col>
                 <Col md={4} className="d-flex align-items-center justify-content-end">
                   <i className="fas fa-save mx-3 icon-button"></i>
-                  <Form.Control className="flex-1" type="text" value={exc.value} />
+                  <Form.Control
+                    name={`corporationRates.exceptions[${idx}].value`}
+                    className="flex-1"
+                    type="text"
+                    value={exc.value}
+                    onChange={formik.handleChange}
+                  />
                   <span className="ml-1">%</span>
                   <i className="fas fa-trash mx-3 icon-button"></i>
                   <Button onClick={() => setCorpExc([...corpExc, { value: exc.value }])} variant="outline-info mx-1">
@@ -436,11 +451,17 @@ const NewPetition = () => {
         <h3 className="text-muted mt-5">Observaciones</h3>
         <Form.Group>
           <Form.Label className="text-muted">Observaciones Convenio</Form.Label>
-          <Form.Control rows="5" as="textarea" />
+          <Form.Control
+            rows="5"
+            as="textarea"
+            name="observations"
+            value={formik.values.observations}
+            onChange={formik.handleChange}
+          />
         </Form.Group>
       </Form>
     </Fragment>
   );
 };
 
-export default NewPetition;
+export default NewRate;

@@ -4,7 +4,7 @@ import { customValueContainer } from '../../../helpers/utilities';
 import Select from 'react-select';
 import { useHistory } from 'react-router-dom';
 
-const Tariffs = () => {
+const RatesList = () => {
 
   const history = useHistory();
 
@@ -121,4 +121,4 @@ const Tariffs = () => {
   </Fragment>;
 };
 
-export default Tariffs;
+export default RatesList;

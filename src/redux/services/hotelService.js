@@ -1,7 +1,7 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
-import { handleResponse } from "../../helpers/utilities";
+// import { handleResponse } from "../../helpers/utilities";
 
 export const hotelService = {
   fetchHotels,

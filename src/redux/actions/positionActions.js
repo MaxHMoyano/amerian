@@ -17,15 +17,19 @@ function cleanState() {
 
 function fetchPositions(hotelId) {
   return dispatch => {
-    dispatch(request());
-    positionService.fetchPositions(hotelId).then((positions) => {
-
-      Promise.all(positions.results.map(position => getPositionsProperties(position))).then(data => {
-        positions.results = data;
-        dispatch(success(positions));
+    return new Promise((resolve, reject) => {
+      dispatch(request());
+      positionService.fetchPositions(hotelId).then((positions) => {
+        Promise.all(positions.results.map(position => getPositionsProperties(position))).then(data => {
+          positions.results = data;
+          dispatch(success(positions));
+          resolve();
+        });
+      }, error => {
+        dispatch(failure(error));
+        reject(error);
       });
-
-    }, error => dispatch(failure(error)));
+    });
   };
   function request() {
     return {
@@ -48,8 +52,11 @@ function fetchPositions(hotelId) {
 
 function createNewPosition(hotelId, position) {
   return dispatch => {
-    positionService.createNewPosition(hotelId, position).then((position) => {
-      dispatch(fetchPositions());
+    return new Promise((resolve, reject) => {
+      positionService.createNewPosition(hotelId, position).then((position) => {
+        resolve();
+      }, reject);
+
     });
   };
 

@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Dropdown } from "react-bootstrap";
 // import Select from "react-select";
 // import { customValueContainer } from "../../../helpers/utilities";
-import NewPosition from './NewPosition';
+import PositionDetail from './PositionDetail';
 import { useSelector, useDispatch } from "react-redux";
 import { positionActions } from "../../../redux/actions";
 
@@ -19,58 +19,63 @@ const PositionsList = () => {
 
   return (
     <Fragment>
-      <NewPosition show={showModal} onCloseDialog={e => setShowModal(false)} />
+      <PositionDetail show={showModal} onCloseDialog={e => setShowModal(false)} />
       <div className="d-flex mb-4 align-items-center">
         <button type="button" onClick={e => setShowModal(true)} className="btn btn-secondary is_rounded mr-3">
           Agregar Posición
         </button>
-        {/* <Form.Control className="w-25" type="text" placeholder="Buscar" />
-        <Select
-          className="react_select_container"
-          classNamePrefix="react_select"
-          components={{
-            ValueContainer: customValueContainer
-          }}
-          isClearable
-          hideSelectedOptions={false}
-          isMulti
-          closeMenuOnSelect={false}
-          placeholder="Hotel: "
-          options={hotels}
-        ></Select>
-        <button className="btn btn-link">Más filtros...</button> */}
       </div>
-      <Table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Descripcion</th>
-            <th>Hotel</th>
-            <th>
-              <i className="fas fa-ellipsis-v"></i>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {positions.results.map(e => (
-            <tr className="table_link" key={e.id}>
-              <td>{e.name}</td>
-              <td>
-                {e.description}
-              </td>
-              <td>
-                {e.hotel}
-              </td>
-              <td>
-                <Button variant="light">
-                  <i className="fas fa-ellipsis-h"></i>
+      {
+        positions.pending ? <div className="d-flex justify-content-center"><i className="fas fa-spinner fa-spin fa-3x"></i></div> :
+          <Table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Hotel</th>
+                <th>
+                  <Button variant="light" disabled>
+                    <i className="fas fa-ellipsis-h"></i>
 
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+                  </Button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {positions.results.map(e => (
+                <tr className="table_link" key={e.id}>
+                  <td>{e.name}</td>
+                  <td>
+                    {e.description}
+                  </td>
+                  <td>
+                    {e.hotel}
+                  </td>
+                  <td>
+                    <Dropdown drop="left">
+                      <Dropdown.Toggle variant="light">
+                        <i className="fas fa-ellipsis-h"></i>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          as="button"
+                          className="d-flex justify-content-between align-items-center">
+                          <span>Editar</span> <i className="fas fa-edit"></i>
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          as="button"
+                          className="d-flex justify-content-between align-items-center">
+                          <span>Eliminar</span> <i className="fas fa-trash"></i>
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+      }
     </Fragment>
   );
 };

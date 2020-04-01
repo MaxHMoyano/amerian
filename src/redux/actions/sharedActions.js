@@ -3,7 +3,7 @@ import { sharedService } from '../services';
 
 export const sharedActions = {
   fetchCountries,
-  fetchProvinces,
+  fetchRegions,
 };
 
 function fetchCountries() {
@@ -25,12 +25,12 @@ function fetchCountries() {
   };
 }
 
-function fetchProvinces(countryId) {
+function fetchRegions(countryId) {
   return (dispatch) => {
     dispatch({
       type: sharedConstants.FETCH_PROVINCES_REQUEST,
     });
-    sharedService.fetchProvinces(countryId).then((payload) => {
+    sharedService.fetchRegions(countryId).then((payload) => {
       dispatch({
         type: sharedConstants.FETCH_PROVINCES_SUCCESS,
         payload,

@@ -3,11 +3,28 @@ import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
 
 export const rateService = {
-  createNewRate,
+  fetchRates,
+  createRate,
   fetchRateTypes,
+  fetchRateStates,
 };
 
-function createNewRate(hotelId, rate) {
+
+function fetchRates() {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/`);
+  return fetch(url, requestOptions).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw res.statusText;
+  });
+}
+
+function createRate(hotelId, rate) {
   const requestOptions = {
     method: "POST",
     headers: authHeader(),
@@ -27,7 +44,21 @@ function fetchRateTypes() {
     method: "GET",
     headers: authHeader(),
   };
-  let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/special-dates/`);
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/types/`);
+  return fetch(url, requestOptions).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw res.statusText;
+  });
+}
+
+function fetchRateStates() {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/status/`);
   return fetch(url, requestOptions).then(res => {
     if (res.ok) {
       return res.json();

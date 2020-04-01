@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../redux/actions/";
 import { Image, Form, Button, Alert } from "react-bootstrap";
@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 const Login = () => {
   const dispatch = useDispatch();
   const error = useSelector(({ auth }) => auth.error);
-  const [showError, setShowError] = useState(false);
+  const loggingIn = useSelector(({ auth }) => auth.loggingIn);
 
   const loginSchema = Yup.object().shape({
     user: Yup.string()
@@ -79,9 +79,13 @@ const Login = () => {
               />
               {(formik.errors.password && formik.touched.password) ? (<span className="error_message">{formik.errors.password}</span>) : null}
             </Form.Group>
-            <Button type="submit" variant="primary" className="mb-4">
-              Iniciar Sesión
-            </Button>
+            {
+              loggingIn ? <i className="fas fa-spinner fa-spin fa-2x mb-4"></i> :
+                <Button type="submit" variant="primary" className="mb-4">
+                  Iniciar Sesión
+                </Button>
+            }
+
             <p className="text-primary">¿Se te olvidó tu contraseña?</p>
             <p className="text-primary">¿Necesitas más ayuda?</p>
           </div>
