@@ -1,6 +1,7 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
+import { handleResponse } from "../../helpers/utilities";
 
 export const positionService = {
   fetchPositions,
@@ -19,12 +20,7 @@ function fetchPositions(hotelId) {
   } else {
     url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/positions/`);
   }
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 function fetchPosition(positionId) {
@@ -33,12 +29,7 @@ function fetchPosition(positionId) {
     headers: authHeader()
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/positions/${positionId}/`);
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 
@@ -50,11 +41,6 @@ function createNewPosition(hotelId, position) {
     body: JSON.stringify(position),
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/positions/`);
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 
 }

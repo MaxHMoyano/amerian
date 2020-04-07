@@ -32,7 +32,7 @@ export const handleResponse = (response) => {
       if (response.status === 401) {
         // auto logout if 401 response returned from api
         logout();
-        // window.location.reload(true);
+        window.location.reload(true);
       }
 
       const error = (data && data.message) || response.statusText;
@@ -47,3 +47,4 @@ export const customSelectTheme = (theme) => ({ ...theme, colors: { ...theme.colo
 
 
 export const phoneRegex = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+export const globalDateFormat = "dd-MM-yyyy";

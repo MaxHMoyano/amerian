@@ -1,7 +1,7 @@
 import { hotelConstants } from '../constants/';
 
 const INITIAL_STATE = {
-  payload: [],
+  results: [],
   error: "",
   pending: false
 };
@@ -16,7 +16,7 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
     case hotelConstants.FETCH_ROOM_TYPES_SUCCESS:
       return {
         ...state,
-        payload,
+        ...payload,
         pending: false,
       };
     case hotelConstants.FETCH_ROOM_TYPES_ERROR:

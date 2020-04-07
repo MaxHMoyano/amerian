@@ -1,6 +1,7 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
+import { handleResponse } from "../../helpers/utilities";
 
 export const sharedService = {
   fetchCountries,
@@ -16,12 +17,7 @@ function fetchCountries() {
   };
 
 
-  return fetch(`${config.apiUrl}/${API_VERSION}/countries/`, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(`${config.apiUrl}/${API_VERSION}/countries/`, requestOptions).then(handleResponse);
 }
 
 function fetchRegions(countryId) {
@@ -31,12 +27,7 @@ function fetchRegions(countryId) {
   };
 
 
-  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/regions/`, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/regions/`, requestOptions).then(handleResponse);
 }
 
 function fetchCountry(countryId) {
@@ -46,12 +37,7 @@ function fetchCountry(countryId) {
   };
 
 
-  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/`, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/`, requestOptions).then(handleResponse);
 }
 
 function fetchRegion(countryId, regionId) {
@@ -61,10 +47,5 @@ function fetchRegion(countryId, regionId) {
   };
 
 
-  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/regions/${regionId}/`, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    Promise.reject(res.statusText);
-  });
+  return fetch(`${config.apiUrl}/${API_VERSION}/countries/${countryId}/regions/${regionId}/`, requestOptions).then(handleResponse);
 }

@@ -3,7 +3,7 @@ import InfoCard from "../../../components/shared/InfoCard";
 import { Button, Table, Badge, Dropdown } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useHistory } from 'react-router-dom';
-import { hotelActions, rateActions } from "../../../redux/actions";
+import { rateActions } from "../../../redux/actions";
 import { useEffect } from "react";
 
 
@@ -88,9 +88,9 @@ const RateUpdatesList = () => {
             }
           </Dropdown.Menu>
         </Dropdown>
-        <Button variant="outline-secondary" className="is_rounded mr-3">
+        {/* <Button variant="outline-secondary" className="is_rounded mr-3">
           Actualizar convenios
-        </Button>
+        </Button> */}
       </div>
       <Table>
         <thead>
@@ -127,8 +127,9 @@ const RateUpdatesList = () => {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       as="button"
+                      onClick={e => history.push(`/comercial/rates/${rate.id}`)}
                       className="d-flex justify-content-between align-items-center">
-                      <span>Editar</span> <i className="fas fa-edit"></i>
+                      <span>Ver detalles</span> <i className="fas fa-eye"></i>
                     </Dropdown.Item>
                     <Dropdown.Item
                       as="button"

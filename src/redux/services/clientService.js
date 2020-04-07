@@ -1,6 +1,7 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
+import { handleResponse } from "../../helpers/utilities";
 
 export const clientService = {
   fetchClients,
@@ -20,12 +21,7 @@ function fetchClients(type) {
     };
     url.search = new URLSearchParams(params).toString();
   }
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 function fetchClientTypes() {
@@ -35,12 +31,7 @@ function fetchClientTypes() {
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/clients/types/`);
 
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 
 }
 
@@ -52,12 +43,7 @@ function createClient(client) {
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/clients/`);
 
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 
 }
 

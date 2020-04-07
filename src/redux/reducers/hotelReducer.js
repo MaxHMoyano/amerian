@@ -25,6 +25,21 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
         error: error,
         pending: false
       };
+    case hotelConstants.EDIT_HOTEL_REQUEST:
+      return {
+        ...state,
+        pending: true,
+      };
+    case hotelConstants.EDIT_HOTEL_SUCCESS:
+      return {
+        ...state,
+        pending: false,
+      };
+    case hotelConstants.EDIT_HOTEL_ERROR:
+      return {
+        ...state,
+        error
+      };
     default:
       return state;
   }

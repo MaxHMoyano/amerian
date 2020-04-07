@@ -1,12 +1,17 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
+import { handleResponse } from "../../helpers/utilities";
 
 export const rateService = {
   fetchRates,
+  fetchRate,
   createRate,
   fetchRateTypes,
   fetchRateStates,
+  createRateAmount,
+  createRateDetail,
+  createRateCondition
 };
 
 
@@ -16,12 +21,7 @@ function fetchRates() {
     headers: authHeader(),
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/`);
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 function createRate(hotelId, rate) {
@@ -31,12 +31,17 @@ function createRate(hotelId, rate) {
     body: JSON.stringify(rate)
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/rates/`);
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
+function fetchRate(rateId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/${rateId}/`);
+  return fetch(url, requestOptions).then(handleResponse);
+
 }
 
 function fetchRateTypes() {
@@ -45,12 +50,7 @@ function fetchRateTypes() {
     headers: authHeader(),
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/types/`);
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 function fetchRateStates() {
@@ -59,11 +59,36 @@ function fetchRateStates() {
     headers: authHeader(),
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/status/`);
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 
+}
+
+function createRateAmount(hotelId, rateId, rateAmount) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify(rateAmount)
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/rates/${rateId}/rate-amounts/`);
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
+function createRateDetail(hotelId, rateId, rateDetail) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify(rateDetail)
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/rates/${rateId}/rate-details/`);
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
+function createRateCondition(hotelId, rateId, rateCondition) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify(rateCondition)
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/rates/${rateId}/special-conditions/`);
+  return fetch(url, requestOptions).then(handleResponse);
 }

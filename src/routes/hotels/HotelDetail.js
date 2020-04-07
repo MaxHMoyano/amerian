@@ -26,6 +26,7 @@ const HotelDetail = (props) => {
   const changeSelectedCountry = ({ label, value }) => {
     dispatch(sharedActions.fetchRegions(value));
     setSelectedCountry({ label, value });
+    formik.setFieldValue("region", null);
   };
 
   const hotelSchema = Yup.object().shape({

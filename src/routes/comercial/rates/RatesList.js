@@ -1,7 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { Table, Badge, Form, Button, Dropdown } from 'react-bootstrap';
-import { customValueContainer } from '../../../helpers/utilities';
-import Select from 'react-select';
+import { Table, Badge, Button, Dropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
 const RatesList = () => {
@@ -31,17 +29,6 @@ const RatesList = () => {
     },
   ]);
 
-
-  const [chains] = useState([
-    { name: "Merit", id: 1 },
-    { name: "cadena 2", id: 2 },
-  ]);
-
-  const [locations] = useState([
-    { name: "Buenos Aires", id: 1 },
-    { name: "Cordoba", id: 2 },
-  ]);
-
   return <Fragment>
     <div className="d-flex align-items-center mb-2">
       <Dropdown>
@@ -56,34 +43,6 @@ const RatesList = () => {
           }
         </Dropdown.Menu>
       </Dropdown>
-      {/* <div className="icon_input w-15">
-        <Form.Control className="" type="text" placeholder="Buscar..." />
-        <i className="fas fa-search"></i>
-      </div>
-      <Select
-        className="react_select_container"
-        classNamePrefix="react_select"
-        components={{
-          ValueContainer: customValueContainer
-        }}
-        isClearable
-        hideSelectedOptions={false}
-        isMulti
-        placeholder="Cadena: "
-        options={chains.map((chain) => ({ label: chain.name, value: chain.id }))}
-      ></Select>
-      <Select
-        className="react_select_container"
-        classNamePrefix="react_select"
-        components={{
-          ValueContainer: customValueContainer
-        }}
-        isClearable
-        hideSelectedOptions={false}
-        isMulti
-        placeholder="Ubicacion: "
-        options={locations.map((location) => ({ label: location.name, value: location.id }))}
-      ></Select> */}
     </div>
     <Table>
       <thead>

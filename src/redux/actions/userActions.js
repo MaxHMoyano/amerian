@@ -25,12 +25,11 @@ function login(email, password) {
 
     userService.login(email, password).then(
       user => {
-        dispatch(fetchUser(user.id));
-        setTimeout(() => {
+        dispatch(fetchUser(user.id)).then((user) => {
           dispatch(welcomePage(user));
-        }, 300);
+        });
       },
-      error => {
+      (error) => {
         dispatch(failure(error));
       }
     );
@@ -53,25 +52,29 @@ function login(email, password) {
   function success(user) {
     return { type: userConstants.LOGIN_SUCCESS, user };
   }
-  function failure(error) {
+  function failure() {
     return { type: userConstants.LOGIN_FAILURE, error: "Ha ocurrido un error, por favor verifique sus credenciales" };
   }
 }
 
 function fetchUser(userId) {
   return (dispatch) => {
-    dispatch({
-      type: userConstants.GET_USER_REQUEST
-    });
-    userService.fetchUser(userId).then((user) => {
+    return new Promise((resolve, reject) => {
       dispatch({
-        type: userConstants.GET_USER_SUCCESS,
-        payload: user
+        type: userConstants.GET_USER_REQUEST
       });
-    }, (error) => {
-      dispatch({
-        type: userConstants.GET_USER_ERROR,
-        error
+      userService.fetchUser(userId).then((user) => {
+        dispatch({
+          type: userConstants.GET_USER_SUCCESS,
+          payload: user
+        });
+        resolve();
+      }, (error) => {
+        dispatch({
+          type: userConstants.GET_USER_ERROR,
+          error
+        });
+        reject(error);
       });
     });
   };

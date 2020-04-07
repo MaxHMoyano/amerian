@@ -1,11 +1,15 @@
 import { rateConstants } from "../constants";
-import { rateService } from "../services/rateService";
+import { hotelService, rateService } from "../services";
 
 export const rateActions = {
   fetchRates,
   createRate,
   fetchRateTypes,
   fetchRateStates,
+  createRateAmount,
+  createRateDetail,
+  createRateCondition,
+  fetchRate,
 };
 
 function fetchRates() {
@@ -46,15 +50,56 @@ function fetchRates() {
   }
 }
 
-function createRate(rate) {
+function createRate(hotelId, rate) {
   return dispatch => {
     return new Promise((resolve, reject) => {
-      rateService.createRate(rate).then((rate) => {
-        resolve();
+      rateService.createRate(hotelId, rate).then((rate) => {
+        resolve(rate);
       });
     });
   };
 }
+
+function createRateAmount(hotelId, rateId, rateAmount) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      rateService.createRateAmount(hotelId, rateId, rateAmount).then((rateAmount) => {
+        resolve(rateAmount);
+      });
+    });
+  };
+}
+
+function createRateDetail(hotelId, rateId, rateDetail) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      rateService.createRateDetail(hotelId, rateId, rateDetail).then((rateDetail) => {
+        resolve(rateDetail);
+      });
+    });
+  };
+}
+
+function createRateCondition(hotelId, rateId, condition) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      rateService.createRateCondition(hotelId, rateId, condition).then((condition) => {
+        resolve(condition);
+      });
+    });
+  };
+}
+
+function fetchRate(rateId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      rateService.fetchRate(rateId).then((rate) => {
+
+      });
+    });
+  };
+}
+
 
 function fetchRateStates() {
   return dispatch => {
@@ -111,6 +156,11 @@ function mapStates(states) {
 
 function getRateData(rate) {
   return new Promise((resolve, reject) => {
-    resolve(rate);
+    Promise.all([hotelService.fetchHotel(rate.hotel)]).then(([hotel]) => {
+      resolve({
+        ...rate,
+        hotel: hotel.name
+      });
+    });
   });
 }

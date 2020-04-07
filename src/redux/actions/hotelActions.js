@@ -3,10 +3,13 @@ import { hotelService, sharedService } from '../services';
 
 export const hotelActions = {
   fetchHotels,
-  fetchRoomTypes,
   createHotel,
-  fetchChains,
   deleteHotel,
+  fetchRoomTypes,
+  createRoomType,
+  editRoomType,
+  deleteRoomType,
+  fetchChains,
 };
 
 function fetchHotels() {
@@ -49,12 +52,41 @@ function fetchHotels() {
 
 }
 
+function deleteRoomType(hotelId, roomTypeId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      hotelService.deleteRoomType(hotelId, roomTypeId).then((res) => {
+        resolve();
+      });
+    });
+  };
+}
 
+function createRoomType(hotelId, roomType) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      hotelService.createRoomType(hotelId, roomType).then((roomType) => {
+        resolve(roomType);
+      });
+    });
+  };
+}
+
+function editRoomType(hotelId, roomTypeId, roomType) {
+  console.log(hotelId, roomTypeId, roomType);
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      hotelService.editRoomType(hotelId, roomTypeId, roomType).then(() => {
+        resolve();
+      });
+    });
+  };
+}
 
 function fetchRoomTypes(hotelId) {
   return (dispatch) => {
     dispatch({ type: hotelConstants.FETCH_ROOM_TYPES_REQUEST });
-    hotelService.fetchRoomTypesByHotelId(hotelId).then((rooms) => {
+    hotelService.fetchRoomTypes(hotelId).then((rooms) => {
       dispatch({
         type: hotelConstants.FETCH_ROOM_TYPES_SUCCESS,
         payload: rooms,

@@ -1,7 +1,7 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
-
+import { handleResponse } from "../../helpers/utilities";
 
 export const staffService = {
   fetchStaff,
@@ -14,12 +14,7 @@ function fetchStaff() {
     headers: authHeader()
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/human_capital/staff/`);
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 
@@ -31,10 +26,5 @@ function createStaff(hotelId, staff) {
   };
   let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/staff/`);
 
-  return fetch(url, requestOptions).then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    throw res.statusText;
-  });
+  return fetch(url, requestOptions).then(handleResponse);
 }
