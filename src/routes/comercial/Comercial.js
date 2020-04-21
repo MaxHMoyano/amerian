@@ -4,11 +4,15 @@ import { useSelector } from "react-redux";
 
 const Comercial = () => {
   // Comercial is a parent route, it always has a first subroute
-  const firstNestedRoute = useSelector(({ menu }) =>
-    menu.activeItem.routes.length ? menu.activeItem.routes[0] : "/"
-  );
+  const firstNestedRoute = useSelector(({ menu }) => {
+    let active = menu.items.find((e) => e.active);
+    if (active) {
+      return active.routes[0].path;
+    }
+    return "/";
+  });
 
-  return <Redirect to={firstNestedRoute.path} />;
+  return <Redirect to={firstNestedRoute} />;
 };
 
 export default Comercial;

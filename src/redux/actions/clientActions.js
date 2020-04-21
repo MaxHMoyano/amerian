@@ -3,15 +3,18 @@ import { clientService } from '../services';
 
 export const clientActions = {
   fetchClients,
+  fetchClient,
+  updateClient,
+  deleteClient,
   fetchClientTypes,
   createClient
 };
 
-function fetchClients(type) {
+function fetchClients(searchParams) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       dispatch(request());
-      clientService.fetchClients(type).then((clients) => {
+      clientService.fetchClients(searchParams).then((clients) => {
         dispatch(success(clients));
         resolve();
       }, (error) => {
@@ -77,6 +80,35 @@ function createClient(client) {
       clientService.createClient(client).then((client) => {
         resolve(client);
       }, reject);
+    });
+  };
+}
+
+function fetchClient(clientId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      clientService.fetchClient(clientId).then((client) => {
+        resolve(client);
+      });
+    });
+  };
+}
+
+function updateClient(clientId, client) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      clientService.updateClient(clientId, client).then((client) => {
+        resolve(client);
+      });
+    });
+  };
+}
+function deleteClient(clientId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      clientService.deleteClient(clientId).then((res) => {
+        resolve(res);
+      });
     });
   };
 }

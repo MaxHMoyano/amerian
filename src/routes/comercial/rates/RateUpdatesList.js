@@ -2,27 +2,24 @@ import React, { useState, Fragment } from "react";
 import InfoCard from "../../../components/shared/InfoCard";
 import { Button, Table, Badge, Dropdown } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { rateActions } from "../../../redux/actions";
 import { useEffect } from "react";
-
+import RateDropdown from "../../../components/shared/RateDropdown";
 
 const RateUpdatesList = () => {
 
   // global Hooks
-  const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
 
   // onMounted function
   useEffect(() => {
     dispatch(rateActions.fetchRates());
-    dispatch(rateActions.fetchRateTypes());
     dispatch(rateActions.fetchRateStates());
   }, [dispatch]);
 
   // selectors
-  const tariffsTypes = useSelector(({ rate }) => rate.types);
   const rates = useSelector(({ rate }) => rate);
 
   // utility functions
@@ -63,7 +60,7 @@ const RateUpdatesList = () => {
 
   return (
     <Fragment>
-      <div className="summary_container mb-4" style={gridSummary}>
+      {/* <div className="summary_container mb-4" style={gridSummary}>
         {summary.map(card => (
           <InfoCard
             key={card.code}
@@ -73,21 +70,10 @@ const RateUpdatesList = () => {
             name={card.name}
           />
         ))}
-      </div>
+      </div> */}
       {/* <hr className="text-muted" /> */}
       <div className="d-flex align-items-center">
-        <Dropdown>
-          <Dropdown.Toggle className="is_rounded mr-2" variant="secondary" id="dropdown-basic">
-            Nueva Tarifa
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            {
-              tariffsTypes.map((e) => (
-                <Dropdown.Item key={e.value} onClick={() => history.push(`${location.pathname}/new?type=${e.value}`)}>{e.name}</Dropdown.Item>
-              ))
-            }
-          </Dropdown.Menu>
-        </Dropdown>
+        <RateDropdown />
         {/* <Button variant="outline-secondary" className="is_rounded mr-3">
           Actualizar convenios
         </Button> */}
@@ -96,7 +82,6 @@ const RateUpdatesList = () => {
         <thead>
           <tr>
             <th>Tarifa</th>
-            <th>Periodo</th>
             <th>Moneda</th>
             <th>Hotel</th>
             <th>Estado</th>
@@ -109,9 +94,12 @@ const RateUpdatesList = () => {
         </thead>
         <tbody>
           {rates.results.map(rate => (
-            <tr className="table_link" key={rate.id}>
-              <td>{rate.name}</td>
-              <td>[Obtener del detalle]</td>
+            <tr key={rate.id}>
+              <td>
+                <span onClick={e => history.push(`/comercial/rates/${rate.id}`)} className="text-info icon-button">
+                  {rate.name}
+                </span>
+              </td>
               <td>{rate.currency}</td>
               <td>{rate.hotel}</td>
               <td>
@@ -125,17 +113,22 @@ const RateUpdatesList = () => {
                     <i className="fas fa-ellipsis-h"></i>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item
-                      as="button"
-                      onClick={e => history.push(`/comercial/rates/${rate.id}`)}
-                      className="d-flex justify-content-between align-items-center">
-                      <span>Ver detalles</span> <i className="fas fa-eye"></i>
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as="button"
-                      className="d-flex justify-content-between align-items-center">
-                      <span>Eliminar</span> <i className="fas fa-trash"></i>
-                    </Dropdown.Item>
+                    {
+                      (rate.status === 1 || rate.status === 3) &&
+                      <Dropdown.Item
+                        as="button"
+                        className="d-flex justify-content-between align-items-center">
+                        <span>Editar</span> <i className="fas fa-edit"></i>
+                      </Dropdown.Item>
+                    }
+                    {
+                      rate.status === 2 &&
+                      <Dropdown.Item
+                        as="button"
+                        className="d-flex justify-content-between align-items-center">
+                        <span>Enviar solicitud</span> <i className="fas fa-paper-plane"></i>
+                      </Dropdown.Item>
+                    }
                   </Dropdown.Menu>
                 </Dropdown>
               </td>

@@ -4,30 +4,34 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 const NavBar = () => {
-  const currentRoute = useSelector(({ menu }) => menu.activeItem);
+  const currentRoute = useSelector(({ menu }) => menu.items.find((e) => e.active === true));
+  const userName = useSelector(({ user }) => user.current ? user.current.first_name : "");
+
+
 
   const [title, setTitle] = useState("");
   let location = useLocation();
 
   useEffect(() => {
-    if (currentRoute.routes.length) {
-      const route = currentRoute.routes.find(
-        route => route.path === window.location.pathname
-      );
-      if (route) {
-        setTitle(route.name);
+    if (currentRoute) {
+      if (currentRoute.routes.length) {
+        const route = currentRoute.routes.find(
+          route => route.path === window.location.pathname
+        );
+        if (route) {
+          setTitle(route.name);
+        }
+      } else {
+        setTitle(currentRoute.name);
       }
-    } else {
-      setTitle(currentRoute.name);
     }
-  }, [currentRoute.name, currentRoute.routes, location]);
+  }, [currentRoute, location]);
 
-  const userName = useSelector(({ user }) => user.current ? user.current.first_name : "");
 
   return (
     <div className="main_navbar">
       <div className="user">
-        {(currentRoute.name === "home" || !currentRoute.name) ? (
+        {(!currentRoute) ? (
           <Fragment>
             <p className="m-0">Bienvenido</p>
             <h2 className="m-0 text-muted font-weight-bold">{userName}</h2>

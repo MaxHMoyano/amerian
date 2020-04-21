@@ -4,28 +4,28 @@ import { NavLink } from "react-router-dom";
 
 const SecondarySidebar = () => {
   // States trackers
-  const currentActiveRouteName = useSelector(
-    ({ menu }) => menu.activeItem.name
-  );
-  const currentNestedRoutes = useSelector(({ menu }) => menu.activeItem.routes);
+  const activeMenu = useSelector(({ menu }) => menu.items.find((e) => e.active));
 
-  // Show sidebar only if there are nestes routes
-  let isSecondarySidebarActive = currentNestedRoutes.length;
-  const [showSecondarySidebar, setShowSecondarySidebar] = useState(false);
+
+  // // Show sidebar only if there are nestes routes
+  const [showSecondarySidebar, setShowSecondarySidebar] = useState(true);
+  const [isSidebarActive, setIsSidebarActive] = useState(false);
 
   useEffect(() => {
-    setShowSecondarySidebar(isSecondarySidebarActive);
-  }, [isSecondarySidebarActive, currentNestedRoutes]);
+    if (activeMenu && activeMenu.routes.length) {
+      setIsSidebarActive(true);
+    } else {
+      setIsSidebarActive(false);
+    }
+  }, [isSidebarActive, activeMenu]);
 
-  if (!isSecondarySidebarActive) {
+  if (!isSidebarActive) {
     return "";
   }
 
   return (
     <div
-      className={`secondary_sidebar ${
-        showSecondarySidebar ? "active" : "inactive"
-      }`}
+      className={`secondary_sidebar ${showSecondarySidebar ? "active" : "inactive"}`}
     >
       <button
         type="button"
@@ -35,17 +35,19 @@ const SecondarySidebar = () => {
         <i
           className={`fas fa-${
             showSecondarySidebar ? "chevron-left" : "chevron-right"
-          }`}
+            }`}
         ></i>
       </button>
       <h4 className="text-muted font-weight-bold mb-5">
-        {currentActiveRouteName}
+        {activeMenu ? activeMenu.name : ""}
       </h4>
-      {currentNestedRoutes.map(e => (
-        <NavLink key={e.name} className="link" to={e.path}>
-          {e.name}
-        </NavLink>
-      ))}
+      {
+        activeMenu && activeMenu.routes.length && activeMenu.routes.map(e => (
+          <NavLink key={e.name} className="link" to={e.path}>
+            {e.name}
+          </NavLink>
+        ))
+      }
     </div>
   );
 };

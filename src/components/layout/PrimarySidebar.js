@@ -13,7 +13,7 @@ const PrimarySidebar = () => {
     <div className="primary_sidebar">
       <Link
         to="/home"
-        onClick={() => dispatch(menuActions.setActiveMenuToHome())}
+        onClick={() => dispatch(menuActions.setActiveMenu(null))}
       >
         <div className="logo">
           <Image src={logo} />
@@ -27,7 +27,7 @@ const PrimarySidebar = () => {
             style={item.isBottom ? { marginTop: "auto" } : {}}
           >
             <NavLink
-              onClick={() => dispatch(menuActions.setActiveMenu(item))}
+              onClick={() => dispatch(menuActions.setActiveMenu(item.id))}
               to={item.path}
               className="menu_link"
             >
@@ -35,7 +35,7 @@ const PrimarySidebar = () => {
             </NavLink>
           </div>
         ))}
-        <div className="menu_item">
+        <div className="menu_item mt-auto">
           <Button variant="link"
             to="/home"
             className="menu_link"

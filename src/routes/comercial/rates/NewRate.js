@@ -12,6 +12,9 @@ import { useFormik } from 'formik';
 import RoomsModal from "./RoomListModal";
 import * as Yup from "yup";
 import { formatISO } from 'date-fns';
+import _ from "lodash";
+
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 };
@@ -50,7 +53,7 @@ const NewRate = () => {
   let currencies = useSelector(({ currency }) => currency);
   let clientTypes = useSelector(({ client }) => client.types);
   let roomTypes = useSelector(({ roomTypes }) => roomTypes);
-
+  let currentUserGroups = useSelector(({ user }) => user.current.groups);
 
   // local state
   const [selectedHotel, setSelectedHotel] = useState(null);
@@ -58,6 +61,8 @@ const NewRate = () => {
 
 
   // Form
+
+  // Yup.addMethod(Yup.date(), "isAlternativeCurrencySelected", )
 
   const roomTypeSchema = Yup.object().shape({
     name: Yup.string().required(),
@@ -69,36 +74,44 @@ const NewRate = () => {
     name: Yup.string().required("El nombre es requerido"),
     hotel: Yup.object().shape({ label: Yup.string().required(), value: Yup.string().required() }).required("El hotel es requerido").nullable(),
     currency: Yup.object().shape({ label: Yup.string().required(), value: Yup.string().required() }).required("La moneda principal es requerida").nullable(),
-    date_from: Yup.date().required("La fecha desde principal es requerida").nullable(),
-    date_to: Yup.date().required("La fecha hasta principal es requerida").nullable(),
+    details: Yup.array().of(Yup.object().shape({
+      name: Yup.string(),
+      date_from: Yup.date().required("La fecha desde principal es requerida").nullable(),
+      date_to: Yup.date().required("La fecha hasta principal es requerida").nullable(),
+      alternative_date_from: Yup.date().nullable(),
+      alternative_date_to: Yup.date().nullable()
+    })),
+    roomTypes: Yup.array().of(roomTypeSchema),
     alternative_currency: Yup.object().shape({ label: Yup.string().required(), value: Yup.string().required() }).nullable(),
-    alternative_date_from: Yup.date().nullable().when("alternative_currency", {
-      is: (value) => value !== null,
-      then: Yup.date().required("La fecha desde alternativa es requerida").nullable(),
-      otherwise: Yup.date().nullable()
+    exchange_rate: Yup.number().when("alternative_currency", (value, schema) => {
+      return value ? schema.required("El tipo de cambio es requerido").min(0, "La tasa de cambio debe ser positiva") : schema.nullable();
     }),
-    alternative_date_to: Yup.date().nullable().when("alternative_currency", {
-      is: (value) => value !== null,
-      then: Yup.date().required("La fecha hasta alternativa es requerida").nullable(),
-      otherwise: Yup.date().nullable()
-    }),
-    exchange_rate: Yup.number().when("alternative_currency", {
-      is: (value) => value !== null,
-      then: Yup.number().required("El tipo de cambio es requerido").min(0, "La tasa de cambio debe ser positiva"),
-      otherwise: Yup.number().nullable()
-    }),
-    roomTypes: Yup.array().of(roomTypeSchema)
   });
+
+  const buildBasicDetail = () => {
+    return {
+      name: "",
+      date_from: new Date(),
+      date_to: null,
+      alternative_date_from: null,
+      alternative_date_to: null,
+    };
+  };
 
   const formik = useFormik({
     initialValues: {
       name: "",
       hotel: null,
       currency: null,
-      date_from: new Date(),
-      date_to: null,
-      alternative_date_from: null,
-      alternative_date_to: null,
+      details: [
+        {
+          name: "",
+          date_from: new Date(),
+          date_to: null,
+          alternative_date_from: null,
+          alternative_date_to: null,
+        }
+      ],
       alternative_currency: null,
       exchange_rate: "",
       agreement_discount: 0,
@@ -134,6 +147,7 @@ const NewRate = () => {
     validationSchema: rateSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
       setSubmitting(true);
+      let isManager = currentUserGroups.some((e) => e === 1);
       let rate = {
         name: values.name,
         currency: values.currency.value,
@@ -144,24 +158,31 @@ const NewRate = () => {
         user: JSON.parse(sessionStorage.getItem("user")).id,
         type: query.get("type"),
         observations: values.observations,
+        status: 1
       };
+      if (isManager) {
+        rate.status = 2;
+      }
       // Creo la rate principal
       dispatch(rateActions.createRate(values.hotel.value, rate)).then((rate) => {
         // Creo los amounts por cada habitacion
         Promise.all(formik.values.roomTypes.map(e => dispatch(rateActions.createRateAmount(values.hotel.value, rate.id, { roomCategory: e.id, rate: rate.id, amount: e.currency })))).then((rateAmounts) => {
           // Creo el detalle
-          let rateDetail = {
-            date_from: formatISO(values.date_from).split("T")[0],
-            date_to: formatISO(values.date_to).split("T")[0],
-            alternative_date_from: values.alternative_date_from ? formatISO(values.alternative_date_from).split("T")[0] : null,
-            alternative_date_to: values.alternative_date_to ? formatISO(values.alternative_date_to).split("T")[0] : null,
+          let details = values.details.map((e) => dispatch(rateActions.createRateDetail(values.hotel.value, rate.id, {
+            date_from: formatISO(e.date_from).split("T")[0],
+            date_to: formatISO(e.date_to).split("T")[0],
+            alternative_date_from: e.alternative_date_from ? formatISO(e.alternative_date_from).split("T")[0] : null,
+            alternative_date_to: e.alternative_date_to ? formatISO(e.alternative_date_to).split("T")[0] : null,
             rate: rate.id,
-          };
-          dispatch(rateActions.createRateDetail(values.hotel.value, rate.id, rateDetail)).then(() => {
+            name: e.name,
+          })));
+          Promise.all(details).then(() => {
             let conditions = buildConditions(rate.id);
             conditions = conditions.map((condition) => dispatch(rateActions.createRateCondition(values.hotel.value, rate.id, condition)));
             Promise.all(conditions).then((res) => {
               setSubmitting(false);
+              resetForm();
+              history.goBack();
             });
           });
         });
@@ -191,11 +212,6 @@ const NewRate = () => {
         });
       }
     });
-
-
-
-
-    console.log(conditions);
     return conditions;
   };
 
@@ -220,7 +236,7 @@ const NewRate = () => {
     { name: "COA", useUsd: false, useArs: false },
   ]);
 
-  const handleTypeChange = e => {
+  const handleClientTypeChange = e => {
     let activeExCopy = activeEx.slice();
     let clientTypeIdx = activeExCopy.findIndex(ex => ex.name === e.target.id.split("-")[0]);
     let currency = e.target.id.split("-")[1];
@@ -253,6 +269,24 @@ const NewRate = () => {
         formik.setFieldValue(`roomTypes[${idx}].alternative_currency`, (el.currency * e.target.value).toFixed(4));
       });
     }
+  };
+
+  const hasErrors = (idx, key) => {
+
+    if (formik.errors.details && formik.errors.details.length) {
+      if (formik.errors.details[idx] && formik.errors.details[idx][key] && !(_.isEmpty(formik.touched.details)) && formik.touched.details[idx] && formik.touched.details[idx][key]) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const addNewDetail = (e) => {
+    let newDetail = buildBasicDetail();
+    formik.setFieldValue("details", [
+      newDetail,
+      ...formik.values.details,
+    ]);
   };
 
   return (
@@ -294,105 +328,213 @@ const NewRate = () => {
             </Form.Group>
           </Col>
         </Row>
-        <h3 className="text-muted mt-5">Vigencia y Monedas</h3>
-        <Row>
-          <Col md={7}>
-            <Form.Group>
-              <Form.Label>Moneda base</Form.Label>
-              <Select
-                options={currencies.results.map((currency) => ({ label: currency.name, value: currency.value }))}
-                className="react_select_container"
-                classNamePrefix="react_select"
-                value={formik.values.currency}
-                onChange={value => formik.setFieldValue("currency", value)}
-              />
-              {formik.errors.currency && formik.touched.currency && <span className="error_message">{formik.errors.currency}</span>}
-            </Form.Group>
-          </Col>
-          <Col md={{ span: 4, offset: 1 }}>
-            <Form.Group>
-              <Form.Label>Vigencia de la tarifa</Form.Label>
-              <div className="d-flex">
-                <div className="d-flex flex-column">
-                  <Datepicker
-                    className={`form-control ${formik.errors.date_from && formik.touched.date_from ? "is-invalid" : ""}`}
-                    placeholderText="Desde"
-                    selected={formik.values.date_from}
-                    onChange={value => formik.setFieldValue("date_from", value)}
-                    dateFormat={globalDateFormat}
+        {
+          query.get("type") === "0" &&
+          <div>
+            <h3 className="text-muted mt-5">Vigencia y Monedas</h3>
+            <Row>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Moneda base</Form.Label>
+                  <Select
+                    options={currencies.results.map((currency) => ({ label: currency.name, value: currency.value }))}
+                    className="react_select_container"
+                    classNamePrefix="react_select"
+                    value={formik.values.currency}
+                    onChange={value => formik.setFieldValue("currency", value)}
                   />
-                  {formik.errors.date_from && formik.touched.date_from && <span className="error_message">{formik.errors.date_from}</span>}
-                </div>
-                <div className="d-flex flex-column">
-                  <Datepicker
-                    className={`form-control ${formik.errors.date_to && formik.touched.date_to ? "is-invalid" : ""}`}
-                    selected={formik.values.date_to}
-                    onChange={value => formik.setFieldValue("date_to", value)}
-                    placeholderText="Hasta"
-                    dateFormat={globalDateFormat}
+                  {formik.errors.currency && formik.touched.currency && <span className="error_message">{formik.errors.currency}</span>}
+                </Form.Group>
+              </Col>
+              <Col md={{ span: 4, offset: 2 }}>
+                <Form.Group>
+                  <Form.Label>Vigencia de la tarifa</Form.Label>
+                  <div className="d-flex">
+                    <div className="d-flex flex-column">
+                      <Datepicker
+                        className={`form-control ${hasErrors(0, "date_from") ? "is-invalid" : ""}`}
+                        placeholderText="Desde"
+                        selected={formik.values.details[0].date_from}
+                        onChange={value => formik.setFieldValue("details[0].date_from", value)}
+                        dateFormat={globalDateFormat}
+                      />
+                      {hasErrors(0, "date_from") && <span className="error_message">{formik.errors.details[0].date_from}</span>}
+                    </div>
+                    <div className="d-flex flex-column">
+                      <Datepicker
+                        className={`form-control ${hasErrors(0, "date_to") ? "is-invalid" : ""}`}
+                        selected={formik.values.details[0].date_to}
+                        onChange={value => formik.setFieldValue("details[0].date_to", value)}
+                        placeholderText="Hasta"
+                        dateFormat={globalDateFormat}
+                      />
+                      {hasErrors(0, "date_to") && <span className="error_message">{formik.errors.details[0].date_to}</span>}
+                    </div>
+                  </div>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Moneda alternativa</Form.Label>
+                  <Select
+                    isClearable
+                    value={formik.values.alternative_currency}
+                    onChange={value => formik.setFieldValue("alternative_currency", value)}
+                    options={currencies.results.map((currency) => ({ label: currency.name, value: currency.value }))}
+                    className="react_select_container"
+                    classNamePrefix="react_select" />
+                  {formik.errors.alternative_currency && formik.touched.alternative_currency && <span className="error_message">{formik.errors.alternative_currency}</span>}
+                </Form.Group>
+              </Col>
+              <Col md={2}>
+                <Form.Group>
+                  <Form.Label>Cambio</Form.Label>
+                  <Form.Control
+                    step="0.01"
+                    type="number"
+                    name="exchange_rate"
+                    value={formik.values.exchange_rate}
+                    onChange={handleExchangeRateChange}
+                    onBlur={formik.handleBlur}
                   />
-                  {formik.errors.date_to && formik.touched.date_to && <span className="error_message">{formik.errors.date_to}</span>}
-                </div>
-              </div>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={7}>
-            <Form.Group>
-              <Form.Label>Moneda alternativa</Form.Label>
-              <Select
-                isClearable
-                value={formik.values.alternative_currency}
-                onChange={value => formik.setFieldValue("alternative_currency", value)}
-                options={currencies.results.map((currency) => ({ label: currency.name, value: currency.value }))}
-                className="react_select_container"
-                classNamePrefix="react_select" />
-              {formik.errors.alternative_currency && formik.touched.alternative_currency && <span className="error_message">{formik.errors.alternative_currency}</span>}
-            </Form.Group>
-          </Col>
-          <Col md={1}>
-            <Form.Group>
-              <Form.Label>Cambio</Form.Label>
-              <Form.Control
-                step="0.01"
-                type="number"
-                name="exchange_rate"
-                value={formik.values.exchange_rate}
-                onChange={handleExchangeRateChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.errors.exchange_rate && formik.touched.exchange_rate && <span className="error_message">{formik.errors.exchange_rate}</span>}
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group>
-              <Form.Label>Vigencia de la tarifa</Form.Label>
-              <div className="d-flex">
-                <div className="d-flex flex-column">
-                  <Datepicker
-                    className={`form-control ${formik.errors.alternative_date_from && formik.touched.alternative_date_from ? "is-invalid" : ""}`}
-                    placeholderText="Desde"
-                    selected={formik.values.alternative_date_from}
-                    onChange={value => formik.setFieldValue("alternative_date_from", value)}
-                    dateFormat={globalDateFormat}
+                  {formik.errors.exchange_rate && formik.touched.exchange_rate && <span className="error_message">{formik.errors.exchange_rate}</span>}
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group>
+                  <Form.Label>Vigencia de la tarifa</Form.Label>
+                  <div className="d-flex">
+                    <div className="d-flex flex-column">
+                      <Datepicker
+                        className={`form-control ${hasErrors(0, "alternative_date_from") ? "is-invalid" : ""}`}
+                        placeholderText="Desde"
+                        selected={formik.values.details[0].alternative_date_from}
+                        onChange={value => formik.setFieldValue("details[0].alternative_date_from", value)}
+                        dateFormat={globalDateFormat}
+                      />
+                      {hasErrors(0, "alternative_date_from") && <span className="error_message">{formik.errors.details[0].alternative_date_from}</span>}
+                    </div>
+                    <div className="d-flex flex-column">
+                      <Datepicker
+                        className={`form-control ${hasErrors(0, "alternative_date_to") ? "is-invalid" : ""}`}
+                        placeholderText="Hasta"
+                        selected={formik.values.details[0].alternative_date_to}
+                        onChange={value => formik.setFieldValue("details[0].alternative_date_to", value)}
+                        dateFormat={globalDateFormat}
+                      />
+                      {hasErrors(0, "alternative_date_to") && <span className="error_message">{formik.errors.details[0].alternative_date_to}</span>}
+                    </div>
+                  </div>
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+        }
+
+        {
+          query.get("type") !== "0" &&
+          <div>
+            <h3 className="text-muted mt-5">Vigencia y fechas especiales</h3>
+            {
+              formik.values.details.map((detail, idx) => (
+                <Row key={idx}>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label>Vigencia de la tarifa</Form.Label>
+                      <div className="d-flex">
+                        <div className="d-flex flex-column">
+                          <Datepicker
+                            className={`form-control ${hasErrors(idx, "date_from") ? "is-invalid" : ""}`}
+                            placeholderText="Desde"
+                            selected={formik.values.details[idx].date_from}
+                            onChange={value => formik.setFieldValue(`details[${idx}].date_from`, value)}
+                            dateFormat={globalDateFormat}
+                          />
+                          {hasErrors(idx, "date_from") && <span className="error_message">{formik.errors.details[idx].date_from}</span>}
+                        </div>
+                        <div className="d-flex flex-column">
+                          <Datepicker
+                            className={`form-control ${hasErrors(idx, "date_to") ? "is-invalid" : ""}`}
+                            placeholderText="Hasta"
+                            selected={formik.values.details[idx].date_to}
+                            onChange={value => formik.setFieldValue(`details[${idx}].date_to`, value)}
+                            dateFormat={globalDateFormat}
+                          />
+                          {hasErrors(idx, "date_to") && <span className="error_message">{formik.errors.details[idx].date_to}</span>}
+                        </div>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label>Ocación</Form.Label>
+                      <Form.Control
+                        name={`details[${idx}].name`}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.details[idx].name}
+                      />
+                    </Form.Group>
+
+                  </Col>
+                  <Col className="d-flex align-items-center">
+                    <Button onClick={e => addNewDetail(idx)} variant="outline-info"><i className="fas fa-plus"></i></Button>
+                  </Col>
+                </Row>
+              ))
+            }
+            <h3 className="text-muted mt-5">Monedas</h3>
+            <Row>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Moneda base</Form.Label>
+                  <Select
+                    options={currencies.results.map((currency) => ({ label: currency.name, value: currency.value }))}
+                    className="react_select_container"
+                    classNamePrefix="react_select"
+                    value={formik.values.currency}
+                    onChange={value => formik.setFieldValue("currency", value)}
                   />
-                  {formik.errors.alternative_date_from && formik.touched.alternative_date_from && <span className="error_message">{formik.errors.alternative_date_from}</span>}
-                </div>
-                <div className="d-flex flex-column">
-                  <Datepicker
-                    className={`form-control ${formik.errors.alternative_date_to && formik.touched.alternative_date_to ? "is-invalid" : ""}`}
-                    placeholderText="Hasta"
-                    selected={formik.values.alternative_date_to}
-                    onChange={value => formik.setFieldValue("alternative_date_to", value)}
-                    dateFormat={globalDateFormat}
+                  {formik.errors.currency && formik.touched.currency && <span className="error_message">{formik.errors.currency}</span>}
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Moneda alternativa</Form.Label>
+                  <Select
+                    isClearable
+                    value={formik.values.alternative_currency}
+                    onChange={value => formik.setFieldValue("alternative_currency", value)}
+                    options={currencies.results.map((currency) => ({ label: currency.name, value: currency.value }))}
+                    className="react_select_container"
+                    classNamePrefix="react_select" />
+                  {formik.errors.alternative_currency && formik.touched.alternative_currency && <span className="error_message">{formik.errors.alternative_currency}</span>}
+                </Form.Group>
+              </Col>
+              <Col md={2}>
+                <Form.Group>
+                  <Form.Label>Cambio</Form.Label>
+                  <Form.Control
+                    step="0.01"
+                    type="number"
+                    name="exchange_rate"
+                    value={formik.values.exchange_rate}
+                    onChange={handleExchangeRateChange}
+                    onBlur={formik.handleBlur}
                   />
-                  {formik.errors.alternative_date_to && formik.touched.alternative_date_to && <span className="error_message">{formik.errors.alternative_date_to}</span>}
-                </div>
-              </div>
-            </Form.Group>
-          </Col>
-        </Row>
+                  {formik.errors.exchange_rate && formik.touched.exchange_rate && <span className="error_message">{formik.errors.exchange_rate}</span>}
+                </Form.Group>
+              </Col>
+            </Row>
+          </div>
+        }
+
+
+        {/* Room types */}
         <div>
           <RoomsModal hotel={selectedHotel} show={showRoomsModal} onClose={e => setShowRoomsModal(false)} />
           <h3 className="text-muted mt-5">Categorias de habitaciones y Racks</h3>
@@ -476,7 +618,7 @@ const NewRate = () => {
                       className="py-2"
                       custom
                       type="checkbox"
-                      onChange={handleTypeChange}
+                      onChange={handleClientTypeChange}
                       label={`${clientType.name} (${currency.value})`}
                       id={`${clientType.value}-${currency.value}`} />
                   ))
@@ -511,7 +653,6 @@ const NewRate = () => {
                     onChange={value => formik.setFieldValue(`corporationRates.exceptions[${idx}].names`, value)}
                     isMulti
                     options={corporationClients.map((client) => ({ label: client.name, value: client.id }))}
-                    theme={customSelectTheme}
                     closeMenuOnSelect={false}
                   />
                 </Col>
@@ -525,6 +666,147 @@ const NewRate = () => {
                   />
                   <span className="ml-1">%</span>
                   <i onClick={e => formik.values.corporationRates.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
+                  <Button variant="outline-info mx-1">
+                    <i className="fas fa-plus"></i>
+                  </Button>
+                </Col>
+              </Row>
+            ))
+          }
+        </div>}
+
+        {isActive("OPE") && <div className="bg-gray p-4 mt-5">
+          <Row>
+            <Col md={6}>
+              <span className="section_title">Descuentos Operadores</span>
+            </Col>
+            <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
+              <Form.Control
+                name="operatorRates.base"
+                value={formik.values.operatorRates.base}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <span className="ml-2">%</span>
+            </Col>
+          </Row>
+          <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
+          {
+            formik.values.operatorRates.exceptions.map((exc, idx) => (
+              <Row className="mb-2" key={idx}>
+                <Col md={8}>
+                  <Select
+                    value={exc.names}
+                    onChange={value => formik.setFieldValue(`operatorRates.exceptions[${idx}].names`, value)}
+                    isMulti
+                    options={operatorClients.map((client) => ({ label: client.name, value: client.id }))}
+                    closeMenuOnSelect={false}
+                  />
+                </Col>
+                <Col md={4} className="d-flex align-items-center justify-content-end">
+                  <Form.Control
+                    name={`operatorRates.exceptions[${idx}].value`}
+                    className="flex-1"
+                    type="text"
+                    value={exc.value}
+                    onChange={formik.handleChange}
+                  />
+                  <span className="ml-1">%</span>
+                  <i onClick={e => formik.values.operatorRates.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
+                  <Button variant="outline-info mx-1">
+                    <i className="fas fa-plus"></i>
+                  </Button>
+                </Col>
+              </Row>
+            ))
+          }
+        </div>}
+
+        {isActive("AGE") && <div className="bg-gray p-4 mt-5">
+          <Row>
+            <Col md={6}>
+              <span className="section_title">Descuentos de agencias T&T</span>
+            </Col>
+            <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
+              <Form.Control
+                name="agencyRates.base"
+                value={formik.values.agencyRates.base}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <span className="ml-2">%</span>
+            </Col>
+          </Row>
+          <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
+          {
+            formik.values.agencyRates.exceptions.map((exc, idx) => (
+              <Row className="mb-2" key={idx}>
+                <Col md={8}>
+                  <Select
+                    value={exc.names}
+                    onChange={value => formik.setFieldValue(`agencyRates.exceptions[${idx}].names`, value)}
+                    isMulti
+                    options={agencyClients.map((client) => ({ label: client.name, value: client.id }))}
+                    closeMenuOnSelect={false}
+                  />
+                </Col>
+                <Col md={4} className="d-flex align-items-center justify-content-end">
+                  <Form.Control
+                    name={`agencyRates.exceptions[${idx}].value`}
+                    className="flex-1"
+                    type="text"
+                    value={exc.value}
+                    onChange={formik.handleChange}
+                  />
+                  <span className="ml-1">%</span>
+                  <i onClick={e => formik.values.agencyRates.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
+                  <Button variant="outline-info mx-1">
+                    <i className="fas fa-plus"></i>
+                  </Button>
+                </Col>
+              </Row>
+            ))
+          }
+        </div>}
+
+        {isActive("COA") && <div className="bg-gray p-4 mt-5">
+          <Row>
+            <Col md={6}>
+              <span className="section_title">Descuentos Agencias Corporativas</span>
+            </Col>
+            <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
+              <Form.Control
+                name="corporateAgencyRates.base"
+                value={formik.values.corporateAgencyRates.base}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <span className="ml-2">%</span>
+            </Col>
+          </Row>
+          <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
+          {
+            formik.values.corporateAgencyRates.exceptions.map((exc, idx) => (
+              <Row className="mb-2" key={idx}>
+                <Col md={8}>
+                  <Select
+                    value={exc.names}
+                    onChange={value => formik.setFieldValue(`corporateAgencyRates.exceptions[${idx}].names`, value)}
+                    isMulti
+                    options={corpAgencyClient.map((client) => ({ label: client.name, value: client.id }))}
+                    closeMenuOnSelect={false}
+                  />
+                </Col>
+                <Col md={4} className="d-flex align-items-center justify-content-end">
+                  <Form.Control
+                    name={`corporateAgencyRates.exceptions[${idx}].value`}
+                    className="flex-1"
+                    type="text"
+                    value={exc.value}
+                    onChange={formik.handleChange}
+                  />
+                  <span className="ml-1">%</span>
+                  <i onClick={e => formik.values.corporateAgencyRates.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
                   <Button variant="outline-info mx-1">
                     <i className="fas fa-plus"></i>
                   </Button>

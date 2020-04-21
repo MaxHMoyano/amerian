@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import { Modal, Button, Form, Col } from "react-bootstrap";
 import Select from 'react-select';
 import { useSelector, useDispatch } from "react-redux";
-import { positionActions, hotelActions, staffActions } from "../../../redux/actions/";
+import { positionActions, staffActions, hotelActions } from "../../../redux/actions/";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import { phoneRegex } from "../../../helpers/utilities";
-const StaffModal = ({ show, onClose }) => {
+import _ from "lodash";
+
+const StaffModal = ({ show, onClose, selected }) => {
   const dispatch = useDispatch();
 
 
@@ -18,6 +20,29 @@ const StaffModal = ({ show, onClose }) => {
     email: Yup.string().email("Email invalido").required("El email es requerido"),
     phone: Yup.string().matches(phoneRegex, "Telefono invalido").required("El telefono es requerido")
   });
+
+  useEffect(() => {
+    if (!_.isEmpty(selected)) {
+      dispatch(staffActions.fetchStaffById(selected.hotel.id, selected.id)).then((staff) => {
+        Promise.all([dispatch(hotelActions.fetchHotel(staff.hotel)), dispatch(positionActions.fetchPosition(staff.position))]).then(([hotel, position]) => {
+          formik.setValues({
+            first_name: staff.first_name,
+            last_name: staff.last_name,
+            hotel: {
+              label: hotel.name,
+              value: hotel.id
+            },
+            position: {
+              label: position.name,
+              value: position.id
+            },
+            email: staff.email,
+            phone: staff.phone,
+          });
+        });
+      });
+    }
+  }, [selected, dispatch]);
 
   const formik = useFormik({
     initialValues: {
@@ -35,14 +60,27 @@ const StaffModal = ({ show, onClose }) => {
         ...values,
         position: values.position.value,
       };
-      dispatch(staffActions.createNewStaff(values.hotel.value, staff)).then(() => {
-        dispatch(staffActions.fetchStaff()).then(() => {
-          setSubmitting(false);
-          onClose();
-          resetForm();
-          dispatch(positionActions.cleanState());
+
+      if (!_.isEmpty(selected)) {
+        dispatch(staffActions.updateStaff(values.hotel.value, selected.id, staff)).then(() => {
+          dispatch(staffActions.fetchStaff()).then(() => {
+            setSubmitting(false);
+            onClose();
+            resetForm();
+            dispatch(positionActions.cleanState());
+          });
         });
-      });
+      } else {
+        dispatch(staffActions.createNewStaff(values.hotel.value, staff)).then(() => {
+          dispatch(staffActions.fetchStaff()).then(() => {
+            setSubmitting(false);
+            onClose();
+            resetForm();
+            dispatch(positionActions.cleanState());
+          });
+        });
+
+      }
     }
   });
 
@@ -54,10 +92,6 @@ const StaffModal = ({ show, onClose }) => {
 
   let hotels = useSelector(({ hotel }) => hotel);
   let positions = useSelector(({ position }) => position);
-
-  useEffect(() => {
-    dispatch(hotelActions.fetchHotels());
-  }, [dispatch]);
 
   return (
     <Modal show={show} onHide={onClose}>
@@ -157,7 +191,7 @@ const StaffModal = ({ show, onClose }) => {
         {
           !formik.isSubmitting ?
             <Modal.Footer>
-              <Button variant="light" onClick={onClose}> Cancelar</Button>
+              <Button variant="light" onClick={e => { onClose(); formik.resetForm(); }}> Cancelar</Button>
               <Button type="submit" variant="secondary">Guardar</Button>
             </Modal.Footer> :
             <Modal.Footer>

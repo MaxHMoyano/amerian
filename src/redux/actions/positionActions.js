@@ -4,6 +4,9 @@ import { positionService, hotelService } from "../services/";
 export const positionActions = {
   fetchPositions,
   createNewPosition,
+  fetchPosition,
+  deletePosition,
+  updatePosition,
   cleanState
 };
 
@@ -15,11 +18,11 @@ function cleanState() {
   };
 }
 
-function fetchPositions(hotelId) {
+function fetchPositions(hotelId, searchParams) {
   return dispatch => {
     return new Promise((resolve, reject) => {
       dispatch(request());
-      positionService.fetchPositions(hotelId).then((positions) => {
+      positionService.fetchPositions(hotelId, searchParams).then((positions) => {
         Promise.all(positions.results.map(position => getPositionsProperties(position))).then(data => {
           positions.results = data;
           dispatch(success(positions));
@@ -61,6 +64,30 @@ function createNewPosition(hotelId, position) {
   };
 
 }
+
+function fetchPosition(positionId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      positionService.fetchPosition(positionId).then(resolve);
+    });
+  };
+}
+function deletePosition(positionId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      positionService.deletePosition(positionId).then(resolve);
+    });
+  };
+}
+function updatePosition(positionId, position) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      positionService.updatePosition(positionId).then(resolve);
+    });
+  };
+}
+
+
 
 async function getPositionsProperties(position) {
   return new Promise((resolve, reject) => {

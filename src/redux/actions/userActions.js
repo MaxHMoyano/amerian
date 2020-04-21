@@ -26,6 +26,7 @@ function login(email, password) {
     userService.login(email, password).then(
       user => {
         dispatch(fetchUser(user.id)).then((user) => {
+          // dispatch(setCurrentUserGroup(user));
           dispatch(welcomePage(user));
         });
       },
@@ -35,13 +36,21 @@ function login(email, password) {
     );
   };
 
+  // function setCurrentUserGroup(user) {
+  //   return dispatch => {
+  //     return new Promise((resolve, reject) => {
+  //       dispatch(userConstants.SET_USER_GROUP())
+  //     });
+  //   };
+  // }
+
   function welcomePage(user) {
     return dispatch => {
       dispatch({ type: userConstants.LOGIN_WELCOME, user });
       setTimeout(() => {
         history.push("/home");
         dispatch(success(user));
-        dispatch({ type: menuConstants.SET_ACTIVE_MENU_TO_HOME });
+        dispatch({ type: menuConstants.SET_ACTIVE_MENU });
       }, 2000);
     };
   }

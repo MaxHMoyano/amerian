@@ -1,146 +1,201 @@
 .main_container {
+}
+
+.main_container_client {
   width: 100vw;
   height: 100vh;
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: auto 1fr;
   grid-template-rows: 90px 1fr;
-  grid-template-areas: "primarySidebar secondarySidebar navbar" "primarySidebar secondarySidebar content";
-  .main_navbar {
-    padding: 2rem 3rem;
-    grid-area: navbar;
+  grid-template-areas: "secondarySidebar navbar" "secondarySidebar content";
+}
+
+.main_navbar {
+  padding: 2rem 3rem;
+  grid-area: navbar;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .toolbar {
+    width: 25%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    .toolbar {
+    justify-content: space-between;
+    .search {
+      flex: 1;
+    }
+    .actions {
       width: 25%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      .search {
-        flex: 1;
-      }
-      .actions {
-        width: 25%;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-      }
+      justify-content: space-around;
     }
   }
+}
 
-  .primary_sidebar {
-    grid-area: primarySidebar;
+.primary_sidebar {
+  grid-area: primarySidebar;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  width: 65px;
+  color: $light;
+  background-color: darken($color: $primary, $amount: 10%);
+  z-index: 1;
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 90px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    &:hover {
+      opacity: 0.8;
+      transform: translate3d(2px, 0, 0);
+    }
+  }
+  .menu {
+    width: 100%;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    width: 65px;
-    color: $light;
-    background-color: darken($color: $primary, $amount: 10%);
-    z-index: 1;
-    .logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 90px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex: 1;
+    .menu_item {
       cursor: pointer;
-      transition: all .3s ease;
-      &:hover {
-        opacity: .8;
-        transform: translate3d(2px, 0, 0);
-      }
-    }
-    .menu {
       width: 100%;
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: center;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      flex: 1;
-      .menu_item {
-        cursor: pointer;
-        width: 100%;
-        padding: 1rem 1rem;
-        &:hover {
-          background: darken($color: $primary, $amount: 20%);
-        }
-        .menu_link {
-          display: block;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: $light;
-          text-decoration: none;
-          padding: 0.5rem;
-          &.active {
-            background-color: lighten($color: $primary, $amount: 1%);
-            border-radius: 50%;
-          }
-        }
-      }
-    }
-  }
-
-  .secondary_sidebar {
-    grid-area: secondarySidebar;
-    background-color: $gray-200;
-    padding: 3rem 1rem;
-    width: 240px;
-    max-width: 240px;
-    position: relative;
-    transition: all 0.3s ease;
-    &.inactive {
-      animation-name: hide_sidebar;
-      animation-duration: 0.3s;
-      animation-fill-mode: forwards;
-      transform: translate3d(-100%, 0, 0);
-      .sidebar_toggle {
-        right: -1.7rem;
-      }
-      h4,
-      .link {
-        display: none !important;
-      }
-    }
-    .sidebar_toggle {
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      // border-radius: 50%;
-      position: absolute;
-      right: -1rem;
-      background-color: darken($color: $primary, $amount: 10%);
-    }
-    .link {
-      display: block;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 1rem 0.5rem;
-      border-radius: 3px;
-      margin-bottom: 0.5rem;
-      font-size: 0.8rem;
-      color: $dark;
-      text-decoration: none;
+      padding: 1rem 1rem;
       &:hover {
-        background-color: $gray-400;
+        background: darken($color: $primary, $amount: 20%);
       }
-      &.active {
-        background-color: $gray-400;
+      .menu_link {
+        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $light;
+        text-decoration: none;
+        padding: 0.5rem;
+        &.active {
+          background-color: lighten($color: $primary, $amount: 1%);
+          border-radius: 50%;
+        }
       }
     }
   }
+}
 
-  .main_content {
-    overflow-y: auto;
-    grid-area: content;
-    padding: 3rem;
-    position: relative;
+.secondary_sidebar {
+  grid-area: secondarySidebar;
+  background-color: $gray-200;
+  padding: 3rem 1rem;
+  width: 240px;
+  max-width: 240px;
+  position: relative;
+  transition: all 0.3s ease;
+  &.inactive {
+    animation-name: hide_sidebar;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    transform: translate3d(-100%, 0, 0);
+    .sidebar_toggle {
+      right: -1.7rem;
+    }
+    h4,
+    .link {
+      display: none !important;
+    }
   }
+  .sidebar_toggle {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // border-radius: 50%;
+    position: absolute;
+    right: -1rem;
+    background-color: darken($color: $primary, $amount: 10%);
+  }
+  .link {
+    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem 0.5rem;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: $dark;
+    text-decoration: none;
+    &:hover {
+      background-color: $gray-400;
+    }
+    &.active {
+      background-color: $gray-400;
+    }
+  }
+}
+.hotel_sidebar {
+  grid-area: hotelSidebar;
+  background-color: $gray-200;
+  padding: 3rem 1rem;
+  width: 240px;
+  max-width: 240px;
+  position: relative;
+  transition: all 0.3s ease;
+  &.inactive {
+    animation-name: hide_sidebar;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    transform: translate3d(-100%, 0, 0);
+    .sidebar_toggle {
+      right: -1.7rem;
+    }
+    h4,
+    .link {
+      display: none !important;
+    }
+  }
+  .sidebar_toggle {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // border-radius: 50%;
+    position: absolute;
+    right: -1rem;
+    background-color: darken($color: $primary, $amount: 10%);
+  }
+  .link {
+    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem 0.5rem;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: $dark;
+    text-decoration: none;
+    &:hover {
+      background-color: $gray-400;
+    }
+    &.active {
+      background-color: $gray-400;
+    }
+  }
+}
+
+.main_content {
+  overflow-y: auto;
+  grid-area: content;
+  padding: 3rem;
+  position: relative;
 }
 
 @keyframes hide_sidebar {

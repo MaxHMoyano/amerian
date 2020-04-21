@@ -1,29 +1,75 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Table, Button, Dropdown } from "react-bootstrap";
+import { Table, Button, Dropdown, Form } from "react-bootstrap";
 // import Select from "react-select";
 // import { customValueContainer } from "../../../helpers/utilities";
 import PositionDetail from './PositionDetail';
 import { useSelector, useDispatch } from "react-redux";
 import { positionActions } from "../../../redux/actions";
+import Select from "react-select";
+import PositionDelete from "./PositionDelete";
 
 const PositionsList = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(positionActions.fetchPositions());
-  }, [dispatch]);
 
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedPosition, setselectedPosition] = useState({});
+  const [searchParams, setSearchParams] = useState({
+    search: "",
+    hotel: null,
+
+  });
+
+  useEffect(() => {
+    dispatch(positionActions.fetchPositions(null, searchParams));
+  }, [dispatch, searchParams]);
+
+
+  // Selectors
   let positions = useSelector(({ position }) => position);
+  let hotels = useSelector(({ hotel }) => hotel);
+
+
+  const handleSearchChange = (e) => {
+    if (e.key === "Enter") {
+      setSearchParams({ ...searchParams, search: e.target.value });
+    }
+  };
+
+
+  const handlePositionEdit = (position) => {
+    setselectedPosition(position);
+    setShowModal(true);
+  };
+
+  const handlePositionDelete = (position) => {
+    setselectedPosition(position);
+    setShowDeleteModal(true);
+  };
 
   return (
     <Fragment>
-      <PositionDetail show={showModal} onCloseDialog={e => setShowModal(false)} />
+      <PositionDetail selected={selectedPosition} show={showModal} onCloseDialog={e => { setShowModal(false); setselectedPosition({}); }} />
+      <PositionDelete selected={selectedPosition} show={showDeleteModal} onClose={e => { setShowDeleteModal(false); setselectedPosition({}); }} />
       <div className="d-flex mb-4 align-items-center">
         <button type="button" onClick={e => setShowModal(true)} className="btn btn-secondary is_rounded mr-3">
           Agregar Posición
         </button>
+        <div className="icon_input search mx-2 w-15">
+          <Form.Control placeholder="Buscar..." onKeyPress={handleSearchChange} />
+          <i className="fas fa-search"></i>
+        </div>
+        <Select
+          className="w-15 mx-2"
+          placeholder="Hotel"
+          isClearable
+          isLoading={hotels.pending}
+          isDisabled={hotels.pending}
+          options={hotels.results.map((e) => ({ label: e.name, value: e.id }))}
+          onChange={value => setSearchParams({ ...searchParams, hotel: value ? value.value : null })}
+        />
       </div>
       {
         positions.pending ? <div className="d-flex justify-content-center"><i className="fas fa-spinner fa-spin fa-3x"></i></div> :
@@ -42,14 +88,14 @@ const PositionsList = () => {
               </tr>
             </thead>
             <tbody>
-              {positions.results.map(e => (
-                <tr className="table_link" key={e.id}>
-                  <td>{e.name}</td>
+              {positions.results.map(position => (
+                <tr className="table_link" key={position.id}>
+                  <td>{position.name}</td>
                   <td>
-                    {e.description}
+                    {position.description}
                   </td>
                   <td>
-                    {e.hotel}
+                    {position.hotel}
                   </td>
                   <td>
                     <Dropdown drop="left">
@@ -59,12 +105,16 @@ const PositionsList = () => {
                       <Dropdown.Menu>
                         <Dropdown.Item
                           as="button"
-                          className="d-flex justify-content-between align-items-center">
+                          className="d-flex justify-content-between align-items-center"
+                          onClick={e => handlePositionEdit(position)}
+                        >
                           <span>Editar</span> <i className="fas fa-edit"></i>
                         </Dropdown.Item>
                         <Dropdown.Item
                           as="button"
-                          className="d-flex justify-content-between align-items-center">
+                          className="d-flex justify-content-between align-items-center"
+                          onClick={e => handlePositionDelete(position)}
+                        >
                           <span>Eliminar</span> <i className="fas fa-trash"></i>
                         </Dropdown.Item>
                       </Dropdown.Menu>

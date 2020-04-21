@@ -5,14 +5,32 @@ import Select from 'react-select';
 import { hotelActions, positionActions } from '../../../redux/actions';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
+import _ from "lodash";
 
-const PositionDetail = ({ show, onCloseDialog }) => {
+const PositionDetail = ({ show, onCloseDialog, selected }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(hotelActions.fetchHotels());
   }, [dispatch]);
   let hotels = useSelector(({ hotel }) => hotel);
+
+  useEffect(() => {
+    if (!_.isEmpty(selected)) {
+      dispatch(positionActions.fetchPosition(selected.id)).then((client) => {
+        dispatch(hotelActions.fetchHotel(client.hotel)).then((hotel) => {
+          formik.setValues({
+            name: client.name,
+            hotel: {
+              label: hotel.name,
+              value: hotel.id
+            },
+            description: client.description
+          });
+        });
+      });
+    }
+  }, [selected, dispatch]);
 
   const positionSchema = Yup.object().shape({
     name: Yup.string().required("El nombre es requerido"),
@@ -97,7 +115,7 @@ const PositionDetail = ({ show, onCloseDialog }) => {
         {
           !formik.isSubmitting ?
             <Modal.Footer>
-              <Button onClick={onCloseDialog} variant="link">Cancelar</Button>
+              <Button onClick={e => { onCloseDialog(); formik.resetForm(); }} variant="link">Cancelar</Button>
               <Button type="submit" variant="secondary">Agregar</Button>
             </Modal.Footer> :
             <Modal.Footer>

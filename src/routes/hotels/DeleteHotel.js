@@ -7,8 +7,12 @@ const DeleteHotel = ({ show, onClose, hotel }) => {
   const dispatch = useDispatch();
 
   const deleteHotel = (e) => {
-    dispatch(hotelActions.deleteHotel(hotel.id));
-    onClose();
+    dispatch(hotelActions.deleteHotel(hotel.id)).then(() => {
+      dispatch(hotelActions.fetchHotels()).then(() => {
+        onClose();
+      });
+    });
+
   };
 
   return (

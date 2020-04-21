@@ -10,6 +10,8 @@ export const rateActions = {
   createRateDetail,
   createRateCondition,
   fetchRate,
+  fetchRateConditions,
+  partialUpdateRate,
 };
 
 function fetchRates() {
@@ -90,11 +92,44 @@ function createRateCondition(hotelId, rateId, condition) {
   };
 }
 
+function fetchRateConditions(hotelId, rateId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      rateService.fetchRateConditions(hotelId, rateId).then((conditions) => {
+        resolve(conditions);
+      });
+    });
+  };
+}
+
 function fetchRate(rateId) {
   return dispatch => {
     return new Promise((resolve, reject) => {
       rateService.fetchRate(rateId).then((rate) => {
-
+        Promise.all([
+          hotelService.fetchHotel(rate.hotel),
+          rateService.fetchRateConditions(rate.hotel, rate.id),
+          rateService.fetchRateDetails(rate.hotel, rate.id),
+          rateService.fetchRateAmounts(rate.hotel, rate.id)
+        ]).then(([hotel, conditions, details, amounts]) => {
+          Promise.all(amounts.results.map(e => getAmountData(e, rate.hotel))).then((data) => {
+            resolve({
+              ...rate,
+              hotel: {
+                id: hotel.id,
+                name: hotel.name,
+              },
+              conditions: [
+                { name: "COR", list: conditions.results.filter((e) => e.client_type === "COR") },
+                { name: "COA", list: conditions.results.filter((e) => e.client_type === "COA") },
+                { name: "AGE", list: conditions.results.filter((e) => e.client_type === "AGE") },
+                { name: "OPE", list: conditions.results.filter((e) => e.client_type === "OPE") },
+              ],
+              details: details.results,
+              amounts: data
+            });
+          });
+        });
       });
     });
   };
@@ -110,6 +145,7 @@ function fetchRateStates() {
           type: rateConstants.FETCH_RATES_STATES_SUCCESS,
           payload: mappedStates,
         });
+        resolve(mappedStates);
       });
     });
   };
@@ -117,13 +153,40 @@ function fetchRateStates() {
 
 function fetchRateTypes() {
   return dispatch => {
-    rateService.fetchRateTypes().then((types) => {
-      dispatch({
-        type: rateConstants.FETCH_RATES_TYPES_SUCCESS,
-        payload: types
+    return new Promise((resolve, reject) => {
+      rateService.fetchRateTypes().then((types) => {
+        resolve(types);
+        dispatch({
+          type: rateConstants.FETCH_RATES_TYPES_SUCCESS,
+          payload: types
+        });
       });
     });
   };
+}
+
+function partialUpdateRate(hotelId, rateId, rate) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      rateService.partialUpdateRate(hotelId, rateId, rate).then((rate) => {
+        resolve(rate);
+      });
+    });
+  };
+}
+
+function getAmountData(amount, hotel) {
+  return new Promise((resolve, reject) => {
+    hotelService.fetchRoomType(hotel, amount.roomCategory).then((data) => {
+      resolve({
+        ...amount,
+        roomCategory: {
+          id: data.id,
+          name: data.name
+        }
+      });
+    });
+  });
 }
 
 function mapStates(states) {

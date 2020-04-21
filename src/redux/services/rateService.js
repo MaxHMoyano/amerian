@@ -11,7 +11,11 @@ export const rateService = {
   fetchRateStates,
   createRateAmount,
   createRateDetail,
-  createRateCondition
+  createRateCondition,
+  fetchRateConditions,
+  fetchRateDetails,
+  fetchRateAmounts,
+  partialUpdateRate,
 };
 
 
@@ -43,6 +47,44 @@ function fetchRate(rateId) {
   return fetch(url, requestOptions).then(handleResponse);
 
 }
+
+function fetchRateConditions(hotelId, rateId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/rates/${rateId}/special-conditions/`);
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
+function fetchRateDetails(hotelId, rateId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/rates/${rateId}/rate-details/`);
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
+function partialUpdateRate(hotelId, rateId, rate) {
+  const requestOptions = {
+    method: "PATCH",
+    headers: authHeader(),
+    body: JSON.stringify(rate),
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/rates/${rateId}/`);
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
+function fetchRateAmounts(hotelId, rateId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+  };
+  let url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/rates/${rateId}/rate-amounts/`);
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
 
 function fetchRateTypes() {
   const requestOptions = {

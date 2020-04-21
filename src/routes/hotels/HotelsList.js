@@ -1,37 +1,103 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Button, Table, Row, Col, Badge, Pagination, Dropdown } from "react-bootstrap";
+import { Button, Table, Row, Col, Badge, Pagination, Dropdown, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { hotelActions } from "../../redux/actions";
+import { hotelActions, sharedActions } from "../../redux/actions";
 import HotelDetail from "./HotelDetail";
 import DeleteHotel from "./DeleteHotel";
+import Select from "react-select";
 
 const HotelsList = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(hotelActions.fetchHotels());
-  }, [dispatch]);
 
-
+  // local state
   const [selectedHotel, setSelectedHotel] = useState({});
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const [searchParams, setSearchParams] = useState({
+    search: null,
+    country: null,
+    region: null,
+    active: null,
+    limit: 10,
+    offset: 0,
+  });
 
+  // refresh actions
+  useEffect(() => {
+    dispatch(hotelActions.fetchHotels(searchParams));
+  }, [dispatch, searchParams]);
+
+  useEffect(() => {
+    dispatch(hotelActions.fetchChains());
+    dispatch(sharedActions.fetchCountries());
+  }, [dispatch]);
+
+
+  // selectors
+  let countries = useSelector(({ shared }) => shared.countries);
+  let regions = useSelector(({ shared }) => shared.regions);
+  let hotels = useSelector(({ hotel }) => hotel);
+
+
+  // utility functions
   const handleDeleteHotel = (hotel) => {
     setSelectedHotel(hotel);
     setShowDeleteModal(true);
   };
 
+  const handleEditHotel = (hotel) => {
+    setSelectedHotel(hotel);
+    setShowDetailModal(true);
+  };
 
-  let hotels = useSelector(({ hotel }) => hotel);
+  const handleCountryChange = (value) => {
+    dispatch(sharedActions.fetchRegions(value.value));
+    setSearchParams({ ...searchParams, country: value.value });
+  };
+
+  const handleSearchChange = (e) => {
+    if (e.key === "Enter") {
+      setSearchParams({ ...searchParams, search: e.target.value });
+    }
+  };
+
+
   return <Fragment>
-    <HotelDetail onClose={e => setShowDetailModal(false)} show={showDetailModal} />
+    <HotelDetail selected={selectedHotel} onClose={e => { setShowDetailModal(false); setSelectedHotel({}); }} show={showDetailModal} />
     <DeleteHotel hotel={selectedHotel} onClose={e => setShowDeleteModal(false)} show={showDeleteModal} />
     <Row>
       <Col className="d-flex">
         <Button onClick={() => setShowDetailModal(true)} className="is_rounded" variant="secondary">Agregar Hotel</Button>
+        <div className="icon_input search mx-2 w-15">
+          <Form.Control placeholder="Buscar..." onKeyPress={handleSearchChange} type="text" />
+          <i className="fas fa-search"></i>
+        </div>
+        <Select
+          placeholder="Pais"
+          className="w-15 mx-2"
+          onChange={handleCountryChange}
+          isLoading={countries.pending}
+          isDisabled={hotels.pending}
+          options={countries.results.map((e) => ({ label: e.name, value: e.id }))}
+        />
+        <Select
+          placeholder="Provincia"
+          className="w-15 mx-2"
+          onChange={value => setSearchParams({ ...searchParams, region: value.value })}
+          isLoading={regions.pending}
+          isDisabled={!regions.results.length || hotels.pending}
+          options={regions.results.map((e) => ({ label: e.name, value: e.id }))}
+        />
+        <Select
+          placeholder="Activo"
+          className="w-15 mx-2"
+          isDisabled={hotels.pending}
+          onChange={value => setSearchParams({ ...searchParams, active: value.value })}
+          options={[{ label: "Activo", value: true }, { label: "Inactivo", value: false }]}
+        />
       </Col>
     </Row>
     <Row className="mt-4">
@@ -76,6 +142,7 @@ const HotelsList = () => {
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
                               <Dropdown.Item
+                                onClick={e => handleEditHotel(hotel)}
                                 as="button"
                                 className="d-flex justify-content-between align-items-center">
                                 <span>Editar</span> <i className="fas fa-edit"></i>
@@ -95,19 +162,18 @@ const HotelsList = () => {
                 </tbody>
               </Table>
               <Pagination className="justify-content-end">
-                <Pagination.Prev />
+                <Pagination.Prev disabled={!hotels.results.previous} onClick={e => dispatch(hotelActions.fetchHotels(null, hotels.previous))} />
                 <Pagination.Item active>{1}</Pagination.Item>
                 <Pagination.Ellipsis />
                 <Pagination.Item>{20}</Pagination.Item>
-                <Pagination.Next />
+                <Pagination.Next onClick={e => dispatch(hotelActions.fetchHotels(null, hotels.next))} />
               </Pagination>
-            </div>
-
-            :
-            <div className="d-flex flex-column justify-content-center align-items-center">
-              <h4 className="text-muted text-center" onClick={e => setShowDetailModal(true)}>No existen hoteles creados. Crea uno ahora!</h4>
+            </div> :
+            <div className="d-flex flex-column justify-content-center align-items-center cursor_pointer" onClick={e => setShowDetailModal(true)}>
+              <h4 className="text-muted text-center">No existen hoteles creados. Crea uno ahora!</h4>
               <i className="fas fa-hotel fa-4x text-muted"></i>
-            </div> : <div className="d-flex flex-column justify-content-center align-items-center"> <i className="fas fa-spinner fa-spin fa-3x"></i> </div>
+            </div> :
+            <div className="d-flex flex-column justify-content-center align-items-center"> <i className="fas fa-spinner fa-spin fa-3x"></i> </div>
         }
       </Col>
     </Row>

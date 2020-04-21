@@ -10,13 +10,15 @@ export const hotelActions = {
   editRoomType,
   deleteRoomType,
   fetchChains,
+  fetchHotel,
+  updateHotel
 };
 
-function fetchHotels() {
+function fetchHotels(searchParams, url) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       dispatch(request());
-      hotelService.fetchHotels().then((hotels) => {
+      hotelService.fetchHotels(searchParams, url).then((hotels) => {
         Promise.all(hotels.results.map(getHotelData)).then((data) => {
           hotels.results = data;
           dispatch(success(hotels));
@@ -27,7 +29,6 @@ function fetchHotels() {
         reject(error);
       });
     });
-
   };
 
   function request() {
@@ -52,6 +53,17 @@ function fetchHotels() {
 
 }
 
+function updateHotel(hotelId, hotel) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      hotelService.updateHotel(hotelId, hotel).then((hotel) => {
+        resolve(hotel);
+      });
+    });
+  };
+}
+
+
 function deleteRoomType(hotelId, roomTypeId) {
   return dispatch => {
     return new Promise((resolve, reject) => {
@@ -73,7 +85,6 @@ function createRoomType(hotelId, roomType) {
 }
 
 function editRoomType(hotelId, roomTypeId, roomType) {
-  console.log(hotelId, roomTypeId, roomType);
   return dispatch => {
     return new Promise((resolve, reject) => {
       hotelService.editRoomType(hotelId, roomTypeId, roomType).then(() => {
@@ -131,13 +142,21 @@ function fetchChains() {
 
 function deleteHotel(hotelId) {
   return dispatch => {
-    hotelService.deleteHotel(hotelId).then((res) => {
-      dispatch(fetchHotels());
+    return new Promise((resolve, reject) => {
+      hotelService.deleteHotel(hotelId).then((res) => {
+        resolve();
+      });
     });
   };
 }
 
-
+function fetchHotel(hotelId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      hotelService.fetchHotel(hotelId).then(resolve);
+    });
+  };
+}
 
 
 function getHotelData(hotel) {

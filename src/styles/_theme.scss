@@ -1,6 +1,6 @@
 // Overrides to bootstrap default options
 $font-family-sans-serif: "Open Sans", sans-serif;
-$font-size-base: 0.85rem;
+$font-size-base: 0.8rem;
 $body-bg: #fff;
 $enable-responsive-font-sizes: true;
 $grid-gutter-width: 16px;
@@ -49,6 +49,10 @@ table th {
       opacity: 1;
     }
   }
+}
+
+.nav-link.active {
+  border-bottom: 2px solid $primary !important;
 }
 
 .bg-gray {

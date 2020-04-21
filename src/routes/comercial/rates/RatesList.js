@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { Table, Badge, Button, Dropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import RateDropdown from "../../../components/shared/RateDropdown";
 
 const RatesList = () => {
 
@@ -31,25 +32,14 @@ const RatesList = () => {
 
   return <Fragment>
     <div className="d-flex align-items-center mb-2">
-      <Dropdown>
-        <Dropdown.Toggle className="is_rounded mr-2" variant="secondary" id="dropdown-basic">
-          Agregar Tarifa
-          </Dropdown.Toggle>
-        <Dropdown.Menu>
-          {
-            tariffsTypes.map((e) => (
-              <Dropdown.Item key={e.value} onClick={() => history.push(`${e.path}`)}>{e.name}</Dropdown.Item>
-            ))
-          }
-        </Dropdown.Menu>
-      </Dropdown>
+      <RateDropdown />
     </div>
     <Table>
       <thead>
         <tr>
           <th>Hotel</th>
           <th>Provincia</th>
-          <th>Tarifa en vigencia</th>
+          <th>Tarifas vigentes</th>
           <th>Solicitudes</th>
         </tr>
       </thead>
@@ -61,7 +51,6 @@ const RatesList = () => {
               <td>{tariff.province}</td>
               <td>
                 <div className="d-flex align-items-center">
-                  <span>{`${tariff.dateFrom} a ${tariff.dateTo}`}</span>
                   <Button variant="outline-info mx-2">Directos</Button>
                   <Button variant="outline-info mx-2">Convenios</Button>
 

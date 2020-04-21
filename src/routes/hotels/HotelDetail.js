@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Row, Col, Form } from 'react-bootstrap';
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
 import { sharedActions, hotelActions } from '../../redux/actions';
 import DatePicker from 'react-datepicker';
-import formatISO from 'date-fns/formatISO';
+import { formatISO, parseISO } from 'date-fns';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
+import _ from "lodash";
 
 const HotelDetail = (props) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(sharedActions.fetchCountries());
-    dispatch(hotelActions.fetchChains());
-  }, [dispatch]);
-
-  const provinces = useSelector(({ shared }) => shared.provinces);
+  const regions = useSelector(({ shared }) => shared.regions);
   const countries = useSelector(({ shared }) => shared.countries);
   const chains = useSelector(({ chain }) => chain);
 
   const [selectedCountry, setSelectedCountry] = useState(null);
 
-
-  const changeSelectedCountry = ({ label, value }) => {
-    dispatch(sharedActions.fetchRegions(value));
+  const changeSelectedCountry = ({ label, value }, region) => {
     setSelectedCountry({ label, value });
-    formik.setFieldValue("region", null);
+    if (!_.isEmpty(region)) {
+      formik.setFieldValue("region", region);
+    } else {
+      dispatch(sharedActions.fetchRegions(value));
+      formik.setFieldValue("region", null);
+    }
   };
 
   const hotelSchema = Yup.object().shape({
@@ -38,6 +37,36 @@ const HotelDetail = (props) => {
     address: Yup.string().required("La direccion es requerida"),
     email: Yup.string().email("Email invalido").required("El email es requerido"),
   });
+
+  useEffect(() => {
+    if (!_.isEmpty(props.selected)) {
+      dispatch(hotelActions.fetchHotel(props.selected.id)).then((hotel) => {
+        dispatch(sharedActions.fetchRegion(hotel.country, hotel.region)).then((region) => {
+          formik.setValues({
+            name: hotel.name,
+            chain: {
+              label: chains.results.find((e) => e.value === hotel.chain).name,
+              value: chains.results.find((e) => e.value === hotel.chain).value
+            },
+            start_date: parseISO(hotel.start_date),
+            active: hotel.active,
+            address: hotel.address,
+            email: hotel.email
+          });
+          changeSelectedCountry(
+            {
+              label: countries.results.find((e) => e.id === hotel.country).name,
+              value: countries.results.find((e) => e.id === hotel.country).id
+            },
+            {
+              label: region.name,
+              value: region.id
+            }
+          );
+        });
+      });
+    }
+  }, [dispatch, props.selected, chains]);
 
   const formik = useFormik({
     initialValues: {
@@ -58,13 +87,23 @@ const HotelDetail = (props) => {
         chain: values.chain.value,
         region: values.region.value
       };
-      dispatch(hotelActions.createHotel(hotel)).then(() => {
-        dispatch(hotelActions.fetchHotels()).then(() => {
-          setSubmitting(false);
-          props.onClose();
-          resetForm();
+      if (!_.isEmpty(props.selected)) {
+        dispatch(hotelActions.updateHotel(props.selected.id, hotel)).then(() => {
+          dispatch(hotelActions.fetchHotels()).then(() => {
+            setSubmitting(false);
+            props.onClose();
+            resetForm();
+          });
         });
-      });
+      } else {
+        dispatch(hotelActions.createHotel(hotel)).then(() => {
+          dispatch(hotelActions.fetchHotels()).then(() => {
+            setSubmitting(false);
+            props.onClose();
+            resetForm();
+          });
+        });
+      }
     }
   });
 
@@ -120,11 +159,11 @@ const HotelDetail = (props) => {
               <Form.Group>
                 <Form.Label>Provincia</Form.Label>
                 <Select
-                  isLoading={provinces.pending}
+                  isLoading={regions.pending}
                   value={formik.values.region}
-                  isDisabled={!provinces.results.length}
+                  isDisabled={!regions.results.length && _.isEmpty(selectedCountry)}
                   onChange={value => formik.setFieldValue("region", value)}
-                  options={provinces.results.map((e) => ({ label: e.name, value: e.id }))} />
+                  options={regions.results.map((e) => ({ label: e.name, value: e.id }))} />
                 {formik.errors.region && formik.touched.region && <span className="error_message">{formik.errors.region}</span>}
               </Form.Group>
             </Col>
@@ -187,7 +226,7 @@ const HotelDetail = (props) => {
         {
           !formik.isSubmitting ?
             <Modal.Footer>
-              <Button onClick={props.onClose} variant="link">Cancelar</Button>
+              <Button onClick={e => { props.onClose(); formik.resetForm(); }} variant="link">Cancelar</Button>
               <Button type="submit" variant="secondary">Agregar</Button>
             </Modal.Footer> :
             <Modal.Footer>

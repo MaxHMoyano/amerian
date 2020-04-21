@@ -1,28 +1,31 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
-import { handleResponse } from "../../helpers/utilities";
+import { handleResponse, buildUrl } from "../../helpers/utilities";
 
 export const hotelService = {
   fetchHotels,
   fetchHotel,
   createHotel,
+  updateHotel,
   deleteHotel,
   fetchRoomTypes,
+  fetchRoomType,
   createRoomType,
   editRoomType,
   deleteRoomType,
   fetchChains,
 };
 
-function fetchHotels() {
+function fetchHotels(searchParams, url) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()
   };
-
-
-  return fetch(`${config.apiUrl}/${API_VERSION}/hotels/`, requestOptions).then(handleResponse);
+  if (!url) {
+    url = buildUrl(`${config.apiUrl}/${API_VERSION}/hotels/`, searchParams);
+  }
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 function fetchHotel(hotelId) {
@@ -33,6 +36,17 @@ function fetchHotel(hotelId) {
   return fetch(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/`, requestOptions).then(handleResponse);
 }
 
+function updateHotel(hotelId, hotel) {
+  const requestOptions = {
+    method: "PUT",
+    body: JSON.stringify(hotel),
+    headers: authHeader(),
+  };
+
+  const url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}`);
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
 function fetchRoomTypes(hotelId) {
   const requestOptions = {
     method: "GET",
@@ -40,6 +54,16 @@ function fetchRoomTypes(hotelId) {
   };
 
   const url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/room_categories/`);
+  return fetch(url, requestOptions).then(handleResponse);
+}
+
+function fetchRoomType(hotelId, roomTypeId) {
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader()
+  };
+
+  const url = new URL(`${config.apiUrl}/${API_VERSION}/hotels/${hotelId}/room_categories/${roomTypeId}/`);
   return fetch(url, requestOptions).then(handleResponse);
 }
 

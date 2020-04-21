@@ -4,6 +4,7 @@ import { sharedService } from '../services';
 export const sharedActions = {
   fetchCountries,
   fetchRegions,
+  fetchRegion,
 };
 
 function fetchCountries() {
@@ -27,18 +28,31 @@ function fetchCountries() {
 
 function fetchRegions(countryId) {
   return (dispatch) => {
-    dispatch({
-      type: sharedConstants.FETCH_PROVINCES_REQUEST,
-    });
-    sharedService.fetchRegions(countryId).then((payload) => {
+    return new Promise((resolve, reject) => {
       dispatch({
-        type: sharedConstants.FETCH_PROVINCES_SUCCESS,
-        payload,
+        type: sharedConstants.FETCH_REGIONS_REQUEST,
       });
-    }, (error) => {
-      dispatch({
-        type: sharedConstants.FETCH_PROVINCES_ERROR,
-        error: error,
+      sharedService.fetchRegions(countryId).then((payload) => {
+        dispatch({
+          type: sharedConstants.FETCH_REGIONS_SUCCESS,
+          payload,
+        });
+        resolve();
+      }, (error) => {
+        dispatch({
+          type: sharedConstants.FETCH_REGIONS_ERROR,
+          error: error,
+        });
+      });
+    });
+  };
+}
+
+function fetchRegion(countryId, regionId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      sharedService.fetchRegion(countryId, regionId).then((region) => {
+        resolve(region);
       });
     });
   };

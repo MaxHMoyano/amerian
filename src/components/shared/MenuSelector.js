@@ -11,11 +11,11 @@ const MenuSelector = () => {
 
   const goToPath = (item) => {
     history.push(item.path);
-    dispatch(menuActions.setActiveMenu(item));
+    dispatch(menuActions.setActiveMenu(item.id));
   };
 
   // Selecciono los items del menu que solo sean los principales.
-  const primaryMenu = useSelector(({ menu }) => menu.items.filter((item) => item.primary || false));
+  const primaryMenu = useSelector(({ menu }) => menu.items);
   return (
     <div className="menu_selector_container my-3">
       {primaryMenu.map((item) => (

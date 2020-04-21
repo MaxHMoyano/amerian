@@ -3,16 +3,19 @@ import { menuConstants } from "../constants";
 const initialState = {
   items: [
     {
+      id: 1,
+      active: false,
       name: "Hoteles",
       icon: "hotel",
       path: "/hotels",
-      primary: true,
+      routes: [],
     },
     {
+      id: 2,
+      active: false,
       name: "Recursos Humanos",
       icon: "users",
       path: "/humanResources",
-      primary: true,
       routes: [
         {
           name: "Staff",
@@ -25,15 +28,16 @@ const initialState = {
       ]
     },
     {
+      id: 3,
+      active: false,
       name: "Comercial",
       icon: "hands-helping",
       path: "/comercial",
-      primary: true,
       routes: [
-        {
-          name: "Tarifas Vigentes",
-          path: "/comercial/rates"
-        },
+        // {
+        //   name: "Tarifas Vigentes",
+        //   path: "/comercial/rates"
+        // },
         {
           name: "Actualizaciones",
           path: "/comercial/rates-updates"
@@ -44,53 +48,24 @@ const initialState = {
         },
       ]
     },
-    {
-      name: "Agregar nuevo",
-      icon: "plus",
-      path: "/create-menu-item",
-    },
-    {
-      name: "Notificaciones",
-      icon: "bell",
-      path: "/notifications",
-      isBottom: true
-    },
-    {
-      name: "Ayuda",
-      icon: "question-circle",
-      path: "/help"
-    },
-    {
-      name: "Configuraciones",
-      icon: "cog",
-      path: "/settings"
-    }
   ],
-  activeItem: {
-    name: "",
-    routes: []
-  }
 };
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case menuConstants.SET_ACTIVE_MENU:
+      state.items = state.items.map((e) => {
+        return {
+          ...e,
+          active: payload === e.id ? true : false
+        };
+      });
       return {
         ...state,
-        activeItem: {
-          name: payload.name,
-          routes: payload.routes || []
-        }
-      };
-    case menuConstants.SET_ACTIVE_MENU_TO_HOME:
-      return {
-        ...state,
-        activeItem: {
-          name: "home",
-          routes: []
-        }
       };
     default:
       return state;
   }
 };
+
+

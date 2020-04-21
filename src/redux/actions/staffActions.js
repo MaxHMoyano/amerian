@@ -3,15 +3,18 @@ import { staffService, positionService, hotelService } from "../services/";
 
 export const staffActions = {
   fetchStaff,
-  createNewStaff
+  createNewStaff,
+  updateStaff,
+  deleteStaff,
+  fetchStaffById
 };
 
 
-function fetchStaff() {
+function fetchStaff(searchParams, url) {
   return dispatch => {
     return new Promise((resolve, reject) => {
       dispatch(request());
-      staffService.fetchStaff().then((staff) => {
+      staffService.fetchStaff(searchParams, url).then((staff) => {
         Promise.all(staff.results.map(getStaffData)).then((data) => {
           staff.results = data;
           dispatch(success(staff));
@@ -37,6 +40,17 @@ function fetchStaff() {
   }
 }
 
+function fetchStaffById(hotelId, staffId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      staffService.fetchStaffById(hotelId, staffId).then((staff) => {
+        resolve(staff);
+      });
+    });
+  };
+}
+
+
 function createNewStaff(hotelId, staff) {
   return dispatch => {
     return new Promise((resolve, reject) => {
@@ -47,14 +61,38 @@ function createNewStaff(hotelId, staff) {
   };
 }
 
+function updateStaff(hotelId, staffId, staff) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      staffService.updateStaff(hotelId, staffId, staff).then((staff) => {
+        resolve(staff);
+      });
+    });
+  };
+}
+
+function deleteStaff(hotelId, staffId) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      staffService.deleteStaff(hotelId, staffId).then(() => {
+        resolve();
+      });
+    });
+  };
+}
+
 function getStaffData(staff) {
   return new Promise((resolve, reject) => {
     Promise.all([positionService.fetchPosition(staff.position), hotelService.fetchHotel(staff.hotel)]).then(([position, hotel]) => {
       resolve({
         ...staff,
         position: position.name,
-        hotel: hotel.name
+        hotel: {
+          id: hotel.id,
+          name: hotel.name
+        }
       });
     }, reject);
   });
 }
+

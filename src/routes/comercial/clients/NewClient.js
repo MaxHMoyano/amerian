@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Form, Row, Col, Button } from "react-bootstrap";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -6,10 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Datepicker from "react-datepicker";
 import * as Yup from "yup";
 import { phoneRegex } from "../../../helpers/utilities";
-import { formatISO } from 'date-fns';
+import { formatISO, parseISO } from 'date-fns';
 import { clientActions } from "../../../redux/actions";
+import _ from "lodash";
 
-const Newclient = ({ show, onClose }) => {
+const Newclient = ({ show, onClose, selected }) => {
 
   // Global hooks
   const dispatch = useDispatch();
@@ -19,6 +20,25 @@ const Newclient = ({ show, onClose }) => {
 
   // Selectors
   let types = useSelector(({ client }) => client.types);
+
+
+  useEffect(() => {
+    if (!_.isEmpty(selected)) {
+      dispatch(clientActions.fetchClient(selected.id)).then((client) => {
+        formik.setValues({
+          name: client.name,
+          type: {
+            label: types.find(e => e.value === client.type).name,
+            value: types.find(e => e.value === client.type).value
+          },
+          phone: client.phone,
+          email: client.email,
+          start_date: parseISO(client.start_date),
+          active: client.active,
+        });
+      });
+    }
+  }, [selected, dispatch]);
 
 
   // Form
@@ -49,13 +69,24 @@ const Newclient = ({ show, onClose }) => {
         type: values.type.value,
         start_date: formatISO(values.start_date).split("T")[0]
       };
-      dispatch(clientActions.createClient(client)).then(() => {
-        dispatch(clientActions.fetchClients()).then(() => {
-          setSubmitting(false);
-          resetForm();
-          onClose();
+      if (!_.isEmpty(selected)) {
+        dispatch(clientActions.updateClient(selected.id, client)).then(() => {
+          dispatch(clientActions.fetchClients()).then(() => {
+            setSubmitting(false);
+            resetForm();
+            onClose();
+          });
         });
-      });
+      } else {
+        dispatch(clientActions.createClient(client)).then(() => {
+          dispatch(clientActions.fetchClients()).then(() => {
+            setSubmitting(false);
+            resetForm();
+            onClose();
+          });
+        });
+
+      }
     }
   });
 
@@ -153,7 +184,7 @@ const Newclient = ({ show, onClose }) => {
         {
           !formik.isSubmitting ?
             <Modal.Footer>
-              <Button onClick={onClose} variant="link">Cancelar</Button>
+              <Button onClick={e => { onClose(); formik.resetForm(); }} variant="link">Cancelar</Button>
               <Button type="submit" variant="secondary">Agregar</Button>
             </Modal.Footer> :
             <Modal.Footer>
