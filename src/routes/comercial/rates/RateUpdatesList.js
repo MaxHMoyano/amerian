@@ -21,6 +21,7 @@ const RateUpdatesList = () => {
 
   // selectors
   const rates = useSelector(({ rate }) => rate);
+  const rateStates = useSelector(({ rate }) => rate.states);
 
   // utility functions
 
@@ -53,25 +54,25 @@ const RateUpdatesList = () => {
 
   const gridSummary = {
     display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    columnGap: "2rem"
+    gridTemplateColumns: "repeat(5, 1fr)",
+    columnGap: "1rem"
   };
 
 
   return (
     <Fragment>
-      {/* <div className="summary_container mb-4" style={gridSummary}>
-        {summary.map(card => (
+      <div className="summary_container mb-4" style={gridSummary}>
+        {rateStates.map((state, idx) => (
           <InfoCard
-            key={card.code}
-            quantity={card.quantity}
-            description={card.description}
-            code={card.code}
-            name={card.name}
+
+            key={idx}
+            quantity={state.count}
+            description={state.name}
+            code={state.code}
+            name={state.name}
           />
         ))}
-      </div> */}
-      {/* <hr className="text-muted" /> */}
+      </div>
       <div className="d-flex align-items-center">
         <RateDropdown />
         {/* <Button variant="outline-secondary" className="is_rounded mr-3">

@@ -48,13 +48,22 @@ const RateDetail = () => {
     return (parseFloat((basePercentage / 100 * amount.amount)) + parseFloat(amount.amount)).toFixed(2);
   };
 
+  const getPercentage = (condition) => {
+    let base = condition.list.find((e) => e.clients.length === 0);
+    return parseFloat(base.percentage).toFixed(1);
+  };
+
   const approveRate = () => {
     let approvedRate = {
       status: 2
     };
     rateActions.partialUpdateRate(rate.hotel, rate.id, approvedRate).then((update) => {
-      console.log(update);
     });
+  };
+
+  const getClientName = (value) => {
+    const client = clientTypes.find(e => e.value === value);
+    return client.name;
   };
 
   return (
@@ -96,8 +105,8 @@ const RateDetail = () => {
       </Row>
       <h2 className="text-muted mt-4">Vigencias</h2>
       {
-        rate.details.map((detail) => (
-          <Row className="mb-3">
+        rate.details.map((detail, idx) => (
+          <Row className="mb-3" key={idx}>
             {
               detail.name &&
               <Col md={3}>
@@ -111,7 +120,7 @@ const RateDetail = () => {
               <Form.Group>
                 <div className="d-flex">
                   <div className="d-flex flex-column">
-                    <Form.Label>Vigencia:</Form.Label>
+                    <Form.Label>Desde:</Form.Label>
                     <Datepicker
                       placeholderText="Desde"
                       className="form-control"
@@ -120,7 +129,7 @@ const RateDetail = () => {
                     />
                   </div>
                   <div className="d-flex flex-column">
-                    <Form.Label>Vigencia:</Form.Label>
+                    <Form.Label>Hasta:</Form.Label>
                     <Datepicker
                       placeholderText="Hasta"
                       className="form-control"
@@ -145,15 +154,26 @@ const RateDetail = () => {
                   <th>Rack</th>
                   {
                     rate.conditions.map((condition, idx) => (
-                      condition.list.length > 0 && <th key={idx}>{condition.name}</th>
+                      condition.list.length > 0 && <th key={idx}>{getClientName(condition.name)}</th>
                     ))
                   }
                 </tr>
               </thead>
               <tbody>
+                <tr className="table-secondary">
+                  <td>% Asignado</td>
+                  <td></td>
+                  {
+                    rate.conditions.map((condition, idx) => (
+                      condition.list.length > 0 && <td key={idx}>
+                        {getPercentage(condition)} %
+                          </td>
+                    ))
+                  }
+                </tr>
                 {
-                  rate.amounts.map((amount) => (
-                    <tr>
+                  rate.amounts.map((amount, idx) => (
+                    <tr key={idx}>
                       <td>{amount.roomCategory.name}</td>
                       <td>${parseFloat(amount.amount).toFixed(2)}</td>
                       {
@@ -180,6 +200,25 @@ const RateDetail = () => {
           <Row key={idx} className="my-3">
             <Col md={6} style={{ backgroundColor: "#fbfbfb" }}>
               <h4 className="section_title mt-4">{clientTypes.length ? clientTypes.find(e => e.value === condition.name).name : ""}</h4>
+              <div className="p-3" style={{ backgroundColor: "#D9EDF7" }}>
+                <p>Descuento para {getClientName(condition.name)} {getPercentage(condition)}% salvo las siguientes excepciones:</p>
+                {
+                  condition.list.map((el, idx) => (
+                    el.clients.length > 0 &&
+                    <Fragment key={idx}>
+                      <Badge variant="dark" className="p-2 mx-2 text-white">{parseFloat(el.percentage).toFixed(1)} % : </Badge>
+                      {
+                        el.clients.map((client, idx) => (
+                          <Fragment key={idx}>
+                            <Badge variant="info" className="p-2 mx-2 text-white">{client.name}</Badge>
+                          </Fragment>
+                        ))
+                      }
+                    </Fragment>
+
+                  ))
+                }
+              </div>
               <div style={{ boxShadow: "1px 0 16px #e0dbdb" }}>
                 <Table bordered hover striped>
                   <thead>
@@ -188,8 +227,7 @@ const RateDetail = () => {
                       <th width="5%">Rack</th>
                       {
                         condition.list.map((el, idx) => (
-                          el.clients.length > 0 &&
-                          <th key={idx} width="5%" > {parseInt(el.percentage).toFixed(1)} %</th>
+                          <th key={idx} width="5%" className={`${!el.clients.length ? "text-info" : ""}`} > {parseInt(el.percentage).toFixed(1)} %</th>
                         ))
                       }
                     </tr>
@@ -202,8 +240,7 @@ const RateDetail = () => {
                           <td>${parseFloat(amount.amount).toFixed(2)}</td>
                           {
                             condition.list.map((el, idx) => (
-                              el.clients.length > 0 &&
-                              <td key={idx} width="5%">
+                              <td key={idx} width="5%" className={`${!el.clients.length ? "text-info" : ""}`}>
                                 ${getPrice(amount, condition)}
                               </td>
                             ))

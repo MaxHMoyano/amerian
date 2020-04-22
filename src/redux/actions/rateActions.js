@@ -1,5 +1,5 @@
 import { rateConstants } from "../constants";
-import { hotelService, rateService } from "../services";
+import { hotelService, rateService, clientService } from "../services";
 
 export const rateActions = {
   fetchRates,
@@ -113,20 +113,22 @@ function fetchRate(rateId) {
           rateService.fetchRateAmounts(rate.hotel, rate.id)
         ]).then(([hotel, conditions, details, amounts]) => {
           Promise.all(amounts.results.map(e => getAmountData(e, rate.hotel))).then((data) => {
-            resolve({
-              ...rate,
-              hotel: {
-                id: hotel.id,
-                name: hotel.name,
-              },
-              conditions: [
-                { name: "COR", list: conditions.results.filter((e) => e.client_type === "COR") },
-                { name: "COA", list: conditions.results.filter((e) => e.client_type === "COA") },
-                { name: "AGE", list: conditions.results.filter((e) => e.client_type === "AGE") },
-                { name: "OPE", list: conditions.results.filter((e) => e.client_type === "OPE") },
-              ],
-              details: details.results,
-              amounts: data
+            Promise.all(conditions.results.map(getConditionData)).then((detailedConditions) => {
+              resolve({
+                ...rate,
+                hotel: {
+                  id: hotel.id,
+                  name: hotel.name,
+                },
+                conditions: [
+                  { name: "COR", list: detailedConditions.filter((e) => e.client_type === "COR") },
+                  { name: "COA", list: detailedConditions.filter((e) => e.client_type === "COA") },
+                  { name: "AGE", list: detailedConditions.filter((e) => e.client_type === "AGE") },
+                  { name: "OPE", list: detailedConditions.filter((e) => e.client_type === "OPE") },
+                ],
+                details: details.results,
+                amounts: data
+              });
             });
           });
         });
@@ -186,6 +188,24 @@ function getAmountData(amount, hotel) {
         }
       });
     });
+  });
+}
+
+function getConditionData(condition) {
+  return new Promise((resolve, reject) => {
+    if (condition.clients.length) {
+      Promise.all(
+        condition.clients.map(client => clientService.fetchClient(client))
+      ).then((clients) => {
+        console.log(clients);
+        resolve({
+          ...condition,
+          clients
+        });
+      });
+    } else {
+      resolve(condition);
+    }
   });
 }
 
