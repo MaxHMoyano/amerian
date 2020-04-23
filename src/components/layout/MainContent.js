@@ -42,11 +42,10 @@ const MainContent = () => {
 
         {/* Comercial routes */}
         <Route exact path="/comercial/" component={Comercial}></Route>
-        <Route exact path="/comercial/rates/" component={RatesList}></Route>
+        <Route exact path="/comercial/hotels-rates/" component={RatesList}></Route>
+        <Route exact path="/comercial/rates/" component={RateUpdatesList}></Route>
+        <Route exact path="/comercial/rates/new-rate" component={NewRate}></Route>
         <Route exact path="/comercial/rates/:id" component={RateDetail}></Route>
-        <Route exact path="/comercial/rates-updates/" component={RateUpdatesList}></Route>
-        <Route exact path="/comercial/rates-updates/new-rate" component={NewRate}></Route>
-        <Route exact path="/comercial/rates-updates/:id" component={NewRate}></Route>
         <Route exact path="/comercial/clients/" component={Clients}></Route>
         <Route path={["/home", "/"]} component={Home}></Route>
       </Switch>

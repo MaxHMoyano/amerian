@@ -7,7 +7,7 @@ const initialState = {
       active: false,
       name: "Hoteles",
       icon: "hotel",
-      path: "/hotels",
+      path: "/hotels/",
       routes: [],
     },
     {
@@ -19,11 +19,11 @@ const initialState = {
       routes: [
         {
           name: "Staff",
-          path: "/humanResources/staff"
+          path: "/humanResources/staff/"
         },
         {
           name: "Posiciones",
-          path: "/humanResources/positions"
+          path: "/humanResources/positions/"
         }
       ]
     },
@@ -36,15 +36,15 @@ const initialState = {
       routes: [
         // {
         //   name: "Tarifas Vigentes",
-        //   path: "/comercial/rates"
+        //   path: "/comercial/hotels-rates/"
         // },
         {
           name: "Actualizaciones",
-          path: "/comercial/rates-updates"
+          path: "/comercial/rates/"
         },
         {
           name: "Clientes Convenio",
-          path: "/comercial/clients"
+          path: "/comercial/clients/"
         },
       ]
     },

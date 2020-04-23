@@ -25,7 +25,7 @@ const RateDropdown = props => {
       <Dropdown.Menu>
         {
           tariffsTypes.map((e) => (
-            <Dropdown.Item key={e.value} onClick={() => history.push(`/comercial/rates-updates/new-rate?type=${e.value}`)}>{e.name}</Dropdown.Item>
+            <Dropdown.Item key={e.value} onClick={() => history.push(`/comercial/rates/new-rate?type=${e.value}`)}>{e.name}</Dropdown.Item>
           ))
         }
       </Dropdown.Menu>

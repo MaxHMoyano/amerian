@@ -119,25 +119,25 @@ const NewRate = () => {
       observations: "",
       roomTypes: [
       ],
-      corporationRates: {
+      COR: {
         base: "",
         exceptions: [
           { value: "", names: [] }
         ],
       },
-      operatorRates: {
+      OPE: {
         base: "",
         exceptions: [
           { value: "", names: [] }
         ],
       },
-      agencyRates: {
+      AGE: {
         base: "",
         exceptions: [
           { value: "", names: [] }
         ],
       },
-      corporateAgencyRates: {
+      COA: {
         base: "",
         exceptions: [
           { value: "", names: [] }
@@ -178,6 +178,7 @@ const NewRate = () => {
           })));
           Promise.all(details).then(() => {
             let conditions = buildConditions(rate.id);
+            console.log(conditions);
             conditions = conditions.map((condition) => dispatch(rateActions.createRateCondition(values.hotel.value, rate.id, condition)));
             Promise.all(conditions).then((res) => {
               setSubmitting(false);
@@ -199,10 +200,10 @@ const NewRate = () => {
           use_usd: ex.useUsd,
           use_ars: ex.useArs,
           rate: rateId,
-          percentage: formik.values.corporationRates.base,
+          percentage: formik.values[ex.name].base,
         };
         conditions.push(baseCondition);
-        formik.values.corporationRates.exceptions.forEach((e) => {
+        formik.values[ex.name].exceptions.forEach((e) => {
           let exception = {
             ...baseCondition,
             percentage: e.value,
@@ -219,7 +220,7 @@ const NewRate = () => {
     formik.setFieldValue("roomTypes", roomTypes.results.map((e) => ({ ...e, currency: "", alternative_currency: "" })));
   }, [roomTypes.results]);
 
-  // Utility fucntions
+  // Utility function
 
   const isActive = (type) => {
     let clientType = activeEx.find(e => e.name === type);
@@ -635,8 +636,8 @@ const NewRate = () => {
             </Col>
             <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
               <Form.Control
-                name="corporationRates.base"
-                value={formik.values.corporationRates.base}
+                name="COR.base"
+                value={formik.values.COR.base}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -645,12 +646,12 @@ const NewRate = () => {
           </Row>
           <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
           {
-            formik.values.corporationRates.exceptions.map((exc, idx) => (
+            formik.values.COR.exceptions.map((exc, idx) => (
               <Row className="mb-2" key={idx}>
                 <Col md={8}>
                   <Select
                     value={exc.names}
-                    onChange={value => formik.setFieldValue(`corporationRates.exceptions[${idx}].names`, value)}
+                    onChange={value => formik.setFieldValue(`COR.exceptions[${idx}].names`, value)}
                     isMulti
                     options={corporationClients.map((client) => ({ label: client.name, value: client.id }))}
                     closeMenuOnSelect={false}
@@ -658,14 +659,14 @@ const NewRate = () => {
                 </Col>
                 <Col md={4} className="d-flex align-items-center justify-content-end">
                   <Form.Control
-                    name={`corporationRates.exceptions[${idx}].value`}
+                    name={`COR.exceptions[${idx}].value`}
                     className="flex-1"
                     type="text"
                     value={exc.value}
                     onChange={formik.handleChange}
                   />
                   <span className="ml-1">%</span>
-                  <i onClick={e => formik.values.corporationRates.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
+                  <i onClick={e => formik.values.COR.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
                   <Button variant="outline-info mx-1">
                     <i className="fas fa-plus"></i>
                   </Button>
@@ -682,8 +683,8 @@ const NewRate = () => {
             </Col>
             <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
               <Form.Control
-                name="operatorRates.base"
-                value={formik.values.operatorRates.base}
+                name="OPE.base"
+                value={formik.values.OPE.base}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -692,12 +693,12 @@ const NewRate = () => {
           </Row>
           <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
           {
-            formik.values.operatorRates.exceptions.map((exc, idx) => (
+            formik.values.OPE.exceptions.map((exc, idx) => (
               <Row className="mb-2" key={idx}>
                 <Col md={8}>
                   <Select
                     value={exc.names}
-                    onChange={value => formik.setFieldValue(`operatorRates.exceptions[${idx}].names`, value)}
+                    onChange={value => formik.setFieldValue(`OPE.exceptions[${idx}].names`, value)}
                     isMulti
                     options={operatorClients.map((client) => ({ label: client.name, value: client.id }))}
                     closeMenuOnSelect={false}
@@ -705,14 +706,14 @@ const NewRate = () => {
                 </Col>
                 <Col md={4} className="d-flex align-items-center justify-content-end">
                   <Form.Control
-                    name={`operatorRates.exceptions[${idx}].value`}
+                    name={`OPE.exceptions[${idx}].value`}
                     className="flex-1"
                     type="text"
                     value={exc.value}
                     onChange={formik.handleChange}
                   />
                   <span className="ml-1">%</span>
-                  <i onClick={e => formik.values.operatorRates.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
+                  <i onClick={e => formik.values.OPE.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
                   <Button variant="outline-info mx-1">
                     <i className="fas fa-plus"></i>
                   </Button>
@@ -729,8 +730,8 @@ const NewRate = () => {
             </Col>
             <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
               <Form.Control
-                name="agencyRates.base"
-                value={formik.values.agencyRates.base}
+                name="AGE.base"
+                value={formik.values.AGE.base}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -739,12 +740,12 @@ const NewRate = () => {
           </Row>
           <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
           {
-            formik.values.agencyRates.exceptions.map((exc, idx) => (
+            formik.values.AGE.exceptions.map((exc, idx) => (
               <Row className="mb-2" key={idx}>
                 <Col md={8}>
                   <Select
                     value={exc.names}
-                    onChange={value => formik.setFieldValue(`agencyRates.exceptions[${idx}].names`, value)}
+                    onChange={value => formik.setFieldValue(`AGE.exceptions[${idx}].names`, value)}
                     isMulti
                     options={agencyClients.map((client) => ({ label: client.name, value: client.id }))}
                     closeMenuOnSelect={false}
@@ -752,14 +753,14 @@ const NewRate = () => {
                 </Col>
                 <Col md={4} className="d-flex align-items-center justify-content-end">
                   <Form.Control
-                    name={`agencyRates.exceptions[${idx}].value`}
+                    name={`AGE.exceptions[${idx}].value`}
                     className="flex-1"
                     type="text"
                     value={exc.value}
                     onChange={formik.handleChange}
                   />
                   <span className="ml-1">%</span>
-                  <i onClick={e => formik.values.agencyRates.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
+                  <i onClick={e => formik.values.AGE.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
                   <Button variant="outline-info mx-1">
                     <i className="fas fa-plus"></i>
                   </Button>
@@ -776,8 +777,8 @@ const NewRate = () => {
             </Col>
             <Col md={{ span: 2, offset: 4 }} className="d-flex align-items-center">
               <Form.Control
-                name="corporateAgencyRates.base"
-                value={formik.values.corporateAgencyRates.base}
+                name="COA.base"
+                value={formik.values.COA.base}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -786,12 +787,12 @@ const NewRate = () => {
           </Row>
           <p className="text-muted"><strong>Excepciones: </strong> Rango recomendado es entre el 17% y el 21%</p>
           {
-            formik.values.corporateAgencyRates.exceptions.map((exc, idx) => (
+            formik.values.COA.exceptions.map((exc, idx) => (
               <Row className="mb-2" key={idx}>
                 <Col md={8}>
                   <Select
                     value={exc.names}
-                    onChange={value => formik.setFieldValue(`corporateAgencyRates.exceptions[${idx}].names`, value)}
+                    onChange={value => formik.setFieldValue(`COA.exceptions[${idx}].names`, value)}
                     isMulti
                     options={corpAgencyClient.map((client) => ({ label: client.name, value: client.id }))}
                     closeMenuOnSelect={false}
@@ -799,14 +800,14 @@ const NewRate = () => {
                 </Col>
                 <Col md={4} className="d-flex align-items-center justify-content-end">
                   <Form.Control
-                    name={`corporateAgencyRates.exceptions[${idx}].value`}
+                    name={`COA.exceptions[${idx}].value`}
                     className="flex-1"
                     type="text"
                     value={exc.value}
                     onChange={formik.handleChange}
                   />
                   <span className="ml-1">%</span>
-                  <i onClick={e => formik.values.corporateAgencyRates.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
+                  <i onClick={e => formik.values.COA.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
                   <Button variant="outline-info mx-1">
                     <i className="fas fa-plus"></i>
                   </Button>

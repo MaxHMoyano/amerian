@@ -669,7 +669,7 @@ module.exports = function (webpackEnv) {
     externals: {
       // global app config object
       config: JSON.stringify({
-        apiUrl: "http://amerian-test.ves3eqv9cp.us-west-2.elasticbeanstalk.com/es/api"
+        apiUrl: "http://amerian-test.ves3eqv9cp.us-west-2.elasticbeanstalk.com/api"
       })
     }
   };
