@@ -5,7 +5,7 @@ const InfoCard = (props) => {
 
 
   return (
-    <div className="info_card">
+    <div className="info_card" onClick={props.onClick}>
       <div className={`info_card_header bg-${props.code}`}>
         <span className="text-uppercase">Solicitudes</span>
         <h3>{props.name}</h3>

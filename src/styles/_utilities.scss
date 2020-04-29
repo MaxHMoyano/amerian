@@ -79,3 +79,16 @@
   display: block !important;
   margin-right: 0.5rem;
 }
+
+.menu_action_button {
+  background-color: rgba($color: $primary, $alpha: 0);
+  color: $white;
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+  flex: 1;
+  &:hover {
+    color: $dark;
+    transform: translate3d(2px, 0, 0);
+  }
+}

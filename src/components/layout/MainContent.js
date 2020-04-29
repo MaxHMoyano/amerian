@@ -27,16 +27,15 @@ const MainContent = () => {
     padding: "0"
   };
 
-
   return (
-    <div className="main_content" style={location.pathname === "/home" || location.pathname === "/" ? noPaddingHomeStyle : {}}>
+    <div className="main_content" style={location.pathname === "/home/" || location.pathname === "/" || location.pathname === "/home" ? noPaddingHomeStyle : {}}>
       <Switch>
         {/* Hotels routes */}
         <Route path="/hotels/" component={HotelsList}></Route>
 
         {/* Human resources routes */}
-        <Route exact path="/humanResources" component={HumanResources}></Route>
-        <Route exact path="/humanResources/staff" component={StaffList}></Route>
+        <Route exact path="/humanResources/" component={HumanResources}></Route>
+        <Route exact path="/humanResources/staff/" component={StaffList}></Route>
         <Route path={`/humanResources/staff/:id`} component={StaffDetail} ></Route>
         <Route exact path="/humanResources/positions/" component={PositionsList}></Route>
 

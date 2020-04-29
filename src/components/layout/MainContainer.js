@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import WelcomePage from "../login/WelcomePage";
 import { useSelector } from "react-redux";
 import NavBar from "./NavBar";
@@ -6,7 +6,7 @@ import PrimarySidebar from "./PrimarySidebar";
 import SecondarySidebar from "./SecondarySidebar";
 import HotelSidebar from "./HotelSidebar";
 import MainContent from "./MainContent";
-import { useEffect } from "react";
+import ClientSidebar from "./ClientSidebar";
 
 const MainContainer = () => {
 
@@ -37,9 +37,9 @@ const MainContainer = () => {
     gridTemplateRows: "90px 1fr",
     gridTemplateAreas: `${isManager() ?
       "'primarySidebar secondarySidebar navbar' 'primarySidebar secondarySidebar content'" :
-      isHotel ?
+      isHotel() ?
         "'hotelSidebar navbar' 'hotelSidebar content'" :
-        "'clientSidebar navbar' 'clientSidebar content'"
+        "'primarySidebar navbar' 'primarySidebar content'"
       }`,
   };
 
@@ -58,6 +58,7 @@ const MainContainer = () => {
         {isManager() && <PrimarySidebar />}
         {isManager() && <SecondarySidebar />}
         {isHotel() && <HotelSidebar />}
+        {isClient() && <ClientSidebar />}
         <MainContent />
       </div>
     );

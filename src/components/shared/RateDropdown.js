@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Dropdown } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom';
 import { rateActions } from '../../redux/actions';
 
-const RateDropdown = props => {
+const RateDropdown = () => {
   // global Hooks
   const dispatch = useDispatch();
   const history = useHistory();
@@ -31,10 +30,6 @@ const RateDropdown = props => {
       </Dropdown.Menu>
     </Dropdown>
   );
-};
-
-RateDropdown.propTypes = {
-
 };
 
 export default RateDropdown;

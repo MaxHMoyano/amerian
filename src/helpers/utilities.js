@@ -52,7 +52,7 @@ export const buildUrl = (url, params) => {
   let request = new URL(url);
   if (params) {
     for (const key in params) {
-      if (params.hasOwnProperty(key) && (params[key] || typeof params[key] === "boolean")) {
+      if (params.hasOwnProperty(key) && (params[key] || typeof params[key] === "boolean" || typeof params[key] === "number")) {
         request.searchParams.set(key, params[key]);
       }
     }

@@ -4,6 +4,7 @@ const initialState = {
   items: [
     {
       id: 1,
+      showOnHotel: false,
       active: false,
       name: "Hoteles",
       icon: "hotel",
@@ -12,10 +13,11 @@ const initialState = {
     },
     {
       id: 2,
+      showOnHotel: true,
       active: false,
       name: "Recursos Humanos",
       icon: "users",
-      path: "/humanResources",
+      path: "/humanResources/",
       routes: [
         {
           name: "Staff",
@@ -29,10 +31,11 @@ const initialState = {
     },
     {
       id: 3,
+      showOnHotel: true,
       active: false,
       name: "Comercial",
       icon: "hands-helping",
-      path: "/comercial",
+      path: "/comercial/",
       routes: [
         // {
         //   name: "Tarifas Vigentes",

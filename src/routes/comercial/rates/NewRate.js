@@ -3,7 +3,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { Form, Button, Table, InputGroup, Row, Col } from 'react-bootstrap';
 import Select from 'react-select';
 import { useState } from 'react';
-import { customSelectTheme, globalDateFormat } from '../../../helpers/utilities';
+import { globalDateFormat } from '../../../helpers/utilities';
 import { useDispatch, useSelector } from 'react-redux';
 import { hotelActions, clientActions, currencyActions, rateActions } from '../../../redux/actions';
 import { useEffect } from 'react';
@@ -178,7 +178,6 @@ const NewRate = () => {
           })));
           Promise.all(details).then(() => {
             let conditions = buildConditions(rate.id);
-            console.log(conditions);
             conditions = conditions.map((condition) => dispatch(rateActions.createRateCondition(values.hotel.value, rate.id, condition)));
             Promise.all(conditions).then((res) => {
               setSubmitting(false);
@@ -288,6 +287,19 @@ const NewRate = () => {
       newDetail,
       ...formik.values.details,
     ]);
+  };
+
+  const addNewException = (name) => {
+    let newException = {
+      value: "", names: []
+    };
+    formik.setFieldValue(
+      `${name}.exceptions`,
+      [
+        ...formik.values[name].exceptions,
+        newException
+      ]
+    );
   };
 
   return (
@@ -667,7 +679,7 @@ const NewRate = () => {
                   />
                   <span className="ml-1">%</span>
                   <i onClick={e => formik.values.COR.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
-                  <Button variant="outline-info mx-1">
+                  <Button variant="outline-info mx-1" onClick={e => addNewException("COR")}>
                     <i className="fas fa-plus"></i>
                   </Button>
                 </Col>
@@ -714,7 +726,7 @@ const NewRate = () => {
                   />
                   <span className="ml-1">%</span>
                   <i onClick={e => formik.values.OPE.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
-                  <Button variant="outline-info mx-1">
+                  <Button variant="outline-info mx-1" onClick={e => addNewException("OPE")}>
                     <i className="fas fa-plus"></i>
                   </Button>
                 </Col>
@@ -761,7 +773,7 @@ const NewRate = () => {
                   />
                   <span className="ml-1">%</span>
                   <i onClick={e => formik.values.AGE.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
-                  <Button variant="outline-info mx-1">
+                  <Button variant="outline-info mx-1" onClick={e => addNewException("AGE")}>
                     <i className="fas fa-plus"></i>
                   </Button>
                 </Col>
@@ -808,7 +820,7 @@ const NewRate = () => {
                   />
                   <span className="ml-1">%</span>
                   <i onClick={e => formik.values.COA.exceptions.splice(idx)} className="fas fa-trash mx-3 icon-button"></i>
-                  <Button variant="outline-info mx-1">
+                  <Button variant="outline-info mx-1" onClick={e => addNewException("COA")}>
                     <i className="fas fa-plus"></i>
                   </Button>
                 </Col>

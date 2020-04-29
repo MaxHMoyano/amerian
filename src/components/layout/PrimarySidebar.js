@@ -37,7 +37,6 @@ const PrimarySidebar = () => {
         ))}
         <div className="menu_item mt-auto">
           <Button variant="link"
-            to="/home"
             className="menu_link"
             onClick={() => dispatch(userActions.logout())}
           >

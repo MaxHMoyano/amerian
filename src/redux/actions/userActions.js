@@ -48,7 +48,7 @@ function login(email, password) {
     return dispatch => {
       dispatch({ type: userConstants.LOGIN_WELCOME, user });
       setTimeout(() => {
-        history.push("/home");
+        history.push("/home/");
         dispatch(success(user));
         dispatch({ type: menuConstants.SET_ACTIVE_MENU });
       }, 2000);

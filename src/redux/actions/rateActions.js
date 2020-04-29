@@ -14,11 +14,11 @@ export const rateActions = {
   partialUpdateRate,
 };
 
-function fetchRates() {
+function fetchRates(searchParams, url) {
   return dispatch => {
     return new Promise((resolve, reject) => {
       dispatch(request());
-      rateService.fetchRates().then((rates) => {
+      rateService.fetchRates(searchParams, url).then((rates) => {
         Promise.all(rates.results.map(getRateData)).then((data) => {
           rates.results = data;
           dispatch(success(rates));
@@ -197,7 +197,6 @@ function getConditionData(condition) {
       Promise.all(
         condition.clients.map(client => clientService.fetchClient(client))
       ).then((clients) => {
-        console.log(clients);
         resolve({
           ...condition,
           clients

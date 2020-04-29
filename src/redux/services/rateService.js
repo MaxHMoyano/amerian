@@ -1,7 +1,7 @@
 import config from "config";
 import { authHeader } from "../../helpers/auth-header";
 import { API_VERSION } from "../../helpers/apiVersion";
-import { handleResponse } from "../../helpers/utilities";
+import { handleResponse, buildUrl } from "../../helpers/utilities";
 
 export const rateService = {
   fetchRates,
@@ -19,12 +19,14 @@ export const rateService = {
 };
 
 
-function fetchRates() {
+function fetchRates(searchParams, url) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
-  let url = new URL(`${config.apiUrl}/${API_VERSION}/rates/`);
+  if (!url) {
+    url = buildUrl(`${config.apiUrl}/${API_VERSION}/rates/`, searchParams);
+  }
   return fetch(url, requestOptions).then(handleResponse);
 }
 

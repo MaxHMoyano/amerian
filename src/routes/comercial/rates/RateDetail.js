@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { rateActions, clientActions } from "../../../redux/actions";
+import { rateActions, clientActions, currencyActions } from "../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from 'react-router-dom';
 import { Form, Row, Col, Button, Table, Badge } from "react-bootstrap";
 import Datepicker from "react-datepicker";
 import { parseISO } from "date-fns";
+import Select from 'react-select';
 
 const RateDetail = () => {
 
@@ -17,12 +18,14 @@ const RateDetail = () => {
   const [rate, setRate] = useState(null);
 
   // selectors
-
+  const isManager = useSelector(({ user }) => user.current.groups.some((e) => e === 1));
   const clientTypes = useSelector(({ client }) => client.types);
+  const currencies = useSelector(({ currency }) => currency);
 
   // on mount function
   useEffect(() => {
     dispatch(clientActions.fetchClientTypes());
+    dispatch(currencyActions.fetchCurrencies());
     Promise.all([
       dispatch(rateActions.fetchRate(params.id)),
       dispatch(rateActions.fetchRateTypes()),
@@ -42,9 +45,16 @@ const RateDetail = () => {
     </div>;
   }
 
-  const getPrice = (amount, condition) => {
+  const getRackPrice = (amount, condition) => {
+    console.log(amount, condition);
     let base = condition.list.find((e) => e.clients.length === 0);
     let basePercentage = base.percentage;
+    return (parseFloat((basePercentage / 100 * amount.amount)) + parseFloat(amount.amount)).toFixed(2);
+  };
+
+  const getPrice = (amount, condition) => {
+    console.log(amount, condition);
+    let basePercentage = condition.percentage;
     return (parseFloat((basePercentage / 100 * amount.amount)) + parseFloat(amount.amount)).toFixed(2);
   };
 
@@ -75,7 +85,7 @@ const RateDetail = () => {
             <Button className="mr-2" variant="secondary">Editar Tarifa</Button>
           }
           {
-            rate.status.value === 1 &&
+            rate.status.value === 1 && isManager &&
             <Button onClick={e => approveRate()} className="mx-2" variant="outline-secondary">Observar / Aprobar</Button>
           }
         </Col>
@@ -99,7 +109,13 @@ const RateDetail = () => {
         <Col md={3}>
           <Form.Group>
             <Form.Label>Moneda:</Form.Label>
-            <Form.Control disabled value={rate.hotel.name} />
+            <Select
+              options={currencies.results.filter((e) => e.value === rate.currency || e.value === rate.alternative_currency).map((e) => ({ label: e.name, value: e.value }))}
+              value={{
+                label: currencies.results.find((e) => e.value === rate.currency).name,
+                value: currencies.results.find((e) => e.value === rate.currency).value
+              }}
+            />
           </Form.Group>
         </Col>
       </Row>
@@ -179,7 +195,7 @@ const RateDetail = () => {
                       {
                         rate.conditions.map((condition, idx) => (
                           condition.list.length > 0 && <td key={idx}>
-                            $ {getPrice(amount, condition)}
+                            $ {getRackPrice(amount, condition)}
                           </td>
                         ))
                       }
@@ -241,7 +257,7 @@ const RateDetail = () => {
                           {
                             condition.list.map((el, idx) => (
                               <td key={idx} width="5%" className={`${!el.clients.length ? "text-info" : ""}`}>
-                                ${getPrice(amount, condition)}
+                                ${getPrice(amount, el)}
                               </td>
                             ))
                           }

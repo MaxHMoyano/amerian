@@ -139,54 +139,72 @@
     }
   }
 }
+
 .hotel_sidebar {
   grid-area: hotelSidebar;
-  background-color: $gray-200;
-  padding: 3rem 1rem;
+  background-color: darken($color: $primary, $amount: 5%);
+  padding: 2rem 1rem;
   width: 240px;
   max-width: 240px;
   position: relative;
   transition: all 0.3s ease;
-  &.inactive {
-    animation-name: hide_sidebar;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
-    transform: translate3d(-100%, 0, 0);
-    .sidebar_toggle {
-      right: -1.7rem;
-    }
-    h4,
-    .link {
-      display: none !important;
-    }
-  }
-  .sidebar_toggle {
-    width: 30px;
-    height: 30px;
+  display: flex;
+  flex-flow: column nowrap;
+  .menu {
+    width: 100%;
     display: flex;
+    flex-flow: column nowrap;
     align-items: center;
-    justify-content: center;
-    // border-radius: 50%;
-    position: absolute;
-    right: -1rem;
-    background-color: darken($color: $primary, $amount: 10%);
-  }
-  .link {
-    display: block;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 1rem 0.5rem;
-    border-radius: 3px;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
-    color: $dark;
-    text-decoration: none;
-    &:hover {
-      background-color: $gray-400;
-    }
-    &.active {
-      background-color: $gray-400;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex: 1;
+    .item_wrapper {
+      width: 100%;
+      margin: 0.1rem 0;
+      &.active,
+      &:hover {
+        text-decoration: none;
+        background: darken($color: $primary, $amount: 10%);
+      }
+      .hotel_sidebar_item {
+        color: $light;
+        width: 100%;
+        padding: 0.75rem;
+        display: flex;
+        align-items: center;
+        border-radius: 3px;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        i {
+          margin-right: 1rem;
+        }
+        &:hover {
+          text-decoration: none;
+        }
+      }
+      .hotel_sidebar_child {
+        color: $gray-400;
+        width: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0.5rem;
+        margin: 0.5rem 0.25rem;
+        &.active,
+        &:hover {
+          text-decoration: none;
+          color: $white;
+        }
+        &.active {
+          &::before {
+            content: ".";
+            margin-right: 0.25rem;
+            position: relative;
+            bottom: 0.25rem;
+          }
+        }
+      }
     }
   }
 }

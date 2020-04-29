@@ -2,12 +2,13 @@
   display: flex;
   flex-flow: column nowrap;
   box-shadow: 0 0 16px $gray-100;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   &:hover {
     transform: translate3d(0, -3px, 0);
-    opacity: .9;
+    opacity: 0.9;
   }
   .info_card_header {
+    cursor: pointer;
     color: $light;
     font-weight: bold;
     padding: 1rem;
@@ -31,11 +32,11 @@
     span:first-child {
       font-weight: bold;
       font-size: 1.5rem;
-      opacity: .8;
+      opacity: 0.8;
     }
     span:nth-child(2) {
       font-size: 1.2rem;
-      opacity: .7;
+      opacity: 0.7;
     }
   }
 }

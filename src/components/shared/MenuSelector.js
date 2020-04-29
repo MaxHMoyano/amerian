@@ -15,7 +15,16 @@ const MenuSelector = () => {
   };
 
   // Selecciono los items del menu que solo sean los principales.
-  const primaryMenu = useSelector(({ menu }) => menu.items);
+  const isManager = useSelector(({ user }) => user.current.groups.some((e) => e === 1));
+  const primaryMenu = useSelector(({ menu }) => {
+    if (isManager) {
+      return menu.items;
+    } else {
+      return menu.items.filter((e) => e.showOnHotel === true);
+    }
+  });
+
+
   return (
     <div className="menu_selector_container my-3">
       {primaryMenu.map((item) => (

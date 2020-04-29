@@ -2,7 +2,7 @@ import { userConstants } from "../constants";
 
 let INITIAL_STATE = {
   current: {
-    groups: [1]
+    groups: [2]
   },
   error: "",
   pending: false
