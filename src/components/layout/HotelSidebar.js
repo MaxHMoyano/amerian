@@ -10,6 +10,7 @@ const HotelSidebar = () => {
   const menu = useSelector(({ menu }) => menu.items.filter((e) => e.showOnHotel));
   const dispatch = useDispatch();
 
+  const isManager = useSelector(({ user }) => user.current.groups.some((e) => e === 1));
 
 
   return (
@@ -60,33 +61,42 @@ const HotelSidebar = () => {
           ))
         }
       </div>
-      <div className="menu_actions p-2 mt-auto d-flex align-items-center justify-content-between">
-        {/* <img src="" alt="photo 2" /> */}
-        <button
-          className="menu_action_button"
-          onClick={() => dispatch(userActions.logout())}
-        >
-          <i className="fas fa-user text-white"></i>
-        </button>
-        <button
-          className="menu_action_button"
-          onClick={() => dispatch(userActions.logout())}
-        >
-          <i className="fas fa-question-circle"></i>
-        </button>
-        <button
-          className="menu_action_button"
-          onClick={() => dispatch(userActions.logout())}
-        >
-          <i className="fas fa-cog"></i>
-        </button>
-        <button
-          className="menu_action_button"
-          onClick={() => dispatch(userActions.logout())}
-        >
-          <i className="fas fa-sign-out-alt"></i>
-        </button>
-      </div>
+      {
+        !isManager &&
+        <div className="menu_actions p-2 mt-auto d-flex align-items-center justify-content-between">
+          {/* <img src="" alt="photo 2" /> */}
+          <button
+            className="menu_action_button"
+            onClick={() => dispatch(userActions.logout())}
+          >
+            <i className="fas fa-user text-white"></i>
+          </button>
+          <button
+            className="menu_action_button"
+            onClick={() => dispatch(userActions.logout())}
+          >
+            <i className="fas fa-question-circle"></i>
+          </button>
+          <button
+            className="menu_action_button"
+            onClick={() => dispatch(userActions.logout())}
+          >
+            <i className="fas fa-cog"></i>
+          </button>
+          <button
+            className="menu_action_button"
+            onClick={() => dispatch(userActions.logout())}
+          >
+            <i className="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      }
+      {
+        isManager &&
+        <Button onClick={e => dispatch(userActions.showContentAsInHotel(false))} variant="light">
+          Volver a hoteles
+        </Button>
+      }
     </div>
   );
 };

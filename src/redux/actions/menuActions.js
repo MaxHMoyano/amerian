@@ -1,4 +1,6 @@
 import { menuConstants } from "../constants";
+import { history } from "../../helpers/history";
+
 
 export const menuActions = {
   setActiveMenu,

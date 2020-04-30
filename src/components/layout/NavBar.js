@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Breadcrumb } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
@@ -7,7 +7,8 @@ const NavBar = () => {
   const currentRoute = useSelector(({ menu }) => menu.items.find((e) => e.active === true));
   const userName = useSelector(({ user }) => user.current ? user.current.first_name : "");
 
-
+  const isManager = useSelector((({ user }) => user.current.groups.some((e) => e === 1)));
+  const isHotel = useSelector((({ user }) => user.current.groups.some((e) => e === 3)));
 
   const [title, setTitle] = useState("");
   let location = useLocation();

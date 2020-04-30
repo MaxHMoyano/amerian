@@ -8,6 +8,7 @@ export const userActions = {
   getAll,
   fetchUser,
   clearLoginError,
+  showContentAsInHotel,
 };
 
 function clearLoginError() {
@@ -18,7 +19,6 @@ function clearLoginError() {
   };
 }
 
-
 function login(email, password) {
   return dispatch => {
     dispatch(request({ email }));
@@ -26,7 +26,6 @@ function login(email, password) {
     userService.login(email, password).then(
       user => {
         dispatch(fetchUser(user.id)).then((user) => {
-          // dispatch(setCurrentUserGroup(user));
           dispatch(welcomePage(user));
         });
       },
@@ -35,14 +34,6 @@ function login(email, password) {
       }
     );
   };
-
-  // function setCurrentUserGroup(user) {
-  //   return dispatch => {
-  //     return new Promise((resolve, reject) => {
-  //       dispatch(userConstants.SET_USER_GROUP())
-  //     });
-  //   };
-  // }
 
   function welcomePage(user) {
     return dispatch => {
@@ -65,6 +56,22 @@ function login(email, password) {
     return { type: userConstants.LOGIN_FAILURE, error: "Ha ocurrido un error, por favor verifique sus credenciales" };
   }
 }
+
+function showContentAsInHotel(show) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: userConstants.SHOW_CONTENT_AS_IN_HOTEL,
+        payload: show
+      });
+      history.push("/home/");
+      dispatch({ type: menuConstants.SET_ACTIVE_MENU });
+      resolve();
+    });
+  };
+}
+
+
 
 function fetchUser(userId) {
   return (dispatch) => {

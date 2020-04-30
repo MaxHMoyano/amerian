@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import WelcomePage from "../login/WelcomePage";
 import { useSelector } from "react-redux";
 import NavBar from "./NavBar";
@@ -17,16 +17,58 @@ const MainContainer = () => {
     return currentGroups.some((e) => e === 1);
   };
 
-  const isClient = () => {
-    return currentGroups.some((e) => e === 2);
-  };
+  // const isClient = () => {
+  //   return currentGroups.some((e) => e === 2);
+  // };
 
   const isHotel = () => {
     return currentGroups.some((e) => e === 3);
   };
 
 
+  const getTemplateAreas = () => {
+    if (isManager()) {
+      if (isHotel()) {
+        return "'primarySidebar hotelSidebar navbar' 'primarySidebar hotelSidebar content'";
+      }
+      return "'primarySidebar secondarySidebar navbar' 'primarySidebar secondarySidebar content'";
+    } else if (isHotel()) {
+      return "'hotelSidebar navbar' 'hotelSidebar content'";
+    } else {
+      return "'primarySidebar navbar' 'primarySidebar content'";
+    }
+  };
 
+  const getMenuStructure = () => {
+    if (isManager()) {
+      if (isHotel()) {
+        return (
+          <Fragment>
+            <PrimarySidebar />
+            <HotelSidebar />
+          </Fragment>
+        );
+      }
+      return (
+        <Fragment>
+          <PrimarySidebar />
+          <SecondarySidebar />
+        </Fragment>
+      );
+    } else if (isHotel()) {
+      return (
+        <Fragment>
+          <HotelSidebar />
+        </Fragment>
+      );
+    } else {
+      return (
+        <Fragment>
+          <ClientSidebar />
+        </Fragment>
+      );
+    }
+  };
 
 
   const layout = {
@@ -35,12 +77,7 @@ const MainContainer = () => {
     display: "grid",
     gridTemplateColumns: `${isManager() ? "auto auto 1fr" : "auto 1fr"}`,
     gridTemplateRows: "90px 1fr",
-    gridTemplateAreas: `${isManager() ?
-      "'primarySidebar secondarySidebar navbar' 'primarySidebar secondarySidebar content'" :
-      isHotel() ?
-        "'hotelSidebar navbar' 'hotelSidebar content'" :
-        "'primarySidebar navbar' 'primarySidebar content'"
-      }`,
+    gridTemplateAreas: getTemplateAreas(),
   };
 
 
@@ -55,10 +92,9 @@ const MainContainer = () => {
   ) : (
       <div style={layout}>
         <NavBar />
-        {isManager() && <PrimarySidebar />}
-        {isManager() && <SecondarySidebar />}
-        {isHotel() && <HotelSidebar />}
-        {isClient() && <ClientSidebar />}
+        {
+          getMenuStructure()
+        }
         <MainContent />
       </div>
     );

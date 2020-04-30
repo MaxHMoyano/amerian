@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Button, Table, Row, Col, Badge, Pagination, Dropdown, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { hotelActions, sharedActions } from "../../redux/actions";
+import { hotelActions, sharedActions, userActions } from "../../redux/actions";
 import HotelDetail from "./HotelDetail";
 import DeleteHotel from "./DeleteHotel";
 import Select from "react-select";
@@ -64,6 +64,10 @@ const HotelsList = () => {
     }
   };
 
+  const goToHotel = () => {
+    dispatch(userActions.showContentAsInHotel(true));
+  };
+
 
   return <Fragment>
     <HotelDetail selected={selectedHotel} onClose={e => { setShowDetailModal(false); setSelectedHotel({}); }} show={showDetailModal} />
@@ -123,10 +127,15 @@ const HotelsList = () => {
                 <tbody>
                   {
                     hotels.results.map((hotel) => (
-                      <tr key={hotel.id} className="table_link">
-                        <td>
+                      <tr
+                        key={hotel.id}
+                        className="table_link"
+                      >
+                        <td
+                          onClick={e => goToHotel()}
+                        >
                           <div className="d-flex flex-column">
-                            <p className="m-0" style={{ fontSize: "1.05rem" }}>{hotel.name}</p>
+                            <p className="m-0 text-info icon-button" style={{ fontSize: "1.05rem" }}>{hotel.name}</p>
                             <p className="text-muted m-0">{hotel.chain}</p>
                           </div>
                         </td>
