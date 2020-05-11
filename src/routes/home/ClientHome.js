@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form, Button } from 'react-bootstrap';
 import Select from 'react-select';
 import { sharedActions, hotelActions } from '../../redux/actions';
-import { useState } from 'react';
 
 const ClientHome = () => {
   const dispatch = useDispatch();
