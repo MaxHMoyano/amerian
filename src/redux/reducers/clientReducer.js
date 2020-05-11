@@ -1,10 +1,20 @@
-import { clientConstants } from "../constants";
+import { clientConstants } from '../constants';
 
 let INITIAL_STATE = {
   types: [],
   results: [],
-  error: "",
-  pending: false
+  error: '',
+  current: {
+    id: 1,
+    name: 'Arcor S.A.',
+    type: 'COR',
+    phone: '123456',
+    email: 'arcor@arcor.com',
+    start_date: '2000-01-01',
+    active: true,
+    user: 5,
+  },
+  pending: false,
 };
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
@@ -12,7 +22,7 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
     case clientConstants.FETCH_CLIENTS_REQUEST:
       return {
         ...state,
-        pending: true
+        pending: true,
       };
     case clientConstants.FETCH_CLIENTS_SUCCESS:
       return {
@@ -24,12 +34,17 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
       return {
         ...state,
         error: error,
-        pending: false
+        pending: false,
+      };
+    case clientConstants.SET_CURRENT_CLIENT:
+      return {
+        ...state,
+        current: payload,
       };
     case clientConstants.FETCH_CLIENT_TYPES_REQUEST:
       return {
         ...state,
-        pending: true
+        pending: true,
       };
     case clientConstants.FETCH_CLIENT_TYPES_SUCCESS:
       return {
@@ -41,7 +56,7 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
       return {
         ...state,
         error: error,
-        pending: false
+        pending: false,
       };
     default:
       return state;

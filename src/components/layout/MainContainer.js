@@ -1,17 +1,16 @@
-import React, { Fragment } from "react";
-import WelcomePage from "../login/WelcomePage";
-import { useSelector } from "react-redux";
-import NavBar from "./NavBar";
-import PrimarySidebar from "./PrimarySidebar";
-import SecondarySidebar from "./SecondarySidebar";
-import HotelSidebar from "./HotelSidebar";
-import MainContent from "./MainContent";
-import ClientSidebar from "./ClientSidebar";
+import React, { Fragment } from 'react';
+import WelcomePage from '../login/WelcomePage';
+import { useSelector } from 'react-redux';
+import NavBar from './NavBar';
+import PrimarySidebar from './PrimarySidebar';
+import SecondarySidebar from './SecondarySidebar';
+import HotelSidebar from './HotelSidebar';
+import MainContent from './MainContent';
+import ClientSidebar from './ClientSidebar';
 
 const MainContainer = () => {
-
   const welcomePage = useSelector(({ auth }) => auth.welcomePage);
-  const currentGroups = useSelector(({ user }) => user.current.groups);
+  const currentGroups = useSelector(({ user }) => user.current.rol);
 
   const isManager = () => {
     return currentGroups.some((e) => e === 1);
@@ -24,7 +23,6 @@ const MainContainer = () => {
   const isHotel = () => {
     return currentGroups.some((e) => e === 3);
   };
-
 
   const getTemplateAreas = () => {
     if (isManager()) {
@@ -70,34 +68,24 @@ const MainContainer = () => {
     }
   };
 
-
   const layout = {
-    width: "100vw",
-    height: "100vh",
-    display: "grid",
-    gridTemplateColumns: `${isManager() ? "auto auto 1fr" : "auto 1fr"}`,
-    gridTemplateRows: "90px 1fr",
+    width: '100vw',
+    height: '100vh',
+    display: 'grid',
+    gridTemplateColumns: `${isManager() ? 'auto auto 1fr' : 'auto 1fr'}`,
+    gridTemplateRows: '90px 1fr',
     gridTemplateAreas: getTemplateAreas(),
   };
-
-
-
-
-
-
-
 
   return welcomePage ? (
     <WelcomePage />
   ) : (
-      <div style={layout}>
-        <NavBar />
-        {
-          getMenuStructure()
-        }
-        <MainContent />
-      </div>
-    );
+    <div style={layout}>
+      <NavBar />
+      {getMenuStructure()}
+      <MainContent />
+    </div>
+  );
 };
 
 export default MainContainer;

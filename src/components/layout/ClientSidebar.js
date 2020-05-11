@@ -1,31 +1,37 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { menuActions } from "../../redux/actions";
-import { Image } from "react-bootstrap";
-import logo from "../../assets/logo.png";
+import { menuActions, userActions } from '../../redux/actions';
+import { Image, Button } from 'react-bootstrap';
+import logo from '../../assets/logo.png';
 
-
-const ClientSidebar = props => {
-
+const ClientSidebar = (props) => {
   const dispatch = useDispatch();
   return (
-    <div className="primary_sidebar">
+    <div className='primary_sidebar'>
       <Link
-        to="/home"
+        to='/home'
         onClick={() => dispatch(menuActions.setActiveMenu(null))}
       >
-        <div className="logo">
+        <div className='logo'>
           <Image src={logo} />
         </div>
       </Link>
+      <div className='menu'>
+        <div className='menu_item mt-auto'>
+          <Button
+            variant='link'
+            className='menu_link'
+            onClick={() => dispatch(userActions.logout())}
+          >
+            <i className='fas fa-sign-out-alt'></i>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
 
-ClientSidebar.propTypes = {
-
-};
+ClientSidebar.propTypes = {};
 
 export default ClientSidebar;

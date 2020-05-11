@@ -1,11 +1,11 @@
-import { userConstants } from "../constants";
+import { userConstants } from '../constants';
 
 let INITIAL_STATE = {
   current: {
-    groups: [1]
+    rol: [2],
   },
-  error: "",
-  pending: false
+  error: '',
+  pending: false,
 };
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
@@ -13,7 +13,7 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
     case userConstants.GET_USER_REQUEST:
       return {
         ...state,
-        pending: true
+        pending: true,
       };
     case userConstants.GET_USER_SUCCESS:
       return {
@@ -25,28 +25,24 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
       return {
         ...state,
         error: error,
-        pending: false
+        pending: false,
       };
     case userConstants.SHOW_CONTENT_AS_IN_HOTEL:
-      console.log(payload);
       if (payload) {
         return {
           ...state,
           current: {
             ...state.current,
-            groups: [
-              ...state.current.groups,
-              3
-            ]
-          }
+            rol: [...state.current.rol, 3],
+          },
         };
       } else {
         return {
           ...state,
           current: {
             ...state.current,
-            groups: state.current.groups.filter((e) => e !== 3)
-          }
+            rol: state.current.rol.filter((e) => e !== 3),
+          },
         };
       }
     default:

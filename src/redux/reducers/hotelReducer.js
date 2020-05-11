@@ -2,8 +2,10 @@ import { hotelConstants } from '../constants/';
 
 const INITIAL_STATE = {
   results: [],
-  error: "",
-  pending: false
+  error: '',
+  pending: false,
+  count: 0,
+  current: null,
 };
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
@@ -11,7 +13,7 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
     case hotelConstants.FETCH_HOTELS_REQUEST:
       return {
         ...state,
-        pending: true
+        pending: true,
       };
     case hotelConstants.FETCH_HOTELS_SUCCESS:
       return {
@@ -23,7 +25,12 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
       return {
         ...state,
         error: error,
-        pending: false
+        pending: false,
+      };
+    case hotelConstants.SET_CURRENT_HOTEL:
+      return {
+        ...state,
+        current: payload,
       };
     case hotelConstants.EDIT_HOTEL_REQUEST:
       return {
@@ -38,7 +45,7 @@ export default (state = INITIAL_STATE, { type, payload, error }) => {
     case hotelConstants.EDIT_HOTEL_ERROR:
       return {
         ...state,
-        error
+        error,
       };
     default:
       return state;

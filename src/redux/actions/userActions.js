@@ -1,6 +1,11 @@
-import { userConstants, menuConstants } from "../constants";
-import { userService } from "../services";
-import { history } from "../../helpers/history";
+import {
+  userConstants,
+  menuConstants,
+  clientConstants,
+  hotelConstants,
+} from '../constants';
+import { userService, clientService, hotelService } from '../services';
+import { history } from '../../helpers/history';
 
 export const userActions = {
   login,
@@ -12,7 +17,7 @@ export const userActions = {
 };
 
 function clearLoginError() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch({
       type: userConstants.CLEAR_LOGIN_ERROR,
     });
@@ -20,11 +25,11 @@ function clearLoginError() {
 }
 
 function login(email, password) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request({ email }));
 
     userService.login(email, password).then(
-      user => {
+      (user) => {
         dispatch(fetchUser(user.id)).then((user) => {
           dispatch(welcomePage(user));
         });
@@ -36,10 +41,10 @@ function login(email, password) {
   };
 
   function welcomePage(user) {
-    return dispatch => {
+    return (dispatch) => {
       dispatch({ type: userConstants.LOGIN_WELCOME, user });
       setTimeout(() => {
-        history.push("/home/");
+        history.push('/home/');
         dispatch(success(user));
         dispatch({ type: menuConstants.SET_ACTIVE_MENU });
       }, 2000);
@@ -53,62 +58,103 @@ function login(email, password) {
     return { type: userConstants.LOGIN_SUCCESS, user };
   }
   function failure() {
-    return { type: userConstants.LOGIN_FAILURE, error: "Ha ocurrido un error, por favor verifique sus credenciales" };
+    return {
+      type: userConstants.LOGIN_FAILURE,
+      error: 'Ha ocurrido un error, por favor verifique sus credenciales',
+    };
   }
 }
 
-function showContentAsInHotel(show) {
-  return dispatch => {
+function showContentAsInHotel(show, hotelId) {
+  return (dispatch) => {
     return new Promise((resolve, reject) => {
+      if (hotelId) {
+        hotelService.fetchHotel(hotelId).then((hotel) =>
+          dispatch({
+            type: hotelConstants.SET_CURRENT_HOTEL,
+            payload: hotel,
+          })
+        );
+      } else {
+        dispatch({
+          type: hotelConstants.SET_CURRENT_HOTEL,
+          payload: null,
+        });
+      }
       dispatch({
         type: userConstants.SHOW_CONTENT_AS_IN_HOTEL,
-        payload: show
+        payload: show,
       });
-      history.push("/home/");
+      history.push('/home/');
       dispatch({ type: menuConstants.SET_ACTIVE_MENU });
       resolve();
     });
   };
 }
 
-
-
 function fetchUser(userId) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       dispatch({
-        type: userConstants.GET_USER_REQUEST
+        type: userConstants.GET_USER_REQUEST,
       });
-      userService.fetchUser(userId).then((user) => {
-        dispatch({
-          type: userConstants.GET_USER_SUCCESS,
-          payload: user
-        });
-        resolve();
-      }, (error) => {
-        dispatch({
-          type: userConstants.GET_USER_ERROR,
-          error
-        });
-        reject(error);
-      });
+      userService.fetchUser(userId).then(
+        (user) => {
+          switch (user.rol) {
+            case 2:
+              clientService.fetchClient(user.client).then((client) =>
+                dispatch({
+                  type: clientConstants.SET_CURRENT_CLIENT,
+                  payload: client,
+                })
+              );
+              break;
+            case 3:
+              hotelService.fetchHotel(user.hotel).then((hotel) =>
+                dispatch({
+                  type: hotelConstants.SET_CURRENT_HOTEL,
+                  payload: hotel,
+                })
+              );
+              break;
+            default:
+              break;
+          }
+          user = {
+            ...user,
+            rol: [user.rol],
+          };
+          dispatch({
+            type: userConstants.GET_USER_SUCCESS,
+            payload: user,
+          });
+          resolve(user);
+        },
+        (error) => {
+          dispatch({
+            type: userConstants.GET_USER_ERROR,
+            error,
+          });
+          reject(error);
+        }
+      );
     });
   };
 }
 
 function logout() {
   userService.logout();
-  history.push("/login");
+  history.push('/login');
   return { type: userConstants.LOGOUT };
 }
 
 function getAll() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request());
 
     userService.getAll().then(
-      users => dispatch(success(users)),
-      error => {
+      (users) => dispatch(success(users)),
+      (error) => {
         dispatch(failure(error));
       }
     );

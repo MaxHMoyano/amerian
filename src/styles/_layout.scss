@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 90px 1fr;
-  grid-template-areas: "secondarySidebar navbar" "secondarySidebar content";
+  grid-template-areas: 'secondarySidebar navbar' 'secondarySidebar content';
 }
 
 .main_navbar {
@@ -198,7 +198,7 @@
         }
         &.active {
           &::before {
-            content: ".";
+            content: '.';
             margin-right: 0.25rem;
             position: relative;
             bottom: 0.25rem;
