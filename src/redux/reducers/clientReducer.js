@@ -4,16 +4,7 @@ let INITIAL_STATE = {
   types: [],
   results: [],
   error: '',
-  current: {
-    id: 1,
-    name: 'Arcor S.A.',
-    type: 'COR',
-    phone: '123456',
-    email: 'arcor@arcor.com',
-    start_date: '2000-01-01',
-    active: true,
-    user: 5,
-  },
+  current: null,
   pending: false,
 };
 
