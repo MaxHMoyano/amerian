@@ -2,7 +2,7 @@ import { userConstants } from '../constants';
 
 let INITIAL_STATE = {
   current: {
-    rol: [2],
+    rol: [1],
   },
   error: '',
   pending: false,

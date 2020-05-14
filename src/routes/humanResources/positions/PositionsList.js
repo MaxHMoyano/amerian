@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { positionActions } from '../../../redux/actions';
 import Select from 'react-select';
 import PositionDelete from './PositionDelete';
+import ListPagination from '../../../components/shared/ListPagination';
 
 const PositionsList = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const PositionsList = () => {
   const [searchParams, setSearchParams] = useState({
     search: '',
     hotel: currentHotel ? currentHotel.id : null,
+    limit: 10,
+    offset: 0,
   });
 
   const hotelSelect = createRef();
@@ -156,6 +159,25 @@ const PositionsList = () => {
           </tbody>
         </Table>
       )}
+      <ListPagination
+        limit={searchParams.limit}
+        offset={searchParams.offset}
+        count={positions.count}
+        previous={positions.previous}
+        next={positions.next}
+        onPreviousPage={(e) =>
+          setSearchParams({
+            ...searchParams,
+            offset: searchParams.offset - searchParams.limit,
+          })
+        }
+        onNextPage={(e) =>
+          setSearchParams({
+            ...searchParams,
+            offset: searchParams.offset + searchParams.limit,
+          })
+        }
+      />
     </Fragment>
   );
 };

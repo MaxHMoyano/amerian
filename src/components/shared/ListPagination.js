@@ -14,7 +14,6 @@ const ListPagination = ({
   let pageCount = Math.ceil(count / limit);
   let currentPage = Math.floor(offset / limit) + 1;
   const getPages = () => {
-    console.log(currentPage);
     const pages = [];
     for (let i = 1; i <= pageCount; i++) {
       pages.push(
@@ -41,8 +40,8 @@ ListPagination.propTypes = {
   offset: PropTypes.number.isRequired,
   next: PropTypes.string,
   previous: PropTypes.string,
-  onPreviousPage: PropTypes.func,
-  onNextPage: PropTypes.func,
+  onPreviousPage: PropTypes.func.isRequired,
+  onNextPage: PropTypes.func.isRequired,
 };
 
 export default ListPagination;

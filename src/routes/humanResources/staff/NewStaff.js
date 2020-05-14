@@ -12,7 +12,7 @@ import * as Yup from 'yup';
 import { phoneRegex } from '../../../helpers/utilities';
 import _ from 'lodash';
 
-const StaffModal = ({ show, onClose, selected }) => {
+const StaffModal = ({ show, onClose, selected, onCreatedStaff }) => {
   const dispatch = useDispatch();
   const currentHotel = useSelector(({ hotel }) => hotel.current);
 
@@ -39,7 +39,6 @@ const StaffModal = ({ show, onClose, selected }) => {
 
   useEffect(() => {
     if (currentHotel && hotelSelect.current) {
-      console.log(currentHotel);
       hotelSelect.current.select.setValue({
         label: currentHotel.name,
         value: currentHotel.id,
@@ -96,24 +95,23 @@ const StaffModal = ({ show, onClose, selected }) => {
         dispatch(
           staffActions.updateStaff(values.hotel.value, selected.id, staff)
         ).then(() => {
-          dispatch(staffActions.fetchStaff()).then(() => {
-            setSubmitting(false);
-            onClose();
-            resetForm();
-            dispatch(positionActions.cleanState());
-          });
+          dispatch(positionActions.cleanState());
+          setSubmitting(false);
+          onCreatedStaff();
+          resetForm();
         });
       } else {
-        dispatch(staffActions.createNewStaff(values.hotel.value, staff)).then(
-          () => {
-            dispatch(staffActions.fetchStaff()).then(() => {
-              setSubmitting(false);
-              onClose();
-              resetForm();
-              dispatch(positionActions.cleanState());
-            });
-          }
-        );
+        dispatch(staffActions.createNewStaff(values.hotel.value, staff))
+          .then(() => {
+            dispatch(positionActions.cleanState());
+            setSubmitting(false);
+            onCreatedStaff();
+            resetForm();
+          })
+          .catch((err) => {
+            console.error(err);
+            setSubmitting(false);
+          });
       }
     },
   });

@@ -3,19 +3,21 @@ import { positionConstants } from '../constants/';
 const initialState = {
   results: [],
   pending: false,
-  error: ""
+  error: '',
+  previous: null,
+  next: null,
+  count: 0,
 };
 
 export default (state = initialState, { type, payload, error }) => {
   switch (type) {
-
     case positionConstants.FETCH_POSITIONS_REQUEST:
       return { ...state, pending: true };
     case positionConstants.FETCH_POSITIONS_SUCCESS:
       return {
         ...state,
         pending: false,
-        ...payload
+        ...payload,
       };
     case positionConstants.FETCH_POSITIONS_ERROR:
       return {
@@ -27,7 +29,7 @@ export default (state = initialState, { type, payload, error }) => {
       return {
         results: [],
         pending: false,
-        error: "",
+        error: '',
       };
 
     default:

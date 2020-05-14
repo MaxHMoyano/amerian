@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { rateActions } from '../../../redux/actions';
 import { useEffect } from 'react';
 import RateDropdown from '../../../components/shared/RateDropdown';
+import ListPagination from '../../../components/shared/ListPagination';
 
 const RateUpdatesList = () => {
   // global Hooks
@@ -183,6 +184,25 @@ const RateUpdatesList = () => {
           <i className='fas fa-spinner fa-spin fa-2x'></i>
         </div>
       )}
+      <ListPagination
+        limit={searchParams.limit}
+        offset={searchParams.offset}
+        count={rates.count}
+        previous={rates.previous}
+        next={rates.next}
+        onPreviousPage={(e) =>
+          setSearchParams({
+            ...searchParams,
+            offset: searchParams.offset - searchParams.limit,
+          })
+        }
+        onNextPage={(e) =>
+          setSearchParams({
+            ...searchParams,
+            offset: searchParams.offset + searchParams.limit,
+          })
+        }
+      />
     </Fragment>
   );
 };

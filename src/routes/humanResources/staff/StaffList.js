@@ -1,10 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Table, Badge, Button, Dropdown, Form } from 'react-bootstrap';
 import Select from 'react-select';
-// import StarRatings from "react-star-ratings";
 import StaffModal from './NewStaff';
-// import { customValueContainer } from "../../../helpers/utilities";
-// import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import {
@@ -13,6 +10,7 @@ import {
   positionActions,
 } from '../../../redux/actions/';
 import DeleteStaff from './DeleteStaff';
+import ListPagination from '../../../components/shared/ListPagination';
 
 const Staff = () => {
   // const history = useHistory();
@@ -38,7 +36,7 @@ const Staff = () => {
   const hotelSelect = React.createRef();
 
   useEffect(() => {
-    dispatch(staffActions.fetchStaff(searchParams));
+    fetchResource();
   }, [dispatch, searchParams]);
 
   useEffect(() => {
@@ -56,6 +54,10 @@ const Staff = () => {
   }, [currentHotel]);
 
   // Utility functions
+
+  const fetchResource = () => {
+    dispatch(staffActions.fetchStaff(searchParams));
+  };
 
   const handleSearchChange = (e) => {
     if (e.key === 'Enter') {
@@ -82,6 +84,7 @@ const Staff = () => {
           setSelectedStaff({});
         }}
         show={showModal}
+        onCreatedStaff={(e) => fetchResource()}
       />
       <DeleteStaff
         selected={selectedStaff}
@@ -212,6 +215,25 @@ const Staff = () => {
           </tbody>
         </Table>
       )}
+      <ListPagination
+        limit={searchParams.limit}
+        offset={searchParams.offset}
+        count={staff.count}
+        previous={staff.previous}
+        next={staff.next}
+        onPreviousPage={(e) =>
+          setSearchParams({
+            ...searchParams,
+            offset: searchParams.offset - searchParams.limit,
+          })
+        }
+        onNextPage={(e) =>
+          setSearchParams({
+            ...searchParams,
+            offset: searchParams.offset + searchParams.limit,
+          })
+        }
+      />
     </Fragment>
   );
 };

@@ -1,14 +1,16 @@
-import { staffConstants } from "../constants";
+import { staffConstants } from '../constants';
 
 const initialState = {
   results: [],
-  error: "",
-  pending: false
+  error: '',
+  pending: false,
+  previous: null,
+  next: null,
+  count: 0,
 };
 
 export default (state = initialState, { type, payload, error }) => {
   switch (type) {
-
     case staffConstants.FETCH_STAFF_REQUEST:
       return { ...state, pending: true };
     case staffConstants.FETCH_STAFF_SUCCESS:

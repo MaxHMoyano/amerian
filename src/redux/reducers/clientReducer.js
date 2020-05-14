@@ -6,6 +6,9 @@ let INITIAL_STATE = {
   error: '',
   current: null,
   pending: false,
+  previous: null,
+  next: null,
+  count: 0,
 };
 
 export default (state = INITIAL_STATE, { type, payload, error }) => {
